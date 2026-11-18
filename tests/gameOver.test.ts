@@ -8,7 +8,7 @@ describe("Game Over per mancato pagamento della quota", () => {
     engine.state = { ...engine.state, review: { ...engine.state.review, statoRevisione: "dovuta", carteTolleranzaResidue: 5 } };
 
     const esplora = engine.getState().manoCarte.find((c) => c.code === "OPS-01")!;
-    engine.dispatch({ id: "gioca-1", type: "ui/giocaCarta", payload: { cardInstanceId: esplora.instanceId, bersaglio: { punto: { x: 1, y: 1 } } } });
+    engine.dispatch({ id: "gioca-1", type: "ui/giocaCarta", payload: { cardInstanceId: esplora.instanceId, bersaglio: {} } });
 
     expect(engine.getState().review.carteTolleranzaResidue).toBe(4);
     expect(engine.getState().review.statoRevisione).toBe("inTolleranza");
@@ -21,7 +21,7 @@ describe("Game Over per mancato pagamento della quota", () => {
     engine.state = { ...engine.state, review: { ...engine.state.review, statoRevisione: "inTolleranza", carteTolleranzaResidue: 1 } };
 
     const esplora = engine.getState().manoCarte.find((c) => c.code === "OPS-01")!;
-    engine.dispatch({ id: "gioca-ultima", type: "ui/giocaCarta", payload: { cardInstanceId: esplora.instanceId, bersaglio: { punto: { x: 1, y: 1 } } } });
+    engine.dispatch({ id: "gioca-ultima", type: "ui/giocaCarta", payload: { cardInstanceId: esplora.instanceId, bersaglio: {} } });
 
     expect(engine.getState().review.carteTolleranzaResidue).toBe(0);
     expect(engine.getState().gameOver).not.toBeNull();

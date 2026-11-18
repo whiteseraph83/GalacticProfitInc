@@ -39,14 +39,16 @@
     "quotaArchetipiRari": { "valore": "~2-3%", "confermato": true, "note": "in pratica l'archetipo anomalo pesa 3/97 ~= 3.1%" },
     "areaSicuraRaggio": { "valore": 300, "confermato": false, "note": "provvisorio: raggio entro cui i pianeti sono gia' scoperti a inizio partita; ridotto in proporzione a pianetiMin/Max" },
     "areaSicuraPianetiMinMax": { "valore": "4-6", "confermato": false },
-    "visibilitaRaggio": { "valore": 300, "confermato": false, "note": "raggio di scoperta attorno alla nave madre; ancora separato dal raggio della carta Esplora" },
+    "visibilitaRaggio": { "valore": 300, "confermato": false, "note": "raggio di scoperta/visibilita' attorno alla nave madre; il comando Radar (ex Esplora) rileva pianeti oltre questo raggio" },
     "sistemiStellariMinMax": { "valore": "3-5", "confermato": false },
     "relittiMinMax": { "valore": "3-6", "confermato": false },
     "giacimentoPianetaComune": { "valore": "400-900", "confermato": false, "note": "unita' totali estraibili per pianeta di archetipo comune" },
     "giacimentoPianetaRaro": { "valore": "250-600", "confermato": false }
   },
   "carte": {
-    "esploraRaggioRivelazione": { "valore": 420, "confermato": false, "note": "unita'; raggio entro cui Esplora rivela pianeti/relitti dal punto cliccato" },
+    "radarRaggioRivelazione": { "valore": "oltre visibilitaRaggio (300)", "confermato": false, "note": "il comando Radar (ex Esplora, rinominato su richiesta utente) rileva un pianeta a caso tra quelli non investigati fuori dal raggio sensori, e lo fissa sempre visibile" },
+    "esplorazioneDurataMinMaxSec": { "valore": "60-180", "confermato": false, "note": "conto alla rovescia della carta speciale 'Esplora' (sostituisce la generazione passiva di carte, richiesta utente), ridotto da ESP-02 fino a un minimo di 20s" },
+    "esplorazionePesoRarita": { "valore": "comune 10, rara 1", "confermato": false, "note": "peso relativo nell'estrazione della carta ricevuta a fine esplorazione" },
     "investigaDurataSec": { "valore": "10-30", "confermato": true, "note": "range confermato nel documento di design (B2)" },
     "contrattoCostoIniziale": { "valore": 30, "confermato": false, "note": "proposto in B3, non approvato" },
     "contrattoCostoOperativoAlMinuto": { "valore": 4, "confermato": false, "note": "proposto in B3, non approvato" },

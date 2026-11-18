@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type DragEvent } from "react";
-import { Application, Assets, Container, FederatedPointerEvent, Graphics, Point, Sprite, Text } from "pixi.js";
+import { Application, Assets, Container, FederatedPointerEvent, FillGradient, Graphics, Point, Sprite, Text } from "pixi.js";
 import type { MiningContract, Planet, ShuttleEntity, Vector2, WreckField } from "../domain/types";
 import { NOMI_RISORSA } from "../ui/resourceNames";
 import { WORLD } from "../domain/worldConstants";
@@ -91,6 +91,8 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
   const rottaPreviewLineRef = useRef<Graphics | null>(null);
   const rottaPreviewLabelRef = useRef<Text | null>(null);
   const sensorRingRef = useRef<Graphics | null>(null);
+  const nebbiaRef = useRef<Graphics | null>(null);
+  const nebbiaGradienteRef = useRef<FillGradient | null>(null);
   const selectionRingRef = useRef<Graphics | null>(null);
   const targetHighlightLayerRef = useRef<Container | null>(null);
   const planetLayerRef = useRef<Container | null>(null);
@@ -324,6 +326,16 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         world.addChild(planetLayer);
         planetLayerRef.current = planetLayer;
 
+        // --- Nebbia di guerra visiva (richiesta utente: "schiarisci la zona nel
+        // raggio della nave madre, tutto cio' che e' fuori deve essere piu'
+        // scuro"): un unico riempimento a gradiente radiale, centrato sulla nave
+        // madre, sopra griglia/relitti/pianeti ma sotto nave madre/navette (che
+        // restano sempre nitide). Non intercetta click (eventMode "none").
+        const nebbia = new Graphics();
+        nebbia.eventMode = "none";
+        world.addChild(nebbia);
+        nebbiaRef.current = nebbia;
+
         // --- Anello di selezione (sopra i pianeti) ------------------------------
         const selectionRing = new Graphics();
         selectionRing.visible = false;
@@ -423,6 +435,33 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         .circle(mothershipPosizione.x, mothershipPosizione.y, WORLD.visibilitaRaggio)
         .stroke({ color: 0x37d6ff, width: 1.5, alpha: 0.22 });
     }
+    const nebbia = nebbiaRef.current;
+    if (nebbia) {
+      // Un FillGradient nuovo crea una texture interna: quello precedente va
+      // distrutto esplicitamente (la nave madre si muove di continuo, quindi
+      // questo effect rieseguirebbe molto spesso) per non perdere texture a
+      // ogni spostamento (vedi doc FillGradient di PixiJS).
+      nebbiaGradienteRef.current?.texture.destroy();
+      const raggioScuro = WORLD.visibilitaRaggio * 1.6;
+      const offsetConfine = WORLD.visibilitaRaggio / raggioScuro;
+      const gradiente = new FillGradient({
+        type: "radial",
+        center: { x: mothershipPosizione.x, y: mothershipPosizione.y },
+        innerRadius: 0,
+        outerCenter: { x: mothershipPosizione.x, y: mothershipPosizione.y },
+        outerRadius: raggioScuro,
+        textureSpace: "global",
+        colorStops: [
+          { offset: 0, color: "rgba(180, 230, 255, 0.07)" },
+          { offset: offsetConfine, color: "rgba(0, 0, 0, 0)" },
+          { offset: 1, color: "rgba(2, 4, 10, 0.78)" },
+        ],
+      });
+      nebbiaGradienteRef.current = gradiente;
+      const span = WORLD.estensioneRegioneMeta + 200;
+      nebbia.clear();
+      nebbia.rect(-span, -span, span * 2, span * 2).fill(gradiente);
+    }
     // Richiesta utente: un pianeta scoperto ma non ancora investigato esce
     // fuori vista quando la nave madre si allontana oltre il raggio
     // sensori, invece di restare visibile per sempre una volta scoperto;
@@ -434,7 +473,7 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
       const dx = pianeta.posizione.x - mothershipPosizione.x;
       const dy = pianeta.posizione.y - mothershipPosizione.y;
       const entroRaggio = Math.hypot(dx, dy) <= WORLD.visibilitaRaggio;
-      sprite.container.visible = pianeta.investigato || entroRaggio;
+      sprite.container.visible = pianeta.investigato || pianeta.sempreVisibile || entroRaggio;
     }
   }, [mothershipPosizione.x, mothershipPosizione.y, mothershipOrientamento, pixiReady, pianetiScoperti]);
 
@@ -512,7 +551,7 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
       // visibile finche' questa non si muove e l'altro effect lo corregge.
       const dx = pianeta.posizione.x - callbacksRef.current.mothershipPosizione.x;
       const dy = pianeta.posizione.y - callbacksRef.current.mothershipPosizione.y;
-      sprite.container.visible = pianeta.investigato || Math.hypot(dx, dy) <= WORLD.visibilitaRaggio;
+      sprite.container.visible = pianeta.investigato || pianeta.sempreVisibile || Math.hypot(dx, dy) <= WORLD.visibilitaRaggio;
       sprite.container.on("pointertap", (e) => {
         e.stopPropagation();
         const modalita = callbacksRef.current.modalitaBersaglioCarta;

@@ -7,7 +7,7 @@ import { applicaVantaggioEreditato } from "./legacy";
 import { SeededRng } from "./rng";
 import { generaRegione } from "../world/regionGenerator";
 import { generaMissioni } from "../world/missionGenerator";
-import type { CardCode, CardInstance, GameState, SlotMercatoCarte } from "./types";
+import type { CardCode, CardInstance, GameState, RaritaCarta, SlotMercatoCarte } from "./types";
 
 // Valori CONFERMATI in B1/B2. Vedi docs/balance.json per i parametri
 // ancora DA BILANCIARE (contrassegnati come provvisori).
@@ -34,10 +34,17 @@ export const BALANCE = {
   navettaTimeoutPartenzaMs: 3 * 60 * 1000,
   soccorsoCarburanteQuantita: 30,
   soccorsoCarburanteCostoFiducia: 10,
-  // Carte (B2, Macrostep 3).
-  intervalloGenerazioneCarteMs: 5 * 60 * 1000,
-  /** B2: "migliorabile via ricerca fino a minimo 2 minuti" (Macrostep 7). */
-  intervalloGenerazioneCarteMinimoMs: 2 * 60 * 1000,
+  // Esplorazione (richiesta utente, sostituisce la generazione passiva di
+  // carte): conto alla rovescia casuale 1-3 minuti, avviato dal giocatore
+  // cliccando la carta speciale "Esplora". La riduzione da ricerca (ESP-02,
+  // "migliorabile via ricerca") accorcia questo intervallo invece di quello
+  // passivo di prima, fino a un minimo di 20s.
+  esplorazioneDurataMinMs: 60 * 1000,
+  esplorazioneDurataMaxMs: 3 * 60 * 1000,
+  esplorazioneDurataMinimaMs: 20 * 1000,
+  // Peso relativo nella selezione casuale della carta ricevuta a fine
+  // esplorazione: comune molto piu' probabile di rara.
+  pesoRaritaCarta: { comune: 10, rara: 1 } satisfies Record<RaritaCarta, number>,
   // Revisioni aziendali e tolleranza (B3, Macrostep 5).
   carteTolleranzaMancataQuota: 5,
 } as const;
@@ -128,7 +135,7 @@ export function creaStatoIniziale(seed: string, vantaggioEreditatoId?: string): 
     campiRelitti: regione.campiRelitti,
     areaSicuraIniziale: regione.areaSicuraIniziale,
     contrattiMinerari: [],
-    ultimaGenerazioneCarteMs: 0,
+    esplorazione: { completataAlMs: null },
     fabbrica: { id: nextId("factory"), costruita: false, linee: 1, coda: [] },
     mercato: { prezzi: { ...PREZZI_BASE }, ultimoAggiornamentoMs: 0 },
     contabilita: { ricaviTotali: 0, speseTotali: 0, ricaviPeriodoCorrente: 0, spesePeriodoCorrente: 0, debito: null },

@@ -2,15 +2,16 @@ import { CARD_DEFINITIONS } from "../domain/cards";
 import { CARD_EFFECTS } from "../domain/cardEffectsConfig";
 import { FABBRICA_COSTO } from "../domain/refineRecipes";
 import { BALANCE } from "../domain/initialState";
+import { WORLD } from "../domain/worldConstants";
 import type { SeededRng } from "../domain/rng";
-import type { CardCode, CardInstance, EntityId, GameState, MiningContract, Vector2 } from "../domain/types";
+import type { CardCode, CardInstance, EntityId, GameState, MiningContract, Planet, Vector2 } from "../domain/types";
 import type { BersaglioCarta, CommandValidationResult } from "./commands";
 import { consumaTolleranzaRevisione, registraRicavo, registraSpesa } from "./economy";
 import { bonusEstrazioneModuli } from "./modules";
 import { bonusRicerca } from "./research";
 import { applicaSaltoIperspaziale, validaSaltoIperspaziale } from "./hyperspace";
 
-// Logica delle carte attivabili (Esplora, Investiga, Contratto minerario,
+// Logica delle carte attivabili (Radar, Investiga, Contratto minerario,
 // Recupera rottami, Fabbrica, Rifornimento). Ricerca resta "non attivabile"
 // (vedi CardDefinition.attivabile): la sua azione reale e' Macrostep 7.
 // Funzioni pure, testabili senza aprire un browser, nello stesso stile di
@@ -18,6 +19,16 @@ import { applicaSaltoIperspaziale, validaSaltoIperspaziale } from "./hyperspace"
 
 function distanza(a: Vector2, b: Vector2): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+/** Pianeti idonei al comando Radar (ex Esplora, richiesta utente): non
+ * ancora investigati e attualmente fuori dal raggio sensori della nave
+ * madre (quindi, se gia' scoperti in precedenza, nascosti dalla nebbia di
+ * guerra in questo momento). */
+function pianetiRilevabiliDalRadar(stato: GameState): Planet[] {
+  return stato.pianeti.filter(
+    (p) => !p.investigato && distanza(p.posizione, stato.mothership.posizione) > WORLD.visibilitaRaggio,
+  );
 }
 
 export function validaGiocaCarta(stato: GameState, cardInstanceId: EntityId, bersaglio: BersaglioCarta): CommandValidationResult {
@@ -31,13 +42,11 @@ export function validaGiocaCarta(stato: GameState, cardInstanceId: EntityId, ber
   }
 
   switch (carta.code) {
-    case "OPS-01": {
-      const punto = bersaglio.punto;
-      if (!punto || !Number.isFinite(punto.x) || !Number.isFinite(punto.y)) {
-        return { ok: false, motivo: "bersaglio non valido per Esplora" };
+    case "OPS-01":
+      if (pianetiRilevabiliDalRadar(stato).length === 0) {
+        return { ok: false, motivo: "nessun pianeta non investigato fuori dal raggio sensori da rilevare" };
       }
       return { ok: true };
-    }
     case "OPS-02": {
       const pianeta = bersaglio.planetId ? stato.pianeti.find((p) => p.id === bersaglio.planetId) : undefined;
       if (!pianeta || !pianeta.scoperto) return { ok: false, motivo: "il pianeta non e' stato scoperto" };
@@ -128,22 +137,24 @@ export function applicaGiocaCarta(stato: GameState, cardInstanceId: EntityId, be
 
   switch (carta.code) {
     case "OPS-01": {
-      const centro = bersaglio.punto as Vector2;
-      const raggio = CARD_EFFECTS.esplora.raggioRivelazione;
-      let scoperti = 0;
-      const pianeti = nuovoStato.pianeti.map((p) => {
-        if (p.scoperto || distanza(p.posizione, centro) > raggio) return p;
-        scoperti += 1;
-        return { ...p, scoperto: true };
-      });
-      const campiRelitti = nuovoStato.campiRelitti.map((r) => {
-        if (r.scoperto || distanza(r.posizione, centro) > raggio) return r;
-        return { ...r, scoperto: true };
-      });
-      nuovoStato = { ...nuovoStato, pianeti, campiRelitti };
-      notifiche.push(
-        scoperti > 0 ? `Esplorazione completata: ${scoperti} nuovo/i corpo/i rilevato/i.` : "Esplorazione completata: nessun nuovo corpo nella zona.",
-      );
+      // Richiesta utente: Radar (ex Esplora) rileva un pianeta a caso tra
+      // quelli non ancora investigati e fuori dal raggio sensori attuale,
+      // e lo rende visibile per sempre da quel momento (sempreVisibile),
+      // indipendentemente da quanto si allontani in seguito la nave madre.
+      // I relitti/civilta'/pericoli restano scoperti passivamente dal solo
+      // avvicinamento (vedi integrateFogDiscovery in engine.ts): non serve
+      // che Radar li tocchi.
+      const candidati = pianetiRilevabiliDalRadar(nuovoStato);
+      const scelto = candidati.length > 0 ? candidati[rng.nextInt(0, candidati.length - 1)] : null;
+      if (scelto) {
+        nuovoStato = {
+          ...nuovoStato,
+          pianeti: nuovoStato.pianeti.map((p) => (p.id === scelto.id ? { ...p, scoperto: true, sempreVisibile: true } : p)),
+        };
+        notifiche.push(`Radar: rilevato ${scelto.nome}, ora sempre visibile sulla mappa.`);
+      } else {
+        notifiche.push("Radar: nessun pianeta idoneo da rilevare al momento.");
+      }
       break;
     }
     case "OPS-02": {
@@ -357,30 +368,56 @@ function nextAutoCardId(): string {
   return `card-auto-${autoCardCounter}`;
 }
 
-/** Genera una carta casuale ogni intervalloGenerazioneCarteMs di tempo
- * attivo; sospesa (non accumulata) se la mano e' piena (B2, CONFERMATO). */
-export function integraGenerazioneCarte(stato: GameState, rng: SeededRng): RisultatoGiocaCarta {
-  const intervalloEffettivo = Math.max(
-    BALANCE.intervalloGenerazioneCarteMinimoMs,
-    BALANCE.intervalloGenerazioneCarteMs + bonusRicerca(stato).riduzioneIntervalloGenerazioneCarteMs,
-  );
-  if (stato.tempoSimulatoMs - stato.ultimaGenerazioneCarteMs < intervalloEffettivo) {
-    return { stato, notifiche: [] };
-  }
-  if (stato.manoCarte.length >= stato.capacitaManoCarte) {
-    return { stato: { ...stato, ultimaGenerazioneCarteMs: stato.tempoSimulatoMs }, notifiche: [] };
-  }
-
+/** Estrazione pesata per rarita' (comune molto piu' probabile di rara, vedi
+ * BALANCE.pesoRaritaCarta) tra tutti i codici carta esistenti. */
+function estraiCodiceCartaPerRarita(rng: SeededRng): CardCode {
   const codici = Object.keys(CARD_DEFINITIONS) as CardCode[];
-  const code = rng.pick(codici);
-  const nuovaCarta: CardInstance = { instanceId: nextAutoCardId(), code, livello: 1 };
+  const pesoTotale = codici.reduce((somma, c) => somma + BALANCE.pesoRaritaCarta[CARD_DEFINITIONS[c].rarita], 0);
+  let soglia = rng.nextFloat(0, pesoTotale);
+  for (const code of codici) {
+    soglia -= BALANCE.pesoRaritaCarta[CARD_DEFINITIONS[code].rarita];
+    if (soglia <= 0) return code;
+  }
+  return codici[codici.length - 1];
+}
 
+/** Carta speciale "Esplora" (richiesta utente, sostituisce la generazione
+ * passiva di carte): disponibile solo quando la mano ha uno slot libero e
+ * nessun'altra esplorazione e' gia' in corso. */
+export function validaAvviaEsplorazione(stato: GameState): CommandValidationResult {
+  if (stato.manoCarte.length >= stato.capacitaManoCarte) {
+    return { ok: false, motivo: "mano carte piena" };
+  }
+  if (stato.esplorazione.completataAlMs !== null) {
+    return { ok: false, motivo: "un'esplorazione e' gia' in corso" };
+  }
+  return { ok: true };
+}
+
+/** Avvia il conto alla rovescia (1-3 minuti, ridotto dalla ricerca ESP-02
+ * fino a un minimo di 20s). */
+export function applicaAvviaEsplorazione(stato: GameState, rng: SeededRng): GameState {
+  const riduzione = bonusRicerca(stato).riduzioneIntervalloGenerazioneCarteMs;
+  const min = Math.max(BALANCE.esplorazioneDurataMinimaMs, BALANCE.esplorazioneDurataMinMs + riduzione);
+  const max = Math.max(min, BALANCE.esplorazioneDurataMaxMs + riduzione);
+  const durata = rng.nextFloat(min, max);
+  return { ...stato, esplorazione: { completataAlMs: stato.tempoSimulatoMs + durata } };
+}
+
+/** Completa l'esplorazione in corso quando il timer scade, assegnando una
+ * carta casuale pesata per rarita'. */
+export function integraEsplorazione(stato: GameState, rng: SeededRng): RisultatoGiocaCarta {
+  const completataAlMs = stato.esplorazione.completataAlMs;
+  if (completataAlMs === null || stato.tempoSimulatoMs < completataAlMs) return { stato, notifiche: [] };
+
+  const code = estraiCodiceCartaPerRarita(rng);
+  const nuovaCarta: CardInstance = { instanceId: nextAutoCardId(), code, livello: 1 };
   return {
     stato: {
       ...stato,
       manoCarte: [...stato.manoCarte, nuovaCarta],
-      ultimaGenerazioneCarteMs: stato.tempoSimulatoMs,
+      esplorazione: { completataAlMs: null },
     },
-    notifiche: [`Nuova carta ricevuta: ${CARD_DEFINITIONS[code].nome}.`],
+    notifiche: [`Esplorazione completata: nuova carta ricevuta, ${CARD_DEFINITIONS[code].nome}.`],
   };
 }

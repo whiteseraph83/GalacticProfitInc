@@ -94,13 +94,22 @@
   margin-bottom: 8px;
 }
 
+/* Richiesta utente: le liste (missioni, mercato, ricerca...) avevano gli
+ * elementi troppo appiccicati tra loro — ora la lista stessa e' un
+ * contenitore con un bordo "laser" (stesso linguaggio visivo del
+ * narrative-toast: bordo ciano acceso + bagliore), con piu' respiro tra una
+ * riga e l'altra. */
 .fleet-list {
   list-style: none;
   margin: 0 0 16px;
-  padding: 0;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: rgba(57, 246, 255, 0.04);
+  box-shadow: 0 0 10px var(--accent-glow);
 }
 
 .fleet-list__item {
@@ -108,8 +117,12 @@
   justify-content: space-between;
   gap: 8px;
   font-size: 0.9rem;
-  padding: 4px 0;
-  border-bottom: 1px solid var(--border-faint);
+  padding: 6px 0;
+}
+
+.fleet-list__item + .fleet-list__item {
+  border-top: 1px solid var(--border-faint);
+  padding-top: 10px;
 }
 
 .fleet-list__name {

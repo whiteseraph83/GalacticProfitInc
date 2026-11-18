@@ -25,7 +25,7 @@ export const TECNOLOGIE: Record<string, TecnologiaDefinition> = {
     id: "ESP-02",
     ramo: "esplorazione",
     nome: "Rete di sonde",
-    descrizione: "Riduce l'intervallo di generazione passiva di nuove carte.",
+    descrizione: "Riduce la durata delle esplorazioni (la carta speciale Esplora).",
     costoCrediti: 450,
     costoPuntiRicerca: 5,
     durataMs: 6 * 60 * 1000,

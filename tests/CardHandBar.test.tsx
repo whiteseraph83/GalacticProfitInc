@@ -21,14 +21,14 @@ async function renderCardHandBar(props: Partial<ComponentProps<typeof CardHandBa
   );
   // Il motore si carica in modo asincrono (resume da IndexedDB, Macrostep 5):
   // attende che la mano carte sia effettivamente montata.
-  await screen.findByText("Esplora");
+  await screen.findByText("Radar");
   return { onCliccaCarta, onInizioTrascinamento, onFineTrascinamento };
 }
 
 describe("CardHandBar", () => {
   it("mostra le 5 carte della mano iniziale", async () => {
     await renderCardHandBar();
-    expect(screen.getByText("Esplora")).toBeInTheDocument();
+    expect(screen.getByText("Radar")).toBeInTheDocument();
     expect(screen.getByText("Investiga")).toBeInTheDocument();
     expect(screen.getByText("Contratto minerario")).toBeInTheDocument();
     expect(screen.getByText("Fabbrica")).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe("CardHandBar", () => {
 
   it("il click su una carta attivabile chiama onCliccaCarta", async () => {
     const { onCliccaCarta } = await renderCardHandBar();
-    fireEvent.click(screen.getByText("Esplora"));
+    fireEvent.click(screen.getByText("Radar"));
     expect(onCliccaCarta).toHaveBeenCalledTimes(1);
     expect(onCliccaCarta.mock.calls[0][0].code).toBe("OPS-01");
   });
@@ -49,11 +49,13 @@ describe("CardHandBar", () => {
     expect(onCliccaCarta.mock.calls[0][0].code).toBe("RSH-01");
   });
 
-  it("le carte con bersaglio sulla mappa sono draggable, Ricerca (bersaglio progettoRicerca, scelto nel pannello) no", async () => {
+  it("le carte con bersaglio sulla mappa sono draggable, Radar e Ricerca (bersaglio nessuno) no", async () => {
     await renderCardHandBar();
-    const esplora = screen.getByText("Esplora").closest("button");
+    const investiga = screen.getByText("Investiga").closest("button");
+    const radar = screen.getByText("Radar").closest("button");
     const ricerca = screen.getByText("Ricerca").closest("button");
-    expect(esplora).toHaveAttribute("draggable", "true");
+    expect(investiga).toHaveAttribute("draggable", "true");
+    expect(radar).toHaveAttribute("draggable", "false");
     expect(ricerca).toHaveAttribute("draggable", "false");
   });
 });

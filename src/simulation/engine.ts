@@ -6,10 +6,12 @@ import type { EntityId, GameState, NotificationEntry, Vector2 } from "../domain/
 import { calcolaPercorso } from "./pathfinding";
 import { integraEstrazione, integraNavette } from "./logistics";
 import {
+  applicaAvviaEsplorazione,
   applicaGiocaCarta,
   integraCostoOperativoContratti,
-  integraGenerazioneCarte,
+  integraEsplorazione,
   integraInvestigazioni,
+  validaAvviaEsplorazione,
   validaGiocaCarta,
 } from "./cardEffects";
 import { applicaAccodaRaffinazione, integraRaffinazione, validaAccodaRaffinazione } from "./factory";
@@ -235,6 +237,8 @@ export class SimulationEngine {
         return validaSceltaNarrativa(this.state, command.payload.sceneId, command.payload.scelteId);
       case "ui/avviaRicerca":
         return validaAvviaRicerca(this.state, command.payload.tecnologiaId);
+      case "ui/avviaEsplorazione":
+        return validaAvviaEsplorazione(this.state);
       case "demo/confirmableAction":
         return { ok: true };
       default:
@@ -381,6 +385,11 @@ export class SimulationEngine {
         this.notify(`Progetto di ricerca avviato: ${TECNOLOGIE[command.payload.tecnologiaId]?.nome ?? command.payload.tecnologiaId}.`);
         return;
       }
+      case "ui/avviaEsplorazione": {
+        this.state = applicaAvviaEsplorazione(this.state, this.cardRng);
+        this.notify("Esplorazione avviata.");
+        return;
+      }
       case "demo/confirmableAction": {
         this.notify("Azione dimostrativa eseguita (test del flusso di conferma).");
         return;
@@ -413,7 +422,7 @@ export class SimulationEngine {
     this.state = integraNavette(this.state, dtMs);
     this.applicaRisultato(integraInvestigazioni(this.state));
     this.applicaRisultato(integraCostoOperativoContratti(this.state, dtMs));
-    this.applicaRisultato(integraGenerazioneCarte(this.state, this.cardRng));
+    this.applicaRisultato(integraEsplorazione(this.state, this.cardRng));
     this.applicaRisultato(integraRaffinazione(this.state));
     this.applicaRisultato(integraMercato(this.state, this.cardRng));
     this.applicaRisultato(integraRevisione(this.state));

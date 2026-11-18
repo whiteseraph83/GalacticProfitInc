@@ -22,7 +22,11 @@ import type { GameState } from "../domain/types";
 // campi `undefined` — da cui il NaN (`undefined + 1`). Incrementare qui
 // scarta in sicurezza quei salvataggi incompatibili, facendo ripartire una
 // nuova carriera invece di uno stato corrotto.
-export const SAVE_SCHEMA_VERSION = 3;
+// Portato a 4: questo stesso giro ha aggiunto altri campi obbligatori dopo
+// il bump a 3 (Planet.sempreVisibile, GameState.esplorazione al posto di
+// ultimaGenerazioneCarteMs) — un salvataggio autosalvato nel frattempo (con
+// l'autosave appena riattivato) andava in NaN/undefined allo stesso modo.
+export const SAVE_SCHEMA_VERSION = 4;
 
 export interface SaveFile {
   schemaVersion: number;

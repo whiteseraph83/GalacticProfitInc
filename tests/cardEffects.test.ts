@@ -3,12 +3,15 @@ import { creaStatoIniziale } from "../src/domain/initialState";
 import { CARD_EFFECTS } from "../src/domain/cardEffectsConfig";
 import { SeededRng } from "../src/domain/rng";
 import {
+  applicaAvviaEsplorazione,
   applicaGiocaCarta,
   integraCostoOperativoContratti,
-  integraGenerazioneCarte,
+  integraEsplorazione,
   integraInvestigazioni,
+  validaAvviaEsplorazione,
   validaGiocaCarta,
 } from "../src/simulation/cardEffects";
+import { WORLD } from "../src/domain/worldConstants";
 import type { CardInstance, GameState } from "../src/domain/types";
 
 function trovaCartaInMano(stato: GameState, code: CardInstance["code"]): CardInstance {
@@ -17,27 +20,35 @@ function trovaCartaInMano(stato: GameState, code: CardInstance["code"]): CardIns
   return carta;
 }
 
-describe("validaGiocaCarta / applicaGiocaCarta — Esplora (OPS-01)", () => {
-  it("rivela pianeti entro il raggio e consuma la carta atomicamente", () => {
-    const stato = creaStatoIniziale("carte-esplora");
-    const nonScoperto = stato.pianeti.find((p) => !p.scoperto);
-    expect(nonScoperto).toBeDefined();
-    if (!nonScoperto) return;
+describe("validaGiocaCarta / applicaGiocaCarta — Radar (OPS-01, ex Esplora)", () => {
+  it("rileva un pianeta non investigato fuori dal raggio sensori, lo rende sempre visibile e consuma la carta atomicamente", () => {
+    const stato = creaStatoIniziale("carte-radar");
+    const fuoriRaggio = stato.pianeti.find(
+      (p) => !p.investigato && Math.hypot(p.posizione.x - stato.mothership.posizione.x, p.posizione.y - stato.mothership.posizione.y) > WORLD.visibilitaRaggio,
+    );
+    expect(fuoriRaggio).toBeDefined();
+    if (!fuoriRaggio) return;
     const carta = trovaCartaInMano(stato, "OPS-01");
-    const bersaglio = { punto: nonScoperto.posizione };
 
-    expect(validaGiocaCarta(stato, carta.instanceId, bersaglio).ok).toBe(true);
-    const { stato: dopo } = applicaGiocaCarta(stato, carta.instanceId, bersaglio, new SeededRng("x"));
+    expect(validaGiocaCarta(stato, carta.instanceId, {}).ok).toBe(true);
+    const { stato: dopo } = applicaGiocaCarta(stato, carta.instanceId, {}, new SeededRng("x"));
 
     expect(dopo.manoCarte.find((c) => c.instanceId === carta.instanceId)).toBeUndefined();
-    expect(dopo.pianeti.find((p) => p.id === nonScoperto.id)?.scoperto).toBe(true);
+    const rilevato = dopo.pianeti.find((p) => p.sempreVisibile);
+    expect(rilevato).toBeDefined();
+    expect(rilevato?.scoperto).toBe(true);
     expect(dopo.review.carteGiocateTotali).toBe(stato.review.carteGiocateTotali + 1);
   });
 
-  it("rifiuta un bersaglio non finito senza mutare lo stato", () => {
-    const stato = creaStatoIniziale("carte-esplora-invalid");
+  it("rifiuta se nessun pianeta e' idoneo (tutti investigati o entro il raggio sensori)", () => {
+    const stato = creaStatoIniziale("carte-radar-nessuno");
     const carta = trovaCartaInMano(stato, "OPS-01");
-    const risultato = validaGiocaCarta(stato, carta.instanceId, { punto: { x: Number.NaN, y: 0 } });
+    // Tutti i pianeti vengono portati entro il raggio sensori: nessun bersaglio idoneo.
+    const statoSenzaBersagli: GameState = {
+      ...stato,
+      pianeti: stato.pianeti.map((p) => ({ ...p, posizione: { x: 0, y: 0 } })),
+    };
+    const risultato = validaGiocaCarta(statoSenzaBersagli, carta.instanceId, {});
     expect(risultato.ok).toBe(false);
   });
 });
@@ -181,26 +192,48 @@ describe("integraCostoOperativoContratti", () => {
   });
 });
 
-describe("integraGenerazioneCarte", () => {
-  it("genera una carta dopo l'intervallo se la mano non e' piena", () => {
-    const stato = creaStatoIniziale("carte-generazione");
-    const statoConSpazio: GameState = { ...stato, manoCarte: stato.manoCarte.slice(0, 2) };
-    const rng = new SeededRng("gen");
-
-    const { stato: troppoPresto } = integraGenerazioneCarte({ ...statoConSpazio, tempoSimulatoMs: 60_000 }, rng);
-    expect(troppoPresto.manoCarte).toHaveLength(2);
-
-    const { stato: dopo, notifiche } = integraGenerazioneCarte({ ...statoConSpazio, tempoSimulatoMs: 5 * 60_000 }, rng);
-    expect(dopo.manoCarte).toHaveLength(3);
-    expect(notifiche.length).toBe(1);
+describe("Esplora: validaAvviaEsplorazione / applicaAvviaEsplorazione / integraEsplorazione", () => {
+  it("rifiuta di avviare un'esplorazione se la mano e' piena", () => {
+    const stato = creaStatoIniziale("esplora-mano-piena");
+    expect(stato.manoCarte).toHaveLength(stato.capacitaManoCarte);
+    expect(validaAvviaEsplorazione(stato).ok).toBe(false);
   });
 
-  it("sospende la generazione se la mano e' piena, senza accumulare", () => {
-    const stato = creaStatoIniziale("carte-generazione-piena");
-    const statoPieno: GameState = { ...stato, tempoSimulatoMs: 5 * 60_000 };
-    const { stato: dopo, notifiche } = integraGenerazioneCarte(statoPieno, new SeededRng("gen2"));
-    expect(dopo.manoCarte).toHaveLength(statoPieno.manoCarte.length);
+  it("rifiuta di avviarne una seconda mentre una e' gia' in corso (una alla volta)", () => {
+    const stato = creaStatoIniziale("esplora-gia-in-corso");
+    const statoConSpazio: GameState = {
+      ...stato,
+      manoCarte: stato.manoCarte.slice(0, 2),
+      esplorazione: { completataAlMs: 12_345 },
+    };
+    expect(validaAvviaEsplorazione(statoConSpazio).ok).toBe(false);
+  });
+
+  it("avvia un conto alla rovescia tra 1 e 3 minuti", () => {
+    const stato = creaStatoIniziale("esplora-avvio");
+    const statoConSpazio: GameState = { ...stato, manoCarte: stato.manoCarte.slice(0, 2) };
+    const dopo = applicaAvviaEsplorazione(statoConSpazio, new SeededRng("esplora"));
+    expect(dopo.esplorazione.completataAlMs).not.toBeNull();
+    const durata = dopo.esplorazione.completataAlMs! - dopo.tempoSimulatoMs;
+    expect(durata).toBeGreaterThanOrEqual(60_000);
+    expect(durata).toBeLessThanOrEqual(3 * 60_000);
+  });
+
+  it("integraEsplorazione non fa nulla prima dello scadere del timer", () => {
+    const stato = creaStatoIniziale("esplora-timer-non-scaduto");
+    const statoInCorso: GameState = { ...stato, manoCarte: stato.manoCarte.slice(0, 2), esplorazione: { completataAlMs: 100_000 } };
+    const { stato: dopo, notifiche } = integraEsplorazione({ ...statoInCorso, tempoSimulatoMs: 50_000 }, new SeededRng("x"));
+    expect(dopo.manoCarte).toHaveLength(2);
+    expect(dopo.esplorazione.completataAlMs).toBe(100_000);
     expect(notifiche).toHaveLength(0);
-    expect(dopo.ultimaGenerazioneCarteMs).toBe(statoPieno.tempoSimulatoMs);
+  });
+
+  it("integraEsplorazione assegna una carta casuale e azzera il timer allo scadere", () => {
+    const stato = creaStatoIniziale("esplora-completata");
+    const statoInCorso: GameState = { ...stato, manoCarte: stato.manoCarte.slice(0, 2), esplorazione: { completataAlMs: 100_000 } };
+    const { stato: dopo, notifiche } = integraEsplorazione({ ...statoInCorso, tempoSimulatoMs: 100_000 }, new SeededRng("y"));
+    expect(dopo.manoCarte).toHaveLength(3);
+    expect(dopo.esplorazione.completataAlMs).toBeNull();
+    expect(notifiche.length).toBe(1);
   });
 });

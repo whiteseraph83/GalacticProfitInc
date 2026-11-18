@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { CARD_DEFINITIONS } from "../domain/cards";
 import type { CardInstance } from "../domain/types";
-import { useGameState } from "./useEngine";
+import { useEngine, useGameState } from "./useEngine";
 import "./CardHandBar.css";
+
+function formattaContoAllaRovescia(msResidui: number): string {
+  const secondiTotali = Math.max(0, Math.ceil(msResidui / 1000));
+  const minuti = Math.floor(secondiTotali / 60);
+  const secondi = secondiTotali % 60;
+  return `${minuti}:${secondi.toString().padStart(2, "0")}`;
+}
 
 export interface CardHandBarProps {
   cartaArmataId: string | null;
@@ -13,7 +20,7 @@ export interface CardHandBarProps {
 
 /**
  * Mano carte sempre visibile in basso (A4). Le carte con bersaglio sulla
- * mappa (Esplora, Investiga, Contratto minerario, Recupera rottami) si
+ * mappa (Investiga, Contratto minerario, Recupera rottami) si
  * possono trascinare sul bersaglio o selezionare con un click e poi
  * cliccare il bersaglio; le carte a bersaglio "nave"/"nessuno" (Fabbrica,
  * Rifornimento) non hanno un punto da trascinare e il click propone subito
@@ -23,8 +30,15 @@ export interface CardHandBarProps {
  * tutti i casi l'effetto si applica solo dopo conferma esplicita.
  */
 export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinamento, onFineTrascinamento }: CardHandBarProps) {
+  const engine = useEngine();
   const state = useGameState();
   const [cartaConTooltip, setCartaConTooltip] = useState<string | null>(null);
+
+  const esplorazioneInCorso = state.esplorazione.completataAlMs !== null;
+  const slotLibero = state.manoCarte.length < state.capacitaManoCarte;
+  const avviaEsplorazione = () => {
+    engine.dispatch({ id: `esplora-${Date.now()}`, type: "ui/avviaEsplorazione" });
+  };
 
   return (
     <footer className="card-hand-bar">
@@ -75,6 +89,32 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
             </button>
           );
         })}
+        {/* Carta speciale "Esplora" (richiesta utente, sostituisce la
+         * generazione passiva di carte): appare con un'icona "+" quando c'e'
+         * uno slot libero in mano; cliccandola avvia un conto alla rovescia
+         * casuale (1-3 minuti) al termine del quale si riceve una carta
+         * casuale (comuni piu' probabili delle rare). Una sola esplorazione
+         * alla volta: mentre e' in corso la carta mostra il tempo residuo
+         * invece della "+", e non e' cliccabile di nuovo. */}
+        {(slotLibero || esplorazioneInCorso) && (
+          <button
+            type="button"
+            className={`game-card game-card--esplora ${esplorazioneInCorso ? "game-card--esplora-attiva" : ""}`}
+            onClick={avviaEsplorazione}
+            disabled={esplorazioneInCorso}
+          >
+            {esplorazioneInCorso ? (
+              <span className="game-card__esplora-countdown">
+                {formattaContoAllaRovescia(state.esplorazione.completataAlMs! - state.tempoSimulatoMs)}
+              </span>
+            ) : (
+              <span className="game-card__esplora-icona" aria-hidden="true">
+                +
+              </span>
+            )}
+            <span className="game-card__name">Esplora</span>
+          </button>
+        )}
         <div className="card-hand-bar__capacity">
           {state.manoCarte.length} / {state.capacitaManoCarte}
         </div>

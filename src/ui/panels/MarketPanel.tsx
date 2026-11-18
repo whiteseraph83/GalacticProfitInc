@@ -4,11 +4,19 @@ import type { ResourceType } from "../../domain/types";
 import { useEngine, useGameState } from "../useEngine";
 import { NOMI_RISORSA } from "../resourceNames";
 
+export interface MarketPanelProps {
+  /** Materiali mai posseduti in stiva (richiesta utente): le relative righe
+   * di mercato restano nascoste finche' non vengono incontrati per la
+   * prima volta, per non ingombrare la lista con risorse non ancora
+   * rilevanti per la partita in corso. */
+  risorseMaiPossedute: Set<ResourceType>;
+}
+
 /** Mercato (B3, confermato): transazioni sempre manuali, prezzi che
  * fluttuano gradualmente ogni 5 minuti di tempo attivo. Acquisti e vendite
  * sono azioni dirette (non richiedono carte, come le rotte cargo o la coda
  * di raffinazione: B2) con quantita' intere e saldo mai negativo. */
-export function MarketPanel() {
+export function MarketPanel({ risorseMaiPossedute }: MarketPanelProps) {
   const engine = useEngine();
   const state = useGameState();
   const idBase = useId();
@@ -31,8 +39,11 @@ export function MarketPanel() {
   return (
     <section aria-label="Mercato">
       <h2>Mercato</h2>
+      {risorseMaiPossedute.size === 0 && <p className="fleet-list__empty">Nessun materiale ancora incontrato in partita.</p>}
       <ul className="fleet-list">
-        {(Object.keys(PREZZI_BASE) as ResourceType[]).map((risorsa) => {
+        {(Object.keys(PREZZI_BASE) as ResourceType[])
+          .filter((risorsa) => risorseMaiPossedute.has(risorsa))
+          .map((risorsa) => {
           const prezzo = state.mercato.prezzi[risorsa] ?? PREZZI_BASE[risorsa];
           const posseduto = state.mothership.stivaCarico[risorsa] ?? 0;
           return (

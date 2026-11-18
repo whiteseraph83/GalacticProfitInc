@@ -129,7 +129,7 @@
       "chapter": "C1",
       "title": "Un punto nel buio",
       "trigger": "tutorial.first_explore_available",
-      "summary": "Introduzione a Esplora e selezione sulla mappa.",
+      "summary": "Introduzione a Radar.",
       "lines": [
         {
           "speaker": "B.O.B.",
@@ -137,7 +137,7 @@
         },
         {
           "speaker": "B.O.B.",
-          "text": "Selezioni Esplora e indichi un’area inesplorata. Prima dell’impiego le mostrerò la conferma: l’azienda è affezionata alle firme."
+          "text": "Attivi Radar: individua da solo un pianeta non ancora investigato, fuori dal raggio dei sensori. Prima dell’impiego le mostrerò la conferma: l’azienda è affezionata alle firme."
         },
         {
           "speaker": "B.O.B.",

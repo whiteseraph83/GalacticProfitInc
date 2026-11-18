@@ -17,7 +17,7 @@ import { PixiMapView, type PixiMapViewHandle } from "../render/PixiMapView";
 import { useEngine, useGameState } from "./useEngine";
 import { useAutosave } from "./useAutosave";
 import { CARD_DEFINITIONS } from "../domain/cards";
-import type { CardDefinition } from "../domain/types";
+import type { CardDefinition, ResourceType } from "../domain/types";
 import { CardActionFlash } from "./components/CardActionFlash";
 import { NarrativeToast } from "./components/NarrativeToast";
 import { useNpcChatter } from "./hooks/useNpcChatter";
@@ -51,6 +51,23 @@ export function AppShell() {
   // sempre montato, gira per tutta la durata della partita.
   const ultimoSalvataggio = useAutosave(engine);
   const chiacchiericcio = useNpcChatter(state);
+
+  // Richiesta utente: nel Mercato non mostrare righe per materiali mai
+  // posseduti (stessa logica "si sblocca alla prima unita' in stiva" dei
+  // contatori minerali in TopBar) — riduce il disordine iniziale della
+  // lista a soli i materiali gia' incontrati in partita.
+  const [risorseMaiPossedute, setRisorseMaiPossedute] = useState<Set<ResourceType>>(new Set());
+  const risorseMaiPosseduteRef = useRef(risorseMaiPossedute);
+  useEffect(() => {
+    const nuove = (Object.keys(state.mothership.stivaCarico) as ResourceType[]).filter(
+      (r) => !risorseMaiPosseduteRef.current.has(r) && (state.mothership.stivaCarico[r] ?? 0) > 0,
+    );
+    if (nuove.length === 0) return;
+    const aggiornato = new Set(risorseMaiPosseduteRef.current);
+    for (const r of nuove) aggiornato.add(r);
+    risorseMaiPosseduteRef.current = aggiornato;
+    setRisorseMaiPossedute(aggiornato);
+  }, [state.mothership.stivaCarico]);
   const [dialogoAutoAvanza, setDialogoAutoAvanza] = useState(false);
   // Bottone ">>>" per debug/test (richiesta utente): avanza a raffica
   // attraverso tutti i dialoghi in coda, incluse le scene successive che si
@@ -131,9 +148,10 @@ export function AppShell() {
     return insieme;
   }, [cartaArmata, pianetiScoperti, state]);
 
-  const modalitaBersaglioCarta = cartaArmata
-    ? { bersagliPianetaValidi, accettaPuntoMappa: CARD_DEFINITIONS[cartaArmata.code].bersaglio === "zonaMappa" }
-    : null;
+  // accettaPuntoMappa era usato solo da Esplora/Radar (bersaglio "zonaMappa"),
+  // rimosso dal tipo bersaglio perche' Radar e' ora automatico (richiesta
+  // utente): nessuna carta clicca piu' un punto libero della mappa.
+  const modalitaBersaglioCarta = cartaArmata ? { bersagliPianetaValidi, accettaPuntoMappa: false } : null;
 
   // Esc annulla la selezione-carta attiva (A4), non tocca una conferma gia' aperta
   // (quella la gestisce ConfirmModal stesso).
@@ -347,7 +365,7 @@ export function AppShell() {
       )}
       {overlayAperto === "mercato" && (
         <OverlayPanel ariaLabel="Mercato" onChiudi={() => setOverlayAperto(null)}>
-          <MarketPanel />
+          <MarketPanel risorseMaiPossedute={risorseMaiPossedute} />
         </OverlayPanel>
       )}
       {overlayAperto === "mercatoCarte" && (

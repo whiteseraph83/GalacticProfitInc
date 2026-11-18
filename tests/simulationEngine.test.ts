@@ -247,7 +247,7 @@ describe("SimulationEngine - soccorso carburante", () => {
 });
 
 describe("SimulationEngine - carte giocabili (ui/giocaCarta)", () => {
-  it("gioca Esplora su un punto valido: consuma la carta esattamente una volta", () => {
+  it("gioca Radar (ex Esplora): consuma la carta esattamente una volta", () => {
     const engine = new SimulationEngine("seed-carte-esplora");
     const carta = engine.getState().manoCarte.find((c) => c.code === "OPS-01");
     expect(carta).toBeDefined();
@@ -256,7 +256,7 @@ describe("SimulationEngine - carte giocabili (ui/giocaCarta)", () => {
     const risultato = engine.dispatch({
       id: "gioca-esplora-1",
       type: "ui/giocaCarta",
-      payload: { cardInstanceId: carta.instanceId, bersaglio: { punto: { x: 50, y: 50 } } },
+      payload: { cardInstanceId: carta.instanceId, bersaglio: {} },
     });
     expect(risultato.ok).toBe(true);
     expect(engine.getState().manoCarte.find((c) => c.instanceId === carta.instanceId)).toBeUndefined();
@@ -266,7 +266,7 @@ describe("SimulationEngine - carte giocabili (ui/giocaCarta)", () => {
     const secondo = engine.dispatch({
       id: "gioca-esplora-1",
       type: "ui/giocaCarta",
-      payload: { cardInstanceId: carta.instanceId, bersaglio: { punto: { x: 50, y: 50 } } },
+      payload: { cardInstanceId: carta.instanceId, bersaglio: {} },
     });
     expect(secondo.ok).toBe(false);
     expect(engine.getState().review.carteGiocateTotali).toBe(1);
@@ -333,16 +333,21 @@ describe("SimulationEngine - carte giocabili (ui/giocaCarta)", () => {
     expect(engine.getState().mothership.stivaCarico.ferroRaffinato).toBeGreaterThan(0);
   });
 
-  it("genera passivamente una carta ogni 5 minuti di tempo attivo (mano non piena)", () => {
+  it("la carta speciale Esplora assegna una nuova carta allo scadere del conto alla rovescia (mano non piena)", () => {
     const engine = new SimulationEngine("seed-carte-passive");
-    // Svuota un po' la mano giocando Esplora, cosi' c'e' spazio per la generazione.
-    const esplora = engine.getState().manoCarte.find((c) => c.code === "OPS-01")!;
-    engine.dispatch({ id: "libera-slot", type: "ui/giocaCarta", payload: { cardInstanceId: esplora.instanceId, bersaglio: { punto: { x: 1, y: 1 } } } });
+    // Svuota uno slot giocando Radar (ex Esplora), cosi' c'e' spazio per avviare un'esplorazione.
+    const radar = engine.getState().manoCarte.find((c) => c.code === "OPS-01")!;
+    engine.dispatch({ id: "libera-slot", type: "ui/giocaCarta", payload: { cardInstanceId: radar.instanceId, bersaglio: {} } });
     expect(engine.getState().manoCarte).toHaveLength(4);
 
-    for (let i = 0; i < 400 && engine.getState().manoCarte.length < 5; i++) {
+    const risultatoAvvio = engine.dispatch({ id: "avvia-esplora", type: "ui/avviaEsplorazione" });
+    expect(risultatoAvvio.ok).toBe(true);
+    expect(engine.getState().esplorazione.completataAlMs).not.toBeNull();
+
+    for (let i = 0; i < 400 && engine.getState().esplorazione.completataAlMs !== null; i++) {
       engine.update(2000);
     }
     expect(engine.getState().manoCarte).toHaveLength(5);
+    expect(engine.getState().esplorazione.completataAlMs).toBeNull();
   });
 });

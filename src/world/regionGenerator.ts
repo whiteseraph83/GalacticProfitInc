@@ -230,6 +230,7 @@ function creaPianeta(
     scoperto: distanza(posizione, centroAreaSicura) <= areaSicuraRaggio,
     investigato: false,
     investigazioneCompletataAlMs: null,
+    sempreVisibile: false,
     risorsaDominante: def.risorsaDominante,
     // Giacimento finito (B1): gli archetipi non comuni sono piu' rari ma
     // leggermente piu' ricchi per singolo pianeta, a bilanciare in futuro.

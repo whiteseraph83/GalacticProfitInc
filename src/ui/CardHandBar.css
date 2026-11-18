@@ -110,6 +110,48 @@
   z-index: 10;
 }
 
+.game-card--esplora {
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-style: dashed;
+  border-color: var(--text-muted);
+  background-color: transparent;
+}
+
+.game-card--esplora:hover,
+.game-card--esplora:focus-visible {
+  border-color: var(--accent);
+  border-style: dashed;
+}
+
+.game-card__esplora-icona {
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.game-card--esplora:hover .game-card__esplora-icona,
+.game-card--esplora:focus-visible .game-card__esplora-icona {
+  color: var(--accent);
+}
+
+.game-card--esplora-attiva {
+  cursor: default;
+  border-color: var(--accent);
+}
+
+.game-card--esplora-attiva:hover,
+.game-card--esplora-attiva:focus-visible {
+  transform: none;
+}
+
+.game-card__esplora-countdown {
+  font-family: var(--font-digital);
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
 .card-hand-bar__capacity {
   margin-left: 12px;
   font-size: 0.89rem;

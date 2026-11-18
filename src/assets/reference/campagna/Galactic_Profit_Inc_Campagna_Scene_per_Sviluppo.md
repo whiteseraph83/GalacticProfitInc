@@ -43,11 +43,11 @@
 
 ### C1_S02 · Un punto nel buio
 **Trigger:** `tutorial.first_explore_available`  
-**Funzione:** Introduzione a Esplora e selezione sulla mappa.  
+**Funzione:** Introduzione a Radar.  
 **Tono:** tutorial
 
 **B.O.B.:** «Quella zona non compare nel nostro inventario di conoscenza. In altre parole, non genera ancora ricavi.»
-**B.O.B.:** «Selezioni Esplora e indichi un’area inesplorata. Prima dell’impiego le mostrerò la conferma: l’azienda è affezionata alle firme.»
+**B.O.B.:** «Attivi Radar: individua da solo un pianeta non ancora investigato, fuori dal raggio dei sensori. Prima dell’impiego le mostrerò la conferma: l’azienda è affezionata alle firme.»
 **B.O.B.:** «Confermare consuma una carta; annullare non costa nulla. Approfitti del concetto, è raro nel nostro settore.»
 **B.O.B.:** «Rilevato un pianeta. Il dipartimento commerciale ha già chiesto se possiamo metterlo in fattura.»
 

@@ -19,10 +19,12 @@ export function dettagliConfermaCarta(carta: CardInstance, bersaglio: BersaglioC
 
   switch (carta.code) {
     case "OPS-01": {
-      const punto = bersaglio.punto;
       return [
-        { etichetta: "Bersaglio", valore: punto ? `Zona (${Math.round(punto.x)}, ${Math.round(punto.y)})` : "—" },
-        { etichetta: "Effetto", valore: `Rivela i corpi entro ${CARD_EFFECTS.esplora.raggioRivelazione} unita'` },
+        { etichetta: "Bersaglio", valore: "Nessuno" },
+        {
+          etichetta: "Effetto",
+          valore: "Rileva un pianeta a caso tra quelli non investigati fuori dal raggio sensori, ora sempre visibile",
+        },
         { etichetta: "Costo", valore: "Nessuno" },
         { etichetta: "Reversibile", valore: "No" },
       ];

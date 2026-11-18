@@ -196,7 +196,7 @@ ha diverse per personaggio).
 
 ## Animazioni per le azioni delle carte
 
-Ogni carta giocata (Esplora, Investiga, Contratto minerario, Fabbrica,
+Ogni carta giocata (Radar, Investiga, Contratto minerario, Fabbrica,
 Recupera rottami, Ricerca, ecc.) dovrebbe avere una propria animazione
 grafica al momento dell'applicazione dell'effetto, non solo il risultato
 finale che compare di colpo. Serve a rendere il feedback dell'azione piu'

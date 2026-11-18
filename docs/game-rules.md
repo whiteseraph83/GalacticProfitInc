@@ -120,10 +120,13 @@ macrostep. Riferimento completo: `Galactic_Profit_Inc_Prompt_Sviluppo_Macrostep.
   `carteGiocateTotali`/`carteGiocateDallUltimaRevisione` **solo** se il
   comando viene davvero applicato: un bersaglio non valido o un doppio
   dispatch dello stesso id non toccano ne' la mano ne' il contatore.
-- **Esplora (OPS-01)**: bersaglio = un punto qualsiasi della mappa; rivela
-  permanentemente (stesso meccanismo del fog of war) tutti i pianeti/relitti
-  entro un raggio dal punto cliccato, indipendentemente dalla posizione
-  della nave madre.
+- **Radar (OPS-01, ex Esplora, rinominato su richiesta utente)**: bersaglio =
+  nessuno (automatico). Rileva un pianeta a caso tra quelli non ancora
+  investigati e attualmente fuori dal raggio sensori della nave madre, e lo
+  rende permanentemente visibile da quel momento in poi (flag
+  `sempreVisibile`), indipendentemente da quanto si allontani in seguito la
+  nave madre. I relitti/civilta'/pericoli restano scoperti passivamente dal
+  solo avvicinamento (fog of war), non serve che Radar li tocchi.
 - **Investiga (OPS-02)**: bersaglio = un pianeta scoperto non ancora
   investigato. **Non istantanea** (B2): avvia un timer di 10-30 secondi
   (seed-based, deterministico per partita); solo allo scadere il pianeta
@@ -647,9 +650,6 @@ descritto dal documento di design.
 - **Nave mineraria senza posizione/sprite proprio**: non vola ancora sulla
   mappa (si assume "sul posto" del contratto); un suo sprite dedicato e'
   rimandato a un prossimo macrostep.
-- **Raggio di visibilita' della nave madre e raggio di Esplora separati**:
-  oggi sono due costanti indipendenti non ancora armonizzate/bilanciate
-  insieme con playtest reale.
 - **Minimappa assente**: il documento la rende opzionale "solo se non
   distrae"; non implementata per restare nello scope.
 - **Linee di produzione**: una base, espandibile a due con la tecnologia

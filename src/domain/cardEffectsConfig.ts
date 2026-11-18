@@ -2,9 +2,6 @@
 // macrostep. DA BILANCIARE (vedi docs/balance.json): sono default sensati
 // per rendere il sistema testabile, non un bilanciamento definitivo (B3).
 export const CARD_EFFECTS = {
-  esplora: {
-    raggioRivelazione: 420,
-  },
   investiga: {
     durataMinSec: 10,
     durataMaxSec: 30,

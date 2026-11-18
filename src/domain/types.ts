@@ -36,13 +36,18 @@ export type CardCode =
 
 export type CardCategory = "operazioni" | "industria" | "ricerca" | "logistica";
 
+/** Rarita' di una carta (richiesta utente): determina il peso con cui puo'
+ * essere estratta dalla carta speciale "Esplora" — comune molto piu'
+ * probabile di rara. */
+export type RaritaCarta = "comune" | "rara";
+
 export interface CardDefinition {
   code: CardCode;
   nome: string;
   categoria: CardCategory;
+  rarita: RaritaCarta;
   descrizione: string;
   bersaglio:
-    | "zonaMappa"
     | "pianetaScoperto"
     | "pianetaInvestigato"
     | "nave"
@@ -98,6 +103,11 @@ export interface Planet {
   /** tempoSimulatoMs al quale un'investigazione in corso si completera';
    * null se nessuna investigazione e' in corso su questo pianeta. */
   investigazioneCompletataAlMs: number | null;
+  /** true se rilevato dal comando Radar (ex Esplora): resta visibile sulla
+   * mappa anche fuori dal raggio sensori della nave madre, pur non essendo
+   * ancora investigato (richiesta utente). I pianeti investigati sono
+   * sempre visibili comunque, a prescindere da questo flag. */
+  sempreVisibile: boolean;
   /** Risorsa dominante e giacimento totale estraibile, generati con il
    * pianeta ma non mostrati al giocatore finche' non investigato. */
   risorsaDominante: RawResourceType;
@@ -233,6 +243,12 @@ export interface TecnologiaDefinition {
   durataMs: number;
   prerequisiti: string[];
   effetto: EffettoTecnologia;
+}
+
+/** completataAlMs null = nessuna esplorazione in corso (la carta "Esplora"
+ * mostra l'icona "+", pronta per essere avviata). */
+export interface EsplorazioneState {
+  completataAlMs: number | null;
 }
 
 export interface ProgettoRicercaAttivo {
@@ -581,9 +597,13 @@ export interface GameState {
   campiRelitti: WreckField[];
   areaSicuraIniziale: { centro: Vector2; raggio: number };
   contrattiMinerari: MiningContract[];
-  /** tempoSimulatoMs dell'ultima generazione passiva di carta (B2: una ogni
-   * 5 minuti di tempo attivo, sospesa se la mano e' piena). */
-  ultimaGenerazioneCarteMs: number;
+  /** Richiesta utente: sostituisce la generazione passiva di carte. Quando
+   * la mano ha uno slot libero appare una carta speciale "Esplora" (non
+   * acquistabile, icona "+"): cliccandola si avvia un'esplorazione, un
+   * conto alla rovescia casuale (1-3 minuti) al termine del quale si riceve
+   * una carta casuale (comuni piu' probabili delle rare). Una sola
+   * esplorazione alla volta. */
+  esplorazione: EsplorazioneState;
   fabbrica: Factory;
   mercato: MarketState;
   contabilita: ContabilitaState;
