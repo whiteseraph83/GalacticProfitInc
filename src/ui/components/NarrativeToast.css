@@ -18,7 +18,7 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 14px 54px 14px 16px;
+  padding: 14px 86px 14px 16px;
   border-radius: 10px;
   border: 1px solid var(--accent);
   background: var(--panel-bg-translucent);

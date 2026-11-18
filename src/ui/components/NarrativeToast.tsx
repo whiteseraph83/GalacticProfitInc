@@ -13,6 +13,10 @@ export interface NarrativeToastProps {
    * restare attivo tra una riga e l'altra finche' l'utente non lo disattiva. */
   autoAvanza: boolean;
   onToggleAutoAvanza: () => void;
+  /** Bottone ">>>" per debug/test (richiesta utente): salta a raffica tutti
+   * i dialoghi in coda, incluse le scene successive che si caricano man
+   * mano, finche' non resta piu' nulla da mostrare. */
+  onSaltaTutto: () => void;
 }
 
 const AUTO_AVANZA_RITARDO_MS = 2000;
@@ -39,7 +43,7 @@ const RIDUZIONE_MOVIMENTO =
  * gestisce i propri eventi pointer sul canvas, uno `stopPropagation`
  * sull'evento DOM "click" da solo non basta).
  */
-export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAutoAvanza }: NarrativeToastProps) {
+export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAutoAvanza, onSaltaTutto }: NarrativeToastProps) {
   const personaggio = personaggioPer(speaker);
   const [caratteriMostrati, setCaratteriMostrati] = useState(RIDUZIONE_MOVIMENTO ? text.length : 0);
   const caratteriMostratiRef = useRef(caratteriMostrati);
@@ -122,6 +126,18 @@ export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAu
           )}
         </div>
         <div className="narrative-toast__azioni">
+          <button
+            type="button"
+            className="narrative-toast__auto"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSaltaTutto();
+            }}
+            aria-label="Salta tutti i dialoghi (debug/test)"
+            title="Debug/test: salta a raffica tutti i dialoghi fino alla fine"
+          >
+            &gt;&gt;&gt;
+          </button>
           <button
             type="button"
             className={`narrative-toast__auto${autoAvanza ? " narrative-toast__auto--attivo" : ""}`}

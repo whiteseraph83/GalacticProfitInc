@@ -46,6 +46,35 @@ export function AppShell() {
   const mapRef = useRef<PixiMapViewHandle>(null);
   const chiacchiericcio = useNpcChatter(state);
   const [dialogoAutoAvanza, setDialogoAutoAvanza] = useState(false);
+  // Bottone ">>>" per debug/test (richiesta utente): avanza a raffica
+  // attraverso tutti i dialoghi in coda, incluse le scene successive che si
+  // caricano man mano che la coda si svuota, finche' non ne resta piu'
+  // nessuno. Si autodisattiva da solo quando non c'e' piu' nulla da saltare.
+  const [saltaVeloceAttivo, setSaltaVeloceAttivo] = useState(false);
+  const dialogoAttuale = chiacchiericcio.attuale;
+  // `chiacchiericcio.chiudi` e' una funzione nuova a ogni render di
+  // AppShell (il game loop fa ri-renderizzare spesso): tenuta in un ref
+  // cosi' l'effetto sotto non si cancella/riarma a ogni render, altrimenti
+  // il timer da 20ms non arrivava quasi mai a scattare e l'avanzamento
+  // procedeva a scatti invece che a raffica.
+  const chiudiDialogoRef = useRef(chiacchiericcio.chiudi);
+  useEffect(() => {
+    chiudiDialogoRef.current = chiacchiericcio.chiudi;
+  }, [chiacchiericcio.chiudi]);
+  useEffect(() => {
+    if (!saltaVeloceAttivo) return;
+    if (!dialogoAttuale) {
+      // Coda momentaneamente vuota: puo' essere la fine davvero, oppure solo
+      // l'istante tra una scena scriptata e la successiva che sta per
+      // caricarsi (vedi useNpcChatter). Si aspetta un attimo prima di
+      // considerarla la fine, altrimenti lo stop scattava quasi sempre a
+      // meta' di scene lunghe su piu' righe, fermando il salto in anticipo.
+      const timer = window.setTimeout(() => setSaltaVeloceAttivo(false), 300);
+      return () => window.clearTimeout(timer);
+    }
+    const timer = window.setTimeout(() => chiudiDialogoRef.current(), 20);
+    return () => window.clearTimeout(timer);
+  }, [saltaVeloceAttivo, dialogoAttuale]);
 
   const pianetiScoperti = useMemo(() => state.pianeti.filter((p) => p.scoperto), [state.pianeti]);
   const relittiScoperti = useMemo(() => state.campiRelitti.filter((r) => r.scoperto), [state.campiRelitti]);
@@ -347,6 +376,7 @@ export function AppShell() {
           onChiudi={chiacchiericcio.chiudi}
           autoAvanza={dialogoAutoAvanza}
           onToggleAutoAvanza={() => setDialogoAutoAvanza((v) => !v)}
+          onSaltaTutto={() => setSaltaVeloceAttivo(true)}
         />
       )}
     </div>
