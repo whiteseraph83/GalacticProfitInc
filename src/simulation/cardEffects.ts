@@ -159,10 +159,20 @@ export function applicaGiocaCarta(stato: GameState, cardInstanceId: EntityId, be
       nuovoStato = {
         ...nuovoStato,
         pianeti: nuovoStato.pianeti.map((p) => (p.id === pianeta.id ? { ...p, investigazioneCompletataAlMs: completataAlMs } : p)),
+        // Richiesta utente: anche qui la navetta deve partire visibilmente
+        // dalla posizione attuale della nave madre, non da dove si trovava
+        // l'ultima volta che era libera.
         navette: navettaLibera
           ? nuovoStato.navette.map((n) =>
               n.id === navettaLibera.id
-                ? { ...n, stato: "inViaggio" as const, destinazione: pianeta.posizione, pianetaInvestigazioneId: pianeta.id, tempoAttesaMs: 0 }
+                ? {
+                    ...n,
+                    stato: "inViaggio" as const,
+                    posizione: nuovoStato.mothership.posizione,
+                    destinazione: pianeta.posizione,
+                    pianetaInvestigazioneId: pianeta.id,
+                    tempoAttesaMs: 0,
+                  }
                 : n,
             )
           : nuovoStato.navette,

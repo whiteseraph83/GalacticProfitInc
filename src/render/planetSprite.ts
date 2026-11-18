@@ -1,4 +1,4 @@
-import { Container, Graphics, TilingSprite } from "pixi.js";
+import { Container, Graphics, Text, TilingSprite } from "pixi.js";
 import type { Planet } from "../domain/types";
 import { getPlanetTexture, hasPlanetPhoto } from "./planetTextures";
 
@@ -24,6 +24,11 @@ export interface PlanetSpriteHandle {
    * tutto, inutile quando i dettagli non sarebbero comunque percepibili a
    * quello zoom. La superficie resta sempre visibile e aggiornata. */
   aggiorna: (dtMs: number, zoomScale: number) => void;
+  /** Mostra/aggiorna il timer di un'azione in corso sul pianeta (richiesta
+   * utente: "per le azioni che richiedono del tempo inserisci un timer ben
+   * visibile in prossimita' del contesto... per investigare inserisci il
+   * timer sul pianeta"). `testo` null nasconde il timer. */
+  impostaTimer: (testo: string | null) => void;
 }
 
 /** Sotto questa scala della camera, i dettagli secondari (alone, atmosfera)
@@ -108,6 +113,34 @@ export function creaPlanetSprite(pianeta: Planet): PlanetSpriteHandle {
   const bordo = new Graphics().circle(0, 0, raggio).stroke({ color: vp.haloColor, width: 1.2, alpha: 0.6 });
   container.addChild(bordo);
 
+  // --- Timer azione in corso (es. investigazione): sfondo + testo, sotto il
+  // pianeta, nascosto finche' non c'e' un'azione a tempo in corso. ----------
+  const timerSfondo = new Graphics();
+  const timerTesto = new Text({
+    text: "",
+    style: { fontFamily: "Consolas, monospace", fontSize: 12, fill: 0x39f6ff, fontWeight: "600" },
+  });
+  timerTesto.anchor.set(0.5, 0.5);
+  timerTesto.position.set(0, raggio + 16);
+  timerSfondo.visible = false;
+  timerTesto.visible = false;
+  container.addChild(timerSfondo);
+  container.addChild(timerTesto);
+
+  const impostaTimer = (testo: string | null) => {
+    timerTesto.visible = testo !== null;
+    timerSfondo.visible = testo !== null;
+    if (testo === null) return;
+    timerTesto.text = testo;
+    const larghezza = timerTesto.width + 12;
+    const altezza = timerTesto.height + 6;
+    timerSfondo
+      .clear()
+      .roundRect(-larghezza / 2, raggio + 16 - altezza / 2, larghezza, altezza, 4)
+      .fill({ color: 0x05070c, alpha: 0.72 })
+      .stroke({ color: 0x39f6ff, width: 1, alpha: 0.7 });
+  };
+
   let accumuloMs = 0;
   const aggiorna = (dtMs: number, zoomScale: number) => {
     const dettagliVisibili = zoomScale >= SOGLIA_DETTAGLIO_LOD;
@@ -131,5 +164,5 @@ export function creaPlanetSprite(pianeta: Planet): PlanetSpriteHandle {
     }
   };
 
-  return { container, pianetaId: pianeta.id, aggiorna };
+  return { container, pianetaId: pianeta.id, aggiorna, impostaTimer };
 }

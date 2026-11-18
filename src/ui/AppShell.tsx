@@ -256,6 +256,7 @@ export function AppShell() {
             ref={mapRef}
             pianetiScoperti={pianetiScoperti}
             relittiScoperti={relittiScoperti}
+            tempoSimulatoMs={state.tempoSimulatoMs}
             mothershipPosizione={state.mothership.posizione}
             mothershipOrientamento={state.mothership.orientamento}
             mothershipPercorso={state.mothership.percorso}

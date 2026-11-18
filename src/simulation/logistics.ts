@@ -102,7 +102,17 @@ function assegnaNavetteAiContratti(stato: GameState): GameState {
     cambiato = true;
     navette = navette.map((n) =>
       n.id === navettaLibera.id
-        ? { ...n, stato: "inViaggio" as const, contrattoAssegnatoId: contratto.id, destinazione: pianeta.posizione, tempoAttesaMs: 0 }
+        ? {
+            ...n,
+            stato: "inViaggio" as const,
+            // Richiesta utente: le navette devono sempre partire
+            // visibilmente dalla nave madre, non dalla posizione (magari
+            // ormai vecchia, risalente all'ultimo rientro) lasciata libera.
+            posizione: stato.mothership.posizione,
+            contrattoAssegnatoId: contratto.id,
+            destinazione: pianeta.posizione,
+            tempoAttesaMs: 0,
+          }
         : n,
     );
     contratti = contratti.map((c) => (c.id === contratto.id ? { ...c, ultimaAssegnazioneMs: stato.tempoSimulatoMs } : c));
