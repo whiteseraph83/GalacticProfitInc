@@ -13,11 +13,12 @@
 }
 
 .narrative-toast {
+  position: relative;
   width: min(620px, calc(100vw - 32px));
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 14px 16px;
+  padding: 14px 54px 14px 16px;
   border-radius: 10px;
   border: 1px solid var(--accent);
   background: var(--panel-bg-translucent);
@@ -25,6 +26,19 @@
   z-index: 45;
   cursor: pointer;
   animation: narrative-toast-in 220ms ease-out;
+}
+
+/* Richiesta utente: "x" e ">" devono restare fissi in alto a destra, non
+ * spostarsi in base a quanto testo (e quindi quanta altezza) occupa il
+ * messaggio — posizionati fuori dal flusso flex invece di essere
+ * semplicemente gli ultimi elementi della riga. */
+.narrative-toast__azioni {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 @keyframes narrative-toast-in {

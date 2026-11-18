@@ -44,6 +44,12 @@ export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAu
   const [caratteriMostrati, setCaratteriMostrati] = useState(RIDUZIONE_MOVIMENTO ? text.length : 0);
   const caratteriMostratiRef = useRef(caratteriMostrati);
   const onChiudiRef = useRef(onChiudi);
+  // Timer della macchina da scrivere: tenuto in un ref cosi' `avanza()` puo'
+  // fermarlo esplicitamente quando l'utente clicca a meta' scrittura. Senza
+  // questo, il setInterval continuava a girare dopo il click e sovrascriveva
+  // il testo appena completato con valori piu' bassi (bug segnalato
+  // dall'utente: "sfarfallio strano" avanzando prima che il testo finisse).
+  const timerScritturaRef = useRef<number | null>(null);
   useEffect(() => {
     onChiudiRef.current = onChiudi;
   }, [onChiudi]);
@@ -58,9 +64,16 @@ export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAu
       indice += 1;
       setCaratteriMostrati(indice);
       caratteriMostratiRef.current = indice;
-      if (indice >= text.length) window.clearInterval(timer);
+      if (indice >= text.length) {
+        window.clearInterval(timer);
+        timerScritturaRef.current = null;
+      }
     }, VELOCITA_MS_PER_CARATTERE);
-    return () => window.clearInterval(timer);
+    timerScritturaRef.current = timer;
+    return () => {
+      window.clearInterval(timer);
+      timerScritturaRef.current = null;
+    };
   }, [text]);
 
   const testoCompleto = caratteriMostrati >= text.length;
@@ -73,6 +86,10 @@ export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAu
 
   const avanza = () => {
     if (caratteriMostratiRef.current < text.length) {
+      if (timerScritturaRef.current !== null) {
+        window.clearInterval(timerScritturaRef.current);
+        timerScritturaRef.current = null;
+      }
       caratteriMostratiRef.current = text.length;
       setCaratteriMostrati(text.length);
     } else {
@@ -104,30 +121,32 @@ export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAu
             </svg>
           )}
         </div>
-        <button
-          type="button"
-          className={`narrative-toast__auto${autoAvanza ? " narrative-toast__auto--attivo" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleAutoAvanza();
-          }}
-          aria-label={autoAvanza ? "Disattiva avanzamento automatico" : "Attiva avanzamento automatico"}
-          aria-pressed={autoAvanza}
-          title="Avanza automaticamente dopo ogni messaggio"
-        >
-          &gt;
-        </button>
-        <button
-          type="button"
-          className="narrative-toast__chiudi"
-          onClick={(e) => {
-            e.stopPropagation();
-            onChiudi();
-          }}
-          aria-label="Chiudi messaggio"
-        >
-          ×
-        </button>
+        <div className="narrative-toast__azioni">
+          <button
+            type="button"
+            className={`narrative-toast__auto${autoAvanza ? " narrative-toast__auto--attivo" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleAutoAvanza();
+            }}
+            aria-label={autoAvanza ? "Disattiva avanzamento automatico" : "Attiva avanzamento automatico"}
+            aria-pressed={autoAvanza}
+            title="Avanza automaticamente dopo ogni messaggio"
+          >
+            &gt;
+          </button>
+          <button
+            type="button"
+            className="narrative-toast__chiudi"
+            onClick={(e) => {
+              e.stopPropagation();
+              onChiudi();
+            }}
+            aria-label="Chiudi messaggio"
+          >
+            ×
+          </button>
+        </div>
       </div>
     </div>
   );
