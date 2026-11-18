@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BALANCE, creaStatoIniziale, validaStato } from "../src/domain/initialState";
+import { WORLD } from "../src/domain/worldConstants";
 
 describe("stato iniziale", () => {
   it("rispetta i valori confermati in B1/B2", () => {
@@ -45,7 +46,7 @@ describe("stato iniziale", () => {
 
   it("genera una regione con pianeti e alcuni gia' scoperti nell'area sicura", () => {
     const stato = creaStatoIniziale("test-seed-regione");
-    expect(stato.pianeti.length).toBeGreaterThanOrEqual(50);
+    expect(stato.pianeti.length).toBeGreaterThanOrEqual(WORLD.pianetiMin);
     const scoperti = stato.pianeti.filter((p) => p.scoperto);
     expect(scoperti.length).toBeGreaterThan(0);
     expect(stato.pianeti.filter((p) => p.investigato)).toHaveLength(0);

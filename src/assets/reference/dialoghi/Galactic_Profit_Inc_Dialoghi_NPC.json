@@ -199,49 +199,49 @@
       "speaker": "B.O.B.",
       "trigger": "card.hand_full",
       "tone": "warning",
-      "text": "Mano piena: la generazione passiva delle carte è sospesa. Perfino le opportunità hanno bisogno di parcheggio."
+      "text": "Mano piena: la generazione passiva dei comandi è sospesa. Perfino le opportunità hanno bisogno di parcheggio."
     },
     {
       "id": "bob_029",
       "speaker": "B.O.B.",
       "trigger": "card.generated",
       "tone": "info",
-      "text": "Nuova carta disponibile. La Direzione la definisce una scelta strategica. Io la chiamerei un raro momento di generosità."
+      "text": "Nuovo comando disponibile. La Direzione la definisce una scelta strategica. Io la chiamerei un raro momento di generosità."
     },
     {
       "id": "bob_030",
       "speaker": "B.O.B.",
       "trigger": "card.invalid_target",
       "tone": "warning",
-      "text": "Bersaglio non valido. La carta è intatta. La sua dignità professionale è un'altra questione."
+      "text": "Bersaglio non valido. Il comando è intatto. La sua dignità professionale è un'altra questione."
     },
     {
       "id": "bob_031",
       "speaker": "B.O.B.",
       "trigger": "card.confirm",
       "tone": "info",
-      "text": "Operazione pronta. Confermi per consumare la carta e applicare i costi indicati. Possiamo ancora fingere che fosse una buona idea."
+      "text": "Operazione pronta. Confermi per usare il comando e applicare i costi indicati. Possiamo ancora fingere che fosse una buona idea."
     },
     {
       "id": "bob_032",
       "speaker": "B.O.B.",
       "trigger": "card.cancel",
       "tone": "info",
-      "text": "Operazione annullata. Nessuna carta consumata; nessun modulo legale da compilare. Per questa volta."
+      "text": "Operazione annullata. Nessun comando consumato; nessun modulo legale da compilare. Per questa volta."
     },
     {
       "id": "bob_033",
       "speaker": "B.O.B.",
       "trigger": "card.market_refresh",
       "tone": "info",
-      "text": "Il mercato carte è stato aggiornato. Le offerte sono nuove; il concetto di «prezzo conveniente» resta in discussione."
+      "text": "Il mercato comandi è stato aggiornato. Le offerte sono nuove; il concetto di «prezzo conveniente» resta in discussione."
     },
     {
       "id": "bob_034",
       "speaker": "B.O.B.",
       "trigger": "card.research_missing",
       "tone": "warning",
-      "text": "Non abbiamo una carta Ricerca disponibile. Consiglio di verificare ricompense e prossima rotazione del mercato."
+      "text": "Non abbiamo un comando Ricerca disponibile. Consiglio di verificare ricompense e prossima rotazione del mercato."
     },
     {
       "id": "bob_035",
@@ -325,7 +325,7 @@
       "speaker": "B.O.B.",
       "trigger": "review.near",
       "tone": "warning",
-      "text": "Revisione in avvicinamento. Mancano {cards_remaining} carte giocate: consiglio di tenere da parte la quota richiesta."
+      "text": "Revisione in avvicinamento. Mancano {cards_remaining} comandi eseguiti: consiglio di tenere da parte la quota richiesta."
     },
     {
       "id": "bob_047",
@@ -339,7 +339,7 @@
       "speaker": "B.O.B.",
       "trigger": "review.ready",
       "tone": "critical",
-      "text": "Quarantesima carta giocata. È il momento della revisione: servono {quota} Cr disponibili."
+      "text": "Quarantesimo comando eseguito. È il momento della revisione: servono {quota} Cr disponibili."
     },
     {
       "id": "bob_049",
@@ -353,7 +353,7 @@
       "speaker": "B.O.B.",
       "trigger": "review.grace",
       "tone": "critical",
-      "text": "Quota non pagata. Restano {grace_cards} carte giocate prima della risoluzione definitiva della pratica. È un modo gentile per dire «licenziamento»."
+      "text": "Quota non pagata. Restano {grace_cards} comandi eseguiti prima della risoluzione definitiva della pratica. È un modo gentile per dire «licenziamento»."
     },
     {
       "id": "bob_051",
@@ -395,7 +395,7 @@
       "speaker": "B.O.B.",
       "trigger": "jump.abort",
       "tone": "info",
-      "text": "Preparazione annullata. Carta e carburante non sono stati consumati. La vecchia regione può continuare a sopportarci."
+      "text": "Preparazione annullata. Comando e carburante non sono stati consumati. La vecchia regione può continuare a sopportarci."
     },
     {
       "id": "bob_057",
@@ -514,7 +514,7 @@
       "speaker": "Rag. Zarg",
       "trigger": "review.near",
       "tone": "warning",
-      "text": "Mancano {cards_remaining} carte alla revisione. Ricordi: la Direzione accetta crediti, non prospettive."
+      "text": "Mancano {cards_remaining} comandi alla revisione. Ricordi: la Direzione accetta crediti, non prospettive."
     },
     {
       "id": "rag_zarg_014",
@@ -542,7 +542,7 @@
       "speaker": "Rag. Zarg",
       "trigger": "review.ready",
       "tone": "critical",
-      "text": "Quaranta carte giocate. Ora il nostro indicatore più importante è il saldo disponibile, e temo non abbia senso del teatro."
+      "text": "Quaranta comandi eseguiti. Ora il nostro indicatore più importante è il saldo disponibile, e temo non abbia senso del teatro."
     },
     {
       "id": "rag_zarg_018",
@@ -563,7 +563,7 @@
       "speaker": "Rag. Zarg",
       "trigger": "review.grace",
       "tone": "critical",
-      "text": "La quota non è stata saldata. Restano {grace_cards} giocate di tolleranza. Ogni carta ora pesa più di quanto suggerisca il cartoncino."
+      "text": "La quota non è stata saldata. Restano {grace_cards} giocate di tolleranza. Ogni comando ora pesa più di quanto suggerisca il cartoncino."
     },
     {
       "id": "rag_zarg_021",
@@ -878,7 +878,7 @@
       "speaker": "Direttore Magnus Voss",
       "trigger": "review.ready",
       "tone": "critical",
-      "text": "Sono state giocate quaranta carte. La prima quota è di seicento crediti. Non le sto chiedendo di essere brillante; soltanto solvibile."
+      "text": "Sono stati giocati quaranta comandi. La prima quota è di seicento crediti. Non le sto chiedendo di essere brillante; soltanto solvibile."
     },
     {
       "id": "direttore_magnus_voss_005",
@@ -1025,7 +1025,7 @@
       "speaker": "Xylo Venn",
       "trigger": "exploration.reward",
       "tone": "info",
-      "text": "Hai recuperato una carta. Prendila: io preferisco tenere il diritto di dire «te l'avevo detto»."
+      "text": "Hai recuperato un comando. Prendila: io preferisco tenere il diritto di dire «te l'avevo detto»."
     },
     {
       "id": "xylo_venn_008",
@@ -1137,14 +1137,14 @@
       "speaker": "Barthol Krix",
       "trigger": "card.market_refresh",
       "tone": "info",
-      "text": "Carte fresche sul mercato. Non garantisco che siano buone idee: garantisco che hanno un prezzo."
+      "text": "Comandi freschi sul mercato. Non garantisco che siano buone idee: garantisco che hanno un prezzo."
     },
     {
       "id": "barthol_krix_008",
       "speaker": "Barthol Krix",
       "trigger": "card.rare",
       "tone": "info",
-      "text": "Una carta rara! Preferisco non dire come l'ho ottenuta: rovinerebbe il nostro rapporto di fiducia reciproca."
+      "text": "Un comando raro! Preferisco non dire come l'ho ottenuta: rovinerebbe il nostro rapporto di fiducia reciproca."
     },
     {
       "id": "barthol_krix_009",
@@ -1309,7 +1309,7 @@
       "lines": [
         {
           "speaker": "Rag. Zarg",
-          "text": "Mancano tre carte alla prima revisione. La quota richiesta è di seicento crediti."
+          "text": "Mancano tre comandi alla prima revisione. La quota richiesta è di seicento crediti."
         },
         {
           "speaker": "B.O.B.",
@@ -1343,7 +1343,7 @@
         },
         {
           "speaker": "B.O.B.",
-          "text": "Attendo conferma. Carta e carburante saranno consumati solo all’esecuzione."
+          "text": "Attendo conferma. Comando e carburante saranno consumati solo all’esecuzione."
         }
       ]
     },

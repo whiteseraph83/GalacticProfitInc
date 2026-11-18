@@ -33,7 +33,7 @@ export const SCENE_NARRATIVE: Record<string, SceneNarrativaDefinition> = {
     mittente: "RagZarg",
     titolo: "Il manuale del dipendente",
     testo:
-      "Rag. Zarg, contabilità regionale: \"Complimenti per la prima missione completata. Ricorda: ogni carta giocata ti avvicina alla prossima revisione contabile. Non è una minaccia, è una proiezione statistica.\"",
+      "Rag. Zarg, contabilità regionale: \"Complimenti per la prima missione completata. Ricorda: ogni comando eseguito ti avvicina alla prossima revisione contabile. Non è una minaccia, è una proiezione statistica.\"",
     condizione: { tipo: "missioniCompletate", minimo: 1 },
     scelte: null,
   },

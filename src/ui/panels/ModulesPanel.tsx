@@ -30,7 +30,7 @@ export function ModulesPanel() {
     return (
       <section aria-label="Moduli">
         <h2>Moduli</h2>
-        <p className="management-panel__note">Richiede una fabbrica costruita (carta Fabbrica).</p>
+        <p className="management-panel__note">Richiede una fabbrica costruita (comando Fabbrica).</p>
       </section>
     );
   }

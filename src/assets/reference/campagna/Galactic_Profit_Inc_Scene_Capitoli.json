@@ -49,24 +49,68 @@
       "summary": "Primo contatto; il giocatore apprende il tono e i suoi obiettivi.",
       "lines": [
         {
+          "speaker": "SISTEMA OMNIPROFIT™",
+          "text": "Connessione alla rete aziendale stabilita. Trasmissione prioritaria dal Consiglio Direttivo."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "«Congratulazioni, Direttore. Dopo un’attenta valutazione delle sue competenze e, soprattutto, dopo aver constatato con grande soddisfazione la sua disponibilità ad accettare il minimo salariale intergalattico, la OmniProfit Galactic Corporation™ ha deciso di affidarle il comando di una delle nostre unità di espansione economica.»"
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "*Breve pausa. Voss riceve una comunicazione nell’auricolare.*"
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "«...Come dice? Ah, mi informano che non era stato messo al corrente delle condizioni economiche.»"
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "*Voss accenna un sorriso.*"
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "«Beh, sfortunatamente per lei, il contratto risulta già accettato. Ma non si preoccupi: alla OmniProfit consideriamo il consenso informato un benefit, non un requisito.»"
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "«Il suo incarico è semplice: esplorare nuovi mondi, sfruttarne le risorse e trasformare ogni opportunità in profitto. Non ci interessa cosa troverà là fuori. Ci interessa quanto renderà.»"
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "«Le verranno assegnati una nave madre, un equipaggio e un capitale operativo. In cambio, ci aspettiamo risultati misurabili. Periodicamente, la Direzione effettuerà una revisione delle sue prestazioni.»"
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "«Un ultimo dettaglio: OmniProfit considera i propri direttori una risorsa estremamente preziosa. E come tutte le risorse, possono essere sostituiti.»"
+        },
+        {
+          "speaker": "SISTEMA OMNIPROFIT™",
+          "text": "Trasmissione terminata. Attivazione sistemi di bordo."
+        },
+        {
           "speaker": "B.O.B.",
-          "text": "Benvenuto a bordo, Direttore. Sono B.O.B., Bilancio Operativo di Bordo. La sua sicurezza è una priorità; registrare quanto ci costa è la prima."
+          "text": "«Benvenuto a bordo, Direttore. Sono B.O.B., Bilancio Operativo di Bordo. La sua sicurezza è una priorità; registrare quanto ci costa è la prima.»"
         },
         {
           "speaker": "Rag. Zarg",
-          "text": "La Direzione ha stanziato 2.000 crediti. L’importo è una dotazione iniziale, non un segno di fiducia personale."
-        },
-        {
-          "speaker": "B.O.B.",
-          "text": "La mano iniziale contiene cinque carte. Nessuna contiene un permesso per licenziarsi."
+          "text": "«La Direzione ha stanziato 2.000 crediti. L’importo è una dotazione iniziale, non un segno di fiducia personale.»"
         },
         {
           "speaker": "Rag. Zarg",
-          "text": "Fra quaranta carte giocate ci verranno richiesti 600 crediti. Li metterei da parte. Ora. Per sicurezza."
+          "text": "«Fra quaranta comandi eseguiti ci verranno richiesti 600 crediti. Li metterei da parte. Ora. Per sicurezza.»"
         },
         {
           "speaker": "B.O.B.",
-          "text": "Ottimo. L’orientamento è iniziato. Il reparto formazione lo considera già una spesa non recuperabile."
+          "text": "«La mano iniziale contiene cinque comandi. Nessuna contiene un permesso per licenziarsi.»"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "«Ottimo. L’orientamento è iniziato. Il reparto formazione lo considera già una spesa non recuperabile.»"
+        },
+        {
+          "speaker": "SISTEMA DI BORDO",
+          "text": "Tutorial avviato. Obiettivo iniziale: esplorare un’area della galassia."
         }
       ],
       "choices": [],
@@ -97,7 +141,7 @@
         },
         {
           "speaker": "B.O.B.",
-          "text": "Confermare consuma una carta; annullare non costa nulla. Approfitti del concetto, è raro nel nostro settore."
+          "text": "Confermare consuma un comando; annullare non costa nulla. Approfitti del concetto, è raro nel nostro settore."
         },
         {
           "speaker": "B.O.B.",
@@ -266,7 +310,7 @@
       "lines": [
         {
           "speaker": "Rag. Zarg",
-          "text": "Mancano tre carte alla prima revisione. La quota richiesta è di seicento crediti."
+          "text": "Mancano tre comandi alla prima revisione. La quota richiesta è di seicento crediti."
         },
         {
           "speaker": "B.O.B.",
@@ -300,7 +344,7 @@
       "lines": [
         {
           "speaker": "Rag. Zarg",
-          "text": "Quaranta carte giocate. Il versamento previsto è 600 crediti: non serve dimostrare come li ha ottenuti."
+          "text": "Quaranta comandi eseguiti. Il versamento previsto è 600 crediti: non serve dimostrare come li ha ottenuti."
         },
         {
           "speaker": "Direttore Magnus Voss",
@@ -360,7 +404,7 @@
         },
         {
           "speaker": "B.O.B.",
-          "text": "La ricerca richiede una carta Ricerca; i moduli delle navi vanno costruiti con materiali raffinati."
+          "text": "La ricerca richiede un comando Ricerca; i moduli delle navi vanno costruiti con materiali raffinati."
         },
         {
           "speaker": "Rag. Zarg",
@@ -505,7 +549,7 @@
       "lines": [
         {
           "speaker": "B.O.B.",
-          "text": "Tecnologia disponibile, carta Iperspazio presente. La destinazione è stimata, non garantita."
+          "text": "Tecnologia disponibile, comando Iperspazio presente. La destinazione è stimata, non garantita."
         },
         {
           "speaker": "Rag. Zarg",
@@ -521,7 +565,7 @@
         },
         {
           "speaker": "B.O.B.",
-          "text": "Potete annullare la preparazione: carta e carburante si consumano soltanto quando eseguiamo il salto."
+          "text": "Potete annullare la preparazione: comando e carburante si consumano soltanto quando eseguiamo il salto."
         }
       ],
       "choices": [],
@@ -1802,7 +1846,7 @@
       "lines": [
         {
           "speaker": "Rag. Zarg",
-          "text": "Mancano tre carte alla prima revisione. La quota richiesta è di seicento crediti."
+          "text": "Mancano tre comandi alla prima revisione. La quota richiesta è di seicento crediti."
         },
         {
           "speaker": "B.O.B.",
@@ -1847,7 +1891,7 @@
         },
         {
           "speaker": "B.O.B.",
-          "text": "Attendo conferma. Carta e carburante saranno consumati solo all’esecuzione."
+          "text": "Attendo conferma. Comando e carburante saranno consumati solo all’esecuzione."
         }
       ],
       "choices": [],

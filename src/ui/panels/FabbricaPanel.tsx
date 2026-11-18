@@ -23,7 +23,7 @@ export function FabbricaPanel() {
       <section aria-label="Fabbrica">
         <h2>Fabbrica</h2>
         <p className="management-panel__note">
-          Nessuna fabbrica costruita. Gioca la carta Fabbrica per costruirne
+          Nessuna fabbrica costruita. Usa il comando Fabbrica per costruirne
           una ({FABBRICA_COSTO.crediti} Cr + {FABBRICA_COSTO.ferro} ferro
           grezzo in stiva).
         </p>

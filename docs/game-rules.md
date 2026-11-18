@@ -25,8 +25,10 @@ macrostep. Riferimento completo: `Galactic_Profit_Inc_Prompt_Sviluppo_Macrostep.
 ## Implementato al Macrostep 1 (universo procedurale)
 
 - **Generatore di regione seed-based** (`src/world/regionGenerator.ts`):
-  50-100 pianeti (B4), distribuiti in parte in 4-8 "sistemi stellari"
-  riconoscibili (cluster) e in parte liberamente nella regione; 9 archetipi
+  18-32 pianeti (originariamente 50-100 in B4, ridotti su richiesta
+  dell'utente dopo playtest — vedi `docs/balance.json`), distribuiti in
+  parte in 3-5 "sistemi stellari" riconoscibili (cluster) e in parte
+  liberamente nella regione; 9 archetipi
   (`src/domain/planetArchetypes.ts`) con l'archetipo `anomalo` come quota
   rara (~3%, peso 3 su un totale di 97). Nomi procedurali unici
   (`src/world/nameGenerator.ts`). Separazione minima garantita tra i corpi

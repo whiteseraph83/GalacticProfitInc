@@ -117,45 +117,15 @@ export function useNpcChatter(stato: GameState): { attuale: ChatterAttivo | null
     prevSegnaliRef.current = segnali;
 
     const nuoviMessaggi: ChatterAttivo[] = [];
-    // Campagna narrativa principale (`src/domain/narrative.ts`, 12 scene
-    // approvate/testate): il suo testo ora passa dallo stesso overlay a
-    // comparsa invece che da un riquadro fisso in sidebar (richiesta
-    // utente: "il messaggio... in alto a sinistra... non serve piu' dal
-    // momento in cui abbiamo introdotto i dialoghi"). L'avanzamento vero e
-    // proprio (dispatch di `ui/sceltaNarrativa`) resta a `NarrativePanel`.
-    const scenaNarrativa = stato.campagna.finaleOttenuto ? null : sceneAttiva(stato);
-    if (scenaNarrativa && !narrativaSceneVisteRef.current.has(scenaNarrativa.id)) {
-      narrativaSceneVisteRef.current.add(scenaNarrativa.id);
-      nuoviMessaggi.push({
-        id: `narrativa-${scenaNarrativa.id}`,
-        speaker: scenaNarrativa.mittente,
-        trigger: "narrativa",
-        tone: "story",
-        text: scenaNarrativa.testo,
-        mostratoAlleMs: Date.now(),
-      });
-    }
-    if (primaVoltaRef.current) {
-      primaVoltaRef.current = false;
-      const benvenuto = scegliMessaggioChatter("game.start", vistiRef.current);
-      if (benvenuto) {
-        vistiRef.current.add(benvenuto.id);
-        nuoviMessaggi.push({ ...benvenuto, mostratoAlleMs: Date.now() });
-      }
-    } else if (prev) {
-      for (const rilevatore of RILEVATORI) {
-        if (!rilevatore.scatta(prev, segnali)) continue;
-        const messaggio = scegliMessaggioChatter(rilevatore.trigger, vistiRef.current);
-        if (!messaggio) continue;
-        vistiRef.current.add(messaggio.id);
-        nuoviMessaggi.push({ ...messaggio, mostratoAlleMs: Date.now() });
-      }
-    }
-    // Sceneggiatura a capitoli (docs/TODO.md, "Campagna narrativa a
-    // capitoli"): una scena alla volta, solo quando la coda e' libera (non
-    // si accoda dietro al chiacchiericcio NPC, per non sommergere il
-    // giocatore quando un salvataggio avanzato viene ricaricato).
-    if (nuoviMessaggi.length === 0 && coda.length === 0) {
+    // Ordine di priorita' quando la coda e' libera: 1) sceneggiatura a
+    // capitoli (il testo curato fornito dall'utente, incluso l'intro
+    // riveduta di C1_S01 con Direttore Magnus Voss) — deve comparire per
+    // prima, non dopo il chiacchiericcio NPC o la campagna storica, altrimenti
+    // il giocatore vede prima testo "minore" e la scena d'apertura arriva in
+    // ritardo; 2) campagna narrativa principale (`src/domain/narrative.ts`,
+    // 12 scene approvate/testate, il cui avanzamento resta gestito da
+    // `NarrativePanel`); 3) chiacchiericcio NPC innescato da trigger di stato.
+    if (coda.length === 0) {
       const scena = prossimaScenaSceneggiatura(stato.campagna.capitoloCorrente, sceneVisteRef.current);
       if (scena) {
         sceneVisteRef.current.add(scena.id);
@@ -170,6 +140,46 @@ export function useNpcChatter(stato: GameState): { attuale: ChatterAttivo | null
           });
         }
       }
+    }
+
+    if (nuoviMessaggi.length === 0) {
+      const scenaNarrativa = stato.campagna.finaleOttenuto ? null : sceneAttiva(stato);
+      if (scenaNarrativa && !narrativaSceneVisteRef.current.has(scenaNarrativa.id)) {
+        narrativaSceneVisteRef.current.add(scenaNarrativa.id);
+        nuoviMessaggi.push({
+          id: `narrativa-${scenaNarrativa.id}`,
+          speaker: scenaNarrativa.mittente,
+          trigger: "narrativa",
+          tone: "story",
+          text: scenaNarrativa.testo,
+          mostratoAlleMs: Date.now(),
+        });
+      }
+    }
+
+    if (nuoviMessaggi.length === 0) {
+      if (primaVoltaRef.current) {
+        primaVoltaRef.current = false;
+        const benvenuto = scegliMessaggioChatter("game.start", vistiRef.current);
+        if (benvenuto) {
+          vistiRef.current.add(benvenuto.id);
+          nuoviMessaggi.push({ ...benvenuto, mostratoAlleMs: Date.now() });
+        }
+      } else if (prev) {
+        for (const rilevatore of RILEVATORI) {
+          if (!rilevatore.scatta(prev, segnali)) continue;
+          const messaggio = scegliMessaggioChatter(rilevatore.trigger, vistiRef.current);
+          if (!messaggio) continue;
+          vistiRef.current.add(messaggio.id);
+          nuoviMessaggi.push({ ...messaggio, mostratoAlleMs: Date.now() });
+        }
+      }
+    } else {
+      // La sceneggiatura/campagna ha gia' riempito la coda questo giro:
+      // il game.start del chiacchiericcio non deve piu' scattare dopo
+      // (altrimenti si accoderebbe comunque al primo svuotamento), ma va
+      // comunque segnato come "gia' considerato" una volta sola.
+      primaVoltaRef.current = false;
     }
 
     if (nuoviMessaggi.length > 0) {

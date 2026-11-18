@@ -34,7 +34,7 @@ export function TopBar({ onTogglePause }: { onTogglePause: () => void }) {
             {Math.round(mothership.carburante)} / {mothership.serbatoioCapacita}
           </span>
         </div>
-        <div className="top-bar__stat" title="Carte giocate dall'ultima revisione / soglia prossima revisione">
+        <div className="top-bar__stat" title="Comandi eseguiti dall'ultima revisione / soglia prossima revisione">
           <IconQuota />
           <span className="top-bar__stat-label">Quota</span>
           <span className="top-bar__stat-value">

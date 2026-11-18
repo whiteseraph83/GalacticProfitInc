@@ -5,16 +5,24 @@ import type { Missione } from "../../domain/types";
 function descriviRicompensa(m: Missione): string {
   const parti: string[] = [];
   if (m.ricompensa.crediti > 0) parti.push(`${m.ricompensa.crediti} Cr`);
-  if (m.ricompensa.carte.length > 0) parti.push(`${m.ricompensa.carte.length} carta/e`);
+  if (m.ricompensa.carte.length > 0) parti.push(`${m.ricompensa.carte.length} comando/i`);
   return parti.length > 0 ? parti.join(" + ") : "nessuna";
 }
 
 const MAX_DISPONIBILI_MOSTRATE = 8;
 
+export interface MissionsPanelProps {
+  /** Versione compatta per la sidebar sinistra (richiesta utente: "anche le
+   * missioni attive devono essere presenti nella sidebar sinistra"): solo
+   * principale + secondarie attive (gia' limitate a 3 dalla regola di
+   * gioco), senza l'elenco delle disponibili ne' il conteggio completate. */
+  compatta?: boolean;
+}
+
 /** Pannello missioni (B5, Macrostep 6): principale automatica, fino a 3
  * secondarie accettabili manualmente tra quelle disponibili, nessuna
  * scadenza per le secondarie, tracking automatico degli obiettivi. */
-export function MissionsPanel() {
+export function MissionsPanel({ compatta = false }: MissionsPanelProps = {}) {
   const engine = useEngine();
   const state = useGameState();
   const idBase = useId();
@@ -33,8 +41,14 @@ export function MissionsPanel() {
   const disponibiliMostrate = mostraTutte ? disponibili : disponibili.slice(0, MAX_DISPONIBILI_MOSTRATE);
 
   return (
-    <section aria-label="Missioni">
-      <h2>Missione principale</h2>
+    <section aria-label={compatta ? "Missioni attive" : "Missioni"}>
+      {compatta ? (
+        <h2>Missioni attive</h2>
+      ) : (
+        <>
+          <h2>Missione principale</h2>
+        </>
+      )}
       {principale && (
         <div className="mission-card mission-card--principale">
           <p className="mission-card__titolo">{principale.titolo}</p>
@@ -43,10 +57,8 @@ export function MissionsPanel() {
         </div>
       )}
 
-      <h2>
-        Secondarie attive ({attive.length}/3)
-      </h2>
-      {attive.length === 0 && <p className="fleet-list__empty">Nessuna missione secondaria attiva.</p>}
+      {!compatta && <h2>Secondarie attive ({attive.length}/3)</h2>}
+      {attive.length === 0 && !principale && <p className="fleet-list__empty">Nessuna missione attiva al momento.</p>}
       <ul className="fleet-list">
         {attive.map((m) => (
           <li className="fleet-list__item mission-row" key={m.id}>
@@ -61,27 +73,30 @@ export function MissionsPanel() {
         ))}
       </ul>
 
-      <h2>Disponibili ({disponibili.length})</h2>
-      <ul className="fleet-list">
-        {disponibiliMostrate.map((m) => (
-          <li className="fleet-list__item mission-row" key={m.id}>
-            <span className="fleet-list__name">
-              {m.titolo}
-              <span className="market-row__detail">{descriviRicompensa(m)}</span>
-            </span>
-            <button type="button" className="btn btn-small" onClick={() => accetta(m.id)} disabled={attive.length >= 3}>
-              Accetta
+      {!compatta && (
+        <>
+          <h2>Disponibili ({disponibili.length})</h2>
+          <ul className="fleet-list">
+            {disponibiliMostrate.map((m) => (
+              <li className="fleet-list__item mission-row" key={m.id}>
+                <span className="fleet-list__name">
+                  {m.titolo}
+                  <span className="market-row__detail">{descriviRicompensa(m)}</span>
+                </span>
+                <button type="button" className="btn btn-small" onClick={() => accetta(m.id)} disabled={attive.length >= 3}>
+                  Accetta
+                </button>
+              </li>
+            ))}
+          </ul>
+          {disponibili.length > MAX_DISPONIBILI_MOSTRATE && (
+            <button type="button" className="btn btn-small" onClick={() => setMostraTutte((v) => !v)}>
+              {mostraTutte ? "Mostra meno" : `Mostra tutte (${disponibili.length})`}
             </button>
-          </li>
-        ))}
-      </ul>
-      {disponibili.length > MAX_DISPONIBILI_MOSTRATE && (
-        <button type="button" className="btn btn-small" onClick={() => setMostraTutte((v) => !v)}>
-          {mostraTutte ? "Mostra meno" : `Mostra tutte (${disponibili.length})`}
-        </button>
+          )}
+          <p className="management-panel__note">Completate: {completate} di {state.missioni.length}.</p>
+        </>
       )}
-
-      <p className="management-panel__note">Completate: {completate} di {state.missioni.length}.</p>
     </section>
   );
 }

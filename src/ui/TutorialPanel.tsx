@@ -22,8 +22,8 @@ export function TutorialPanel() {
 
   const passi = [
     { fatto: true, testo: "Scopri un pianeta (gia' fatto: l'area sicura iniziale ne rivela alcuni)" },
-    { fatto: state.pianeti.some((p) => p.investigato), testo: "Investiga un pianeta scoperto (carta Investiga)" },
-    { fatto: state.contrattiMinerari.length > 0, testo: "Avvia un contratto minerario (carta Contratto minerario)" },
+    { fatto: state.pianeti.some((p) => p.investigato), testo: "Investiga un pianeta scoperto (comando Investiga)" },
+    { fatto: state.contrattiMinerari.length > 0, testo: "Avvia un contratto minerario (comando Contratto minerario)" },
     { fatto: cargoTotale(state.mothership.stivaCarico) > 0, testo: "Ricevi la prima consegna in stiva (automatico, via navetta)" },
     { fatto: state.contabilita.ricaviTotali > 0, testo: "Vendi qualcosa al mercato" },
   ];

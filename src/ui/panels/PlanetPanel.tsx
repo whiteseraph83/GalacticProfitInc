@@ -18,7 +18,7 @@ export function PlanetPanel({ pianeta }: { pianeta: Planet | null }) {
           <p className="planet-panel__placeholder-note">
             {pianeta.investigato
               ? `Risorsa rilevata: ${pianeta.risorsaDominante}`
-              : "Risorse sconosciute: richiede la carta Investiga."}
+              : "Risorse sconosciute: richiede il comando Investiga."}
           </p>
         </div>
       ) : (

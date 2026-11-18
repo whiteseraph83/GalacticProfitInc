@@ -83,7 +83,7 @@ export function dettagliConfermaCarta(carta: CardInstance, bersaglio: BersaglioC
         { etichetta: "Nuova regione", valore: `#${anteprima.numeroRegione} - ${anteprima.numeroPianeti} corpi rilevati` },
         { etichetta: "Ricchezza stimata", valore: anteprima.ricchezzaStimata },
         { etichetta: "Campi relitti rilevati", valore: String(anteprima.numeroCampiRelitti) },
-        { etichetta: "Costo", valore: `${HYPERSPACE.costoCarburante} carburante + 1 carta Iperspazio` },
+        { etichetta: "Costo", valore: `${HYPERSPACE.costoCarburante} carburante + 1 comando Iperspazio` },
         {
           etichetta: "Attenzione",
           valore: `${missioniAbbandonate} missioni e ${contrattiInterrotti} contratti minerari attivi andranno persi/interrotti; il materiale gia' caricato sulle navette verra' trasferito, quello ancora sul pianeta sara' abbandonato`,

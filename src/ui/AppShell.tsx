@@ -218,8 +218,10 @@ export function AppShell() {
       <div className="app-shell__body">
         <aside className="app-shell__side-panel app-shell__side-panel--left">
           <NarrativePanel />
+          <MissionsPanel compatta />
           <EventsPanel />
           <CivilizationsPanel />
+          <NotificationLogPanel limite={10} onVediTutte={() => setOverlayAperto("notifiche")} />
         </aside>
 
         <div className="app-shell__map">
@@ -239,13 +241,10 @@ export function AppShell() {
               Mercato
             </button>
             <button type="button" className="btn" onClick={() => setOverlayAperto("mercatoCarte")}>
-              Mercato carte
+              Mercato comandi
             </button>
             <button type="button" className="btn" onClick={() => setOverlayAperto("ricerca")}>
               Ricerca
-            </button>
-            <button type="button" className="btn" onClick={() => setOverlayAperto("notifiche")}>
-              Notifiche
             </button>
             <button type="button" className="btn" onClick={() => setOverlayAperto("impostazioni")}>
               Impostazioni
@@ -259,6 +258,7 @@ export function AppShell() {
             mothershipPosizione={state.mothership.posizione}
             mothershipOrientamento={state.mothership.orientamento}
             mothershipPercorso={state.mothership.percorso}
+            navette={state.navette}
             pianetaSelezionatoId={state.pianetaSelezionatoId}
             onSelezionaPianeta={selezionaPianeta}
             onMuoviNaveMadre={muoviNaveMadre}
@@ -284,9 +284,9 @@ export function AppShell() {
       {propostaCarta && (
         <ConfirmModal
           aperto
-          titolo={`Gioca: ${CARD_DEFINITIONS[propostaCarta.carta.code].nome}`}
+          titolo={`Usa comando: ${CARD_DEFINITIONS[propostaCarta.carta.code].nome}`}
           dettagli={dettagliConfermaCarta(propostaCarta.carta, propostaCarta.bersaglio, state)}
-          testoConferma="Gioca carta"
+          testoConferma="Usa comando"
           onConferma={confermaCarta}
           onAnnulla={annullaCarta}
         />
@@ -302,7 +302,7 @@ export function AppShell() {
         </OverlayPanel>
       )}
       {overlayAperto === "mercatoCarte" && (
-        <OverlayPanel ariaLabel="Mercato carte" onChiudi={() => setOverlayAperto(null)}>
+        <OverlayPanel ariaLabel="Mercato comandi" onChiudi={() => setOverlayAperto(null)}>
           <CardMarketPanel />
         </OverlayPanel>
       )}

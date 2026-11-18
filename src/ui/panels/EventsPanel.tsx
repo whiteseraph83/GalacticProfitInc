@@ -23,22 +23,17 @@ export function EventsPanel() {
     .map((e) => ({ attivo: e, def: EVENTO_DEFINITIONS[e.definizioneId] }))
     .filter((e) => e.def && !e.def.critico);
 
-  if (eventiNonCritici.length === 0) {
-    return (
-      <section aria-label="Eventi">
-        <h2>Eventi</h2>
-        <p className="management-panel__note">Nessun evento in corso.</p>
-      </section>
-    );
-  }
+  // Nessun titolo/sezione vuota quando non c'e' nulla da mostrare
+  // (richiesta utente: sidebar sinistra senza sezioni "fantasma").
+  if (eventiNonCritici.length === 0) return null;
 
   const scegli = (eventoId: string, scelteId: string) =>
     engine.dispatch({ id: `${idBase}-scelta-${eventoId}-${scelteId}`, type: "ui/sceltaEvento", payload: { eventoId, scelteId } });
   const ignora = (eventoId: string) => engine.dispatch({ id: `${idBase}-ignora-${eventoId}`, type: "ui/ignoraEvento", payload: { eventoId } });
 
   return (
-    <section aria-label="Eventi">
-      <h2>Eventi</h2>
+    <section aria-label="Eventi in corso">
+      <h2>Eventi in corso</h2>
       {eventiNonCritici.map(({ attivo, def }) => (
         <div key={attivo.id} className="mission-card">
           <p className="mission-card__titolo">

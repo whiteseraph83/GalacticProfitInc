@@ -1,17 +1,23 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type DragEvent } from "react";
 import { Application, Assets, Container, FederatedPointerEvent, Graphics, Point, Sprite, Text } from "pixi.js";
-import type { Planet, Vector2, WreckField } from "../domain/types";
+import type { Planet, ShuttleEntity, Vector2, WreckField } from "../domain/types";
 import { WORLD } from "../domain/worldConstants";
 import { BALANCE } from "../domain/initialState";
 import { calcolaPercorso } from "../simulation/pathfinding";
 import { creaPlanetSprite, type PlanetSpriteHandle } from "./planetSprite";
 import { precaricaFotoPianeti } from "./planetTextures";
 import naveMadreUrl from "../assets/sprites/ships/nave_madre.png";
+import navettaUrl from "../assets/sprites/ships/navetta.png";
 
 /** Lunghezza dell'immagine della nave madre (ritagliata/mascherata, vedi
  * scripts/process_ship.py) espressa in unita' mondo: la foto reale ha un
  * aspect ratio proprio, diverso dal vecchio triangolo procedurale. */
 const NAVE_MADRE_LUNGHEZZA_MONDO = 60;
+/** Le navette sono un mezzo molto piu' piccolo della nave madre: l'asset
+ * esisteva gia' pronto (`src/assets/sprites/ships/navetta.png`) ma non era
+ * mai stato collegato al rendering (richiesta utente: "non vedo le
+ * navicelle"). */
+const NAVETTA_LUNGHEZZA_MONDO = 22;
 
 export interface PixiMapViewHandle {
   ricentra: () => void;
@@ -23,6 +29,7 @@ export interface PixiMapViewProps {
   mothershipPosizione: Vector2;
   mothershipOrientamento: number;
   mothershipPercorso: Vector2[];
+  navette: ShuttleEntity[];
   pianetaSelezionatoId: string | null;
   onSelezionaPianeta: (id: string) => void;
   onMuoviNaveMadre: (destinazione: Vector2) => void;
@@ -51,6 +58,7 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
     mothershipPosizione,
     mothershipOrientamento,
     mothershipPercorso,
+    navette,
     pianetaSelezionatoId,
     onSelezionaPianeta,
     onMuoviNaveMadre,
@@ -66,6 +74,9 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
   const appRef = useRef<Application | null>(null);
   const worldRef = useRef<Container | null>(null);
   const mothershipGfxRef = useRef<Sprite | null>(null);
+  const navetteLayerRef = useRef<Container | null>(null);
+  const navetteGfxRef = useRef<Map<string, Sprite>>(new Map());
+  const navettaTextureRef = useRef<import("pixi.js").Texture | null>(null);
   const percorsoLineRef = useRef<Graphics | null>(null);
   const rottaPreviewLineRef = useRef<Graphics | null>(null);
   const rottaPreviewLabelRef = useRef<Text | null>(null);
@@ -139,6 +150,8 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         // creerebbe lo sprite prima che le dimensioni reali dell'immagine
         // siano note, sbagliando la scala iniziale).
         const naveMadreTexture = await Assets.load(naveMadreUrl);
+        const navettaTexture = await Assets.load(navettaUrl);
+        navettaTextureRef.current = navettaTexture;
         await precaricaFotoPianeti();
         if (destroyed) {
           app.destroy(true);
@@ -357,6 +370,11 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         world.addChild(mothership);
         mothershipGfxRef.current = mothership;
 
+        // --- Navette: livello dedicato, popolato/aggiornato dall'effect sotto. ---
+        const navetteLayer = new Container();
+        world.addChild(navetteLayer);
+        navetteLayerRef.current = navetteLayer;
+
         // --- Loop di animazione: rotazione pianeti, pulsazione anomali, sensori ---
         app.ticker.add((ticker) => {
           const dtMs = ticker.deltaMS;
@@ -396,6 +414,46 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         .stroke({ color: 0x37d6ff, width: 1.5, alpha: 0.22 });
     }
   }, [mothershipPosizione.x, mothershipPosizione.y, mothershipOrientamento, pixiReady]);
+
+  // Crea/aggiorna gli sprite delle navette (richiesta utente: "non vedo le
+  // navicelle quando faccio investiga o altro" — l'asset esisteva ma non era
+  // mai stato collegato al rendering). Rotazione stimata dalla direzione
+  // verso la destinazione corrente (le navette non hanno un campo
+  // `orientamento` proprio, a differenza della nave madre).
+  useEffect(() => {
+    const layer = navetteLayerRef.current;
+    const texture = navettaTextureRef.current;
+    if (!layer || !texture) return;
+
+    const idPresenti = new Set<string>();
+    for (const navetta of navette) {
+      idPresenti.add(navetta.id);
+      let sprite = navetteGfxRef.current.get(navetta.id);
+      if (!sprite) {
+        sprite = new Sprite(texture);
+        sprite.anchor.set(0.5, 0.5);
+        sprite.scale.set(NAVETTA_LUNGHEZZA_MONDO / texture.width);
+        layer.addChild(sprite);
+        navetteGfxRef.current.set(navetta.id, sprite);
+      }
+      sprite.position.set(navetta.posizione.x, navetta.posizione.y);
+      if (navetta.destinazione) {
+        const dx = navetta.destinazione.x - navetta.posizione.x;
+        const dy = navetta.destinazione.y - navetta.posizione.y;
+        if (Math.hypot(dx, dy) > 1) sprite.rotation = Math.atan2(dy, dx);
+      }
+      // In attesa/carico: leggermente trasparente, per distinguerla a
+      // colpo d'occhio da una in transito verso il contratto.
+      sprite.alpha = navetta.stato === "libera" ? 0.55 : 1;
+    }
+
+    for (const [id, sprite] of navetteGfxRef.current) {
+      if (idPresenti.has(id)) continue;
+      layer.removeChild(sprite);
+      sprite.destroy();
+      navetteGfxRef.current.delete(id);
+    }
+  }, [navette, pixiReady]);
 
   // Disegna il percorso pianificato residuo (incluso l'eventuale aggiramento
   // di un ostacolo), cosi' il giocatore vede dove sta andando la nave.

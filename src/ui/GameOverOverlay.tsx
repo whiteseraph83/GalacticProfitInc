@@ -67,7 +67,7 @@ export function GameOverOverlay() {
         <h1>GAME OVER</h1>
         <p>{state.gameOver.motivo}</p>
         <p className="management-panel__note">
-          Carte giocate: {state.review.carteGiocateTotali} · Revisioni pagate: {state.review.numeroRevisioniPagate}
+          Comandi eseguiti: {state.review.carteGiocateTotali} · Revisioni pagate: {state.review.numeroRevisioniPagate}
         </p>
 
         <h2 className="ending-overlay__titolo">Scegli un vantaggio per la prossima carriera</h2>

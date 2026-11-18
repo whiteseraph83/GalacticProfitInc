@@ -24,7 +24,7 @@ export function RevisionBanner() {
       <span>
         Revisione aziendale dovuta: <strong>{state.review.quotaDaPagare} Cr</strong>
         {state.review.statoRevisione === "inTolleranza" && (
-          <> — tolleranza: {state.review.carteTolleranzaResidue} carte rimanenti prima del Game Over</>
+          <> — tolleranza: {state.review.carteTolleranzaResidue} comandi rimanenti prima del Game Over</>
         )}
       </span>
       <button type="button" className="btn btn-primary" onClick={() => setModaleAperto(true)} disabled={!puoPagare}>

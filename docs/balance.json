@@ -34,13 +34,13 @@
     "intervalloNuovaCartaMinuti": { "valore": 5, "confermato": true }
   },
   "mondo": {
-    "pianetiMin": { "valore": 50, "confermato": true, "note": "range confermato in B4 (50-100)" },
-    "pianetiMax": { "valore": 100, "confermato": true },
+    "pianetiMin": { "valore": 18, "confermato": false, "note": "range B4 originale 50-100; ridotto su richiesta esplicita dell'utente dopo playtest ('i pianeti sono troppi'), con estensione regione/area sicura riproporzionate di conseguenza" },
+    "pianetiMax": { "valore": 32, "confermato": false },
     "quotaArchetipiRari": { "valore": "~2-3%", "confermato": true, "note": "in pratica l'archetipo anomalo pesa 3/97 ~= 3.1%" },
-    "areaSicuraRaggio": { "valore": 380, "confermato": false, "note": "provvisorio: raggio entro cui i pianeti sono gia' scoperti a inizio partita" },
+    "areaSicuraRaggio": { "valore": 300, "confermato": false, "note": "provvisorio: raggio entro cui i pianeti sono gia' scoperti a inizio partita; ridotto in proporzione a pianetiMin/Max" },
     "areaSicuraPianetiMinMax": { "valore": "4-6", "confermato": false },
-    "visibilitaRaggio": { "valore": 380, "confermato": false, "note": "raggio di scoperta attorno alla nave madre; ancora separato dal raggio della carta Esplora" },
-    "sistemiStellariMinMax": { "valore": "4-8", "confermato": false },
+    "visibilitaRaggio": { "valore": 300, "confermato": false, "note": "raggio di scoperta attorno alla nave madre; ancora separato dal raggio della carta Esplora" },
+    "sistemiStellariMinMax": { "valore": "3-5", "confermato": false },
     "relittiMinMax": { "valore": "3-6", "confermato": false },
     "giacimentoPianetaComune": { "valore": "400-900", "confermato": false, "note": "unita' totali estraibili per pianeta di archetipo comune" },
     "giacimentoPianetaRaro": { "valore": "250-600", "confermato": false }

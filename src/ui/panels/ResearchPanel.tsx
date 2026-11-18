@@ -51,7 +51,7 @@ export function ResearchPanel() {
       <h2>Ricerca</h2>
       <p className="management-panel__note">
         Progetti attivi: {state.ricerca.progettiAttivi.length}/{slotMax}
-        {!cartaRicerca && " · nessuna carta Ricerca in mano"}
+        {!cartaRicerca && " · nessun comando Ricerca in mano"}
       </p>
       {RAMI_RICERCA.map((ramo) => (
         <div key={ramo} className="research-branch">
@@ -104,7 +104,7 @@ export function ResearchPanel() {
             ? [
                 { etichetta: "Ramo", valore: NOME_RAMO[tecnologia.ramo] },
                 { etichetta: "Effetto", valore: tecnologia.descrizione },
-                { etichetta: "Costo", valore: `${tecnologia.costoCrediti} Cr (dedotto subito) + 1 carta Ricerca` },
+                { etichetta: "Costo", valore: `${tecnologia.costoCrediti} Cr (dedotto subito) + 1 comando Ricerca` },
                 { etichetta: "Durata", valore: `${Math.round(tecnologia.durataMs / 60000)} minuti` },
                 { etichetta: "Reversibile", valore: "No" },
               ]

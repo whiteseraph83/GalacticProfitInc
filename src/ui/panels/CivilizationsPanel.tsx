@@ -33,14 +33,9 @@ export function CivilizationsPanel() {
   };
   const civiltaProposta = civiltaDiplomaziaProposta ? state.civilta.find((c) => c.id === civiltaDiplomaziaProposta) : null;
 
-  if (civilteScoperte.length === 0) {
-    return (
-      <section aria-label="Civilta'">
-        <h2>Civilta'</h2>
-        <p className="management-panel__note">Nessuna civilta' ancora rilevata in questa regione.</p>
-      </section>
-    );
-  }
+  // Nessun titolo/sezione vuota quando non c'e' nulla da mostrare
+  // (richiesta utente: sidebar sinistra senza sezioni "fantasma").
+  if (civilteScoperte.length === 0) return null;
 
   const nextId = (prefisso: string) => {
     contatoreRef.current += 1;
@@ -61,8 +56,8 @@ export function CivilizationsPanel() {
   };
 
   return (
-    <section aria-label="Civilta'">
-      <h2>Civilta'</h2>
+    <section aria-label="Civiltà nella regione">
+      <h2>Civiltà nella regione</h2>
       {civilteScoperte.map((civilta) => {
         const risorsa = civilta.richiestaAttiva?.risorsa;
         const chiaveQuantita = risorsa ? `${civilta.id}-${risorsa}` : "";
@@ -131,7 +126,7 @@ export function CivilizationsPanel() {
               ]
             : []
         }
-        testoConferma="Gioca carta"
+        testoConferma="Usa comando"
         onConferma={confermaDiplomaziaLampo}
         onAnnulla={() => setCiviltaDiplomaziaProposta(null)}
       />

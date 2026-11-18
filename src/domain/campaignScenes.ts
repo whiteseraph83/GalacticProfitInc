@@ -45,7 +45,12 @@ export const SCENE_CAPITOLI: CampaignScene[] = data.scenes.filter((s) => s.chapt
 const NUMERO_CAPITOLO: Record<string, number> = { "CAP-1": 1, "CAP-2": 2, "CAP-3": 3, "CAP-4": 4, "CAP-5": 5 };
 
 export function numeroCapitoloAttuale(capitoloCorrente: CapitoloId | null): number {
-  if (!capitoloCorrente) return 0;
+  // null = il motore non ha ancora registrato il capitolo corrente (accade
+  // per un istante al primo render, prima del primo tick di
+  // `integraCampagna`): una nuova carriera e' concettualmente gia' al
+  // capitolo 1 fin da subito, quindi si considera CAP-1 raggiunto anche in
+  // questo caso transitorio invece di bloccare la primissima scena.
+  if (!capitoloCorrente) return 1;
   return NUMERO_CAPITOLO[capitoloCorrente] ?? 0;
 }
 

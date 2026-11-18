@@ -6,6 +6,13 @@ import avatarAlieno from "../assets/reference/characters/avatar_alieno_ref.webp"
 import avatarCapitano from "../assets/reference/characters/avatar_capitano_anziano_ref.webp";
 import type { MittenteNarrativo } from "../domain/types";
 
+/** Icona generica (nessuna foto fornita) per i messaggi di sistema/non
+ * personaggio introdotti dalla sceneggiatura a capitoli (es.
+ * "SISTEMA OMNIPROFIT™", "SISTEMA DI BORDO"): un'antenna/segnale stilizzata
+ * in laser cyan, come SVG inline (nessun asset esterno). */
+const avatarSistema =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2339f6ff' stroke-width='1.6'%3E%3Ccircle cx='12' cy='12' r='10.5' fill='%2305070c'/%3E%3Cpath d='M12 16v-5'/%3E%3Cpath d='M9 8a4.2 4.2 0 0 1 6 0'/%3E%3Cpath d='M6.5 5.5a8 8 0 0 1 11 0'/%3E%3Ccircle cx='12' cy='17.3' r='1.1' fill='%2339f6ff' stroke='none'/%3E%3C/svg%3E";
+
 /**
  * Mappa personaggio -> avatar/nome visualizzato/colore accento, usata
  * dall'overlay narrativo (vedi docs/TODO.md, "Messaggi narrativi come
@@ -29,6 +36,8 @@ export const PERSONAGGI: Record<string, PersonaggioNarrativo> = {
   "Dex Calder": { nomeVisualizzato: "Dex Calder", avatar: avatarMeccanico, colore: "var(--laser-magenta)" },
   "Xylo Venn": { nomeVisualizzato: "Xylo Venn", avatar: avatarAlieno, colore: "var(--laser-violet)" },
   "Barthol Krix": { nomeVisualizzato: "Barthol Krix", avatar: avatarCapitano, colore: "#ffd23d" },
+  "SISTEMA OMNIPROFIT™": { nomeVisualizzato: "SISTEMA OMNIPROFIT™", avatar: avatarSistema, colore: "var(--accent)" },
+  "SISTEMA DI BORDO": { nomeVisualizzato: "SISTEMA DI BORDO", avatar: avatarSistema, colore: "var(--accent)" },
 };
 
 /** Alias per i `mittente` storici del motore (`src/domain/narrative.ts`),

@@ -51,8 +51,8 @@ export function DirectorArchivePanel() {
                 {voce.finaleNarrativoId ? (FINALI[voce.finaleNarrativoId]?.titolo ?? voce.finaleNarrativoId) : "Game Over"}
               </span>
               <span className="market-row__detail">
-                {voce.statistiche.creditiFinali} Cr · regione {voce.statistiche.numeroRegioniVisitate} · {voce.statistiche.carteGiocateTotali} carte
-                giocate · {voce.statistiche.revisioniPagate} revisioni pagate · {formattaDurata(voce.statistiche.tempoSimulatoMs)} di servizio
+                {voce.statistiche.creditiFinali} Cr · regione {voce.statistiche.numeroRegioniVisitate} · {voce.statistiche.carteGiocateTotali} comandi
+                eseguiti · {voce.statistiche.revisioniPagate} revisioni pagate · {formattaDurata(voce.statistiche.tempoSimulatoMs)} di servizio
               </span>
             </span>
           </li>
