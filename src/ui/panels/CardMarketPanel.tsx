@@ -24,8 +24,8 @@ export function CardMarketPanel() {
     engine.dispatch({ id: `${idBase}-acquista-${slotId}-${Date.now()}`, type: "ui/acquistaCartaMercato", payload: { slotId } });
 
   return (
-    <section aria-label="Mercato comandi">
-      <h2>Mercato comandi</h2>
+    <section aria-label="Catalogo comandi">
+      <h2>Catalogo comandi</h2>
       <p className="management-panel__note">Rinnovo tra: {formattaContoAllaRovescia(prossimaRotazioneMs)}</p>
       <ul className="fleet-list">
         {state.mercatoCarte.slots.map((slot) => {

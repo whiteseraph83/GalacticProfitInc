@@ -141,15 +141,27 @@ export function AppShell() {
   }, [cartaSelezionataClick, propostaCarta]);
 
   // Loop di simulazione: la UI gira a frame rate variabile, il motore
-  // avanza a sub-step fissi indipendenti dal frame (A3).
+  // avanza a sub-step fissi indipendenti dal frame (A3). requestAnimationFrame
+  // da solo NON basta a fermare la simulazione quando la finestra perde il
+  // focus (es. Alt-Tab): i browser lo throttlano solo per una scheda
+  // nascosta, non per una visibile ma senza focus (richiesta utente: "il
+  // gioco continua anche se non sei con il focus sul browser") — quindi si
+  // controlla esplicitamente document.hasFocus()/visibilityState e si salta
+  // l'update quando non si e' in primo piano, azzerando lastTs cosi' alla
+  // ripresa non si applica un unico balzo temporale enorme.
   useEffect(() => {
     let frameId: number;
     let lastTs: number | null = null;
+    const inPrimoPiano = () => document.hasFocus() && document.visibilityState === "visible";
     const loop = (ts: number) => {
-      if (lastTs !== null) {
-        engine.update(ts - lastTs);
+      if (!inPrimoPiano()) {
+        lastTs = null;
+      } else {
+        if (lastTs !== null) {
+          engine.update(ts - lastTs);
+        }
+        lastTs = ts;
       }
-      lastTs = ts;
       frameId = requestAnimationFrame(loop);
     };
     frameId = requestAnimationFrame(loop);
@@ -271,7 +283,7 @@ export function AppShell() {
               Mercato
             </button>
             <button type="button" className="btn" onClick={() => setOverlayAperto("mercatoCarte")}>
-              Mercato comandi
+              Catalogo comandi
             </button>
             <button type="button" className="btn" onClick={() => setOverlayAperto("ricerca")}>
               Ricerca
@@ -333,7 +345,7 @@ export function AppShell() {
         </OverlayPanel>
       )}
       {overlayAperto === "mercatoCarte" && (
-        <OverlayPanel ariaLabel="Mercato comandi" onChiudi={() => setOverlayAperto(null)}>
+        <OverlayPanel ariaLabel="Catalogo comandi" onChiudi={() => setOverlayAperto(null)}>
           <CardMarketPanel />
         </OverlayPanel>
       )}

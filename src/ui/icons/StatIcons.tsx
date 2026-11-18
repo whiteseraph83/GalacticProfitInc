@@ -38,3 +38,16 @@ export function IconFiducia() {
     </svg>
   );
 }
+
+/** Icona generica "frammento di minerale grezzo", condivisa da tutte le
+ * risorse base (richiesta utente: contatori per ferro e gli altri minerali
+ * man mano che vengono scoperti) — il colore (via `currentColor`, impostato
+ * dal chiamante) distingue a colpo d'occhio una risorsa dall'altra. */
+export function IconMinerale() {
+  return (
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M12 2.5 19.5 8l-2 11.5h-11L4.5 8Z" strokeLinejoin="round" />
+      <path d="M12 2.5v5M8 19.5l2-6.5-3-3M16 19.5l-2-6.5 3-3M9 13h6" strokeLinejoin="round" />
+    </svg>
+  );
+}

@@ -417,7 +417,20 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         .circle(mothershipPosizione.x, mothershipPosizione.y, WORLD.visibilitaRaggio)
         .stroke({ color: 0x37d6ff, width: 1.5, alpha: 0.22 });
     }
-  }, [mothershipPosizione.x, mothershipPosizione.y, mothershipOrientamento, pixiReady]);
+    // Richiesta utente: un pianeta scoperto ma non ancora investigato esce
+    // fuori vista quando la nave madre si allontana oltre il raggio
+    // sensori, invece di restare visibile per sempre una volta scoperto;
+    // un pianeta investigato invece resta sempre visibile (la sua
+    // composizione e' ormai nota, non serve piu' "rilevarlo" dal vivo).
+    for (const pianeta of pianetiScoperti) {
+      const sprite = planetSpritesRef.current.get(pianeta.id);
+      if (!sprite) continue;
+      const dx = pianeta.posizione.x - mothershipPosizione.x;
+      const dy = pianeta.posizione.y - mothershipPosizione.y;
+      const entroRaggio = Math.hypot(dx, dy) <= WORLD.visibilitaRaggio;
+      sprite.container.visible = pianeta.investigato || entroRaggio;
+    }
+  }, [mothershipPosizione.x, mothershipPosizione.y, mothershipOrientamento, pixiReady, pianetiScoperti]);
 
   // Crea/aggiorna gli sprite delle navette (richiesta utente: "non vedo le
   // navicelle quando faccio investiga o altro" — l'asset esisteva ma non era
@@ -487,6 +500,13 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         esistente.container.destroy({ children: true });
       }
       const sprite = creaPlanetSprite(pianeta);
+      // Visibilita' iniziale corretta subito (richiesta utente: fuori dal
+      // raggio sensori non si vede finche' non e' investigato): altrimenti
+      // un pianeta appena scoperto lontano dalla nave madre resterebbe
+      // visibile finche' questa non si muove e l'altro effect lo corregge.
+      const dx = pianeta.posizione.x - callbacksRef.current.mothershipPosizione.x;
+      const dy = pianeta.posizione.y - callbacksRef.current.mothershipPosizione.y;
+      sprite.container.visible = pianeta.investigato || Math.hypot(dx, dy) <= WORLD.visibilitaRaggio;
       sprite.container.on("pointertap", (e) => {
         e.stopPropagation();
         const modalita = callbacksRef.current.modalitaBersaglioCarta;
