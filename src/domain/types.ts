@@ -48,7 +48,6 @@ export interface CardDefinition {
     | "nave"
     | "nessuno"
     | "relitto"
-    | "progettoRicerca"
     | "civiltaScoperta";
   inManoIniziale: boolean;
   /** false per le carte la cui azione reale non e' ancora implementata in
@@ -226,6 +225,11 @@ export interface TecnologiaDefinition {
   nome: string;
   descrizione: string;
   costoCrediti: number;
+  /** Punti ricerca richiesti per avviare il progetto (richiesta utente:
+   * "per avviare una ricerca ora servono punti ricerca"), oltre al costo in
+   * crediti. Si accumulano giocando il comando Ricerca (RSH-01), +1 punto
+   * per ogni comando giocato. */
+  costoPuntiRicerca: number;
   durataMs: number;
   prerequisiti: string[];
   effetto: EffettoTecnologia;
@@ -241,6 +245,8 @@ export interface ProgettoRicercaAttivo {
 export interface RicercaState {
   progettiAttivi: ProgettoRicercaAttivo[];
   completate: string[];
+  /** Punti ricerca accumulati, spesi per avviare un progetto. */
+  puntiRicerca: number;
 }
 
 /** Bonus globali aggregati dalle tecnologie completate (vedi

@@ -34,6 +34,9 @@ export function validaAvviaRicerca(stato: GameState, tecnologiaId: string): Comm
   if (stato.crediti < tecnologia.costoCrediti) {
     return { ok: false, motivo: "crediti insufficienti per avviare la ricerca" };
   }
+  if (stato.ricerca.puntiRicerca < tecnologia.costoPuntiRicerca) {
+    return { ok: false, motivo: "punti ricerca insufficienti: gioca altri comandi Ricerca" };
+  }
   return { ok: true };
 }
 
@@ -59,7 +62,11 @@ export function applicaAvviaRicerca(stato: GameState, tecnologiaId: string): Gam
   return {
     ...stato,
     crediti: stato.crediti - tecnologia.costoCrediti,
-    ricerca: { ...stato.ricerca, progettiAttivi: [...stato.ricerca.progettiAttivi, progetto] },
+    ricerca: {
+      ...stato.ricerca,
+      progettiAttivi: [...stato.ricerca.progettiAttivi, progetto],
+      puntiRicerca: stato.ricerca.puntiRicerca - tecnologia.costoPuntiRicerca,
+    },
   };
 }
 
@@ -91,7 +98,7 @@ export function integraRicerca(stato: GameState): RisultatoRicerca {
   return {
     stato: {
       ...stato,
-      ricerca: { progettiAttivi, completate: [...stato.ricerca.completate, ...completatiOra] },
+      ricerca: { ...stato.ricerca, progettiAttivi, completate: [...stato.ricerca.completate, ...completatiOra] },
     },
     notifiche,
   };

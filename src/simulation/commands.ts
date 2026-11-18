@@ -34,6 +34,7 @@ export type GameCommand =
   | { id: EntityId; type: "ui/sceltaEvento"; payload: { eventoId: EntityId; scelteId: string } }
   | { id: EntityId; type: "ui/ignoraEvento"; payload: { eventoId: EntityId } }
   | { id: EntityId; type: "ui/sceltaNarrativa"; payload: { sceneId: string; scelteId: string } }
+  | { id: EntityId; type: "ui/avviaRicerca"; payload: { tecnologiaId: string } }
   | { id: EntityId; type: "demo/confirmableAction"; payload: Record<string, never> };
 
 export type GameCommandType = GameCommand["type"];

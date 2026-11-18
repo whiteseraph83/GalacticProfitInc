@@ -1,4 +1,5 @@
 import { BALANCE, creaStatoIniziale } from "../domain/initialState";
+import { TECNOLOGIE } from "../domain/research";
 import { WORLD } from "../domain/worldConstants";
 import { SeededRng } from "../domain/rng";
 import type { EntityId, GameState, NotificationEntry, Vector2 } from "../domain/types";
@@ -43,7 +44,7 @@ import {
   validaEquipaggiaModulo,
   validaRimuoviModulo,
 } from "./modules";
-import { bonusRicerca, integraRicerca } from "./research";
+import { applicaAvviaRicerca, bonusRicerca, integraRicerca, validaAvviaRicerca } from "./research";
 import {
   applicaCommerciaConCivilta,
   applicaInviaDonoCivilta,
@@ -232,6 +233,8 @@ export class SimulationEngine {
         return validaIgnoraEvento(this.state, command.payload.eventoId);
       case "ui/sceltaNarrativa":
         return validaSceltaNarrativa(this.state, command.payload.sceneId, command.payload.scelteId);
+      case "ui/avviaRicerca":
+        return validaAvviaRicerca(this.state, command.payload.tecnologiaId);
       case "demo/confirmableAction":
         return { ok: true };
       default:
@@ -371,6 +374,11 @@ export class SimulationEngine {
         const { stato, notifiche } = applicaSceltaNarrativa(this.state, command.payload.sceneId, command.payload.scelteId);
         this.state = stato;
         for (const testo of notifiche) this.notify(testo);
+        return;
+      }
+      case "ui/avviaRicerca": {
+        this.state = applicaAvviaRicerca(this.state, command.payload.tecnologiaId);
+        this.notify(`Progetto di ricerca avviato: ${TECNOLOGIE[command.payload.tecnologiaId]?.nome ?? command.payload.tecnologiaId}.`);
         return;
       }
       case "demo/confirmableAction": {

@@ -16,7 +16,7 @@ export const BALANCE = {
   stivaMothershipCapacita: 500,
   serbatoioMothershipCapacita: 150,
   carburanteIniziale: 120, // proposto, non ancora approvato come definitivo
-  capacitaNavetta: 40,
+  capacitaNavetta: 20, // ridotto da 40 su richiesta dell'utente dopo playtest
   numeroNavetteIniziali: 2,
   estrazioneBaseAlMinuto: 4,
   capacitaManoCarteBase: 5,
@@ -135,7 +135,7 @@ export function creaStatoIniziale(seed: string, vantaggioEreditatoId?: string): 
     gameOver: null,
     missioni,
     mercatoCarte: { slots: creaSlotMercatoCarte(rngMercatoCarte), ultimaRotazioneMs: 0 },
-    ricerca: { progettiAttivi: [], completate: [] },
+    ricerca: { progettiAttivi: [], completate: [], puntiRicerca: 0 },
     moduli: [],
     numeroRegione: 1,
     civilta: regione.civilta,

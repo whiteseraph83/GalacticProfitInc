@@ -17,10 +17,10 @@ export interface CardHandBarProps {
  * possono trascinare sul bersaglio o selezionare con un click e poi
  * cliccare il bersaglio; le carte a bersaglio "nave"/"nessuno" (Fabbrica,
  * Rifornimento) non hanno un punto da trascinare e il click propone subito
- * la conferma (vedi AppShell). Ricerca (bersaglio "progettoRicerca",
- * Macrostep 7) non ha nemmeno un punto da trascinare: il progetto si
- * sceglie nel pannello Ricerca, che gioca la carta direttamente. In tutti i
- * casi l'effetto si applica solo dopo conferma esplicita.
+ * la conferma (vedi AppShell): Ricerca (bersaglio "nessuno", Macrostep 7) ora
+ * genera cosi' +1 punto ricerca a ogni comando giocato; i progetti si
+ * avviano a parte, nel pannello Ricerca, spendendo i punti accumulati. In
+ * tutti i casi l'effetto si applica solo dopo conferma esplicita.
  */
 export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinamento, onFineTrascinamento }: CardHandBarProps) {
   const state = useGameState();
@@ -37,7 +37,6 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
             def.attivabile &&
             def.bersaglio !== "nave" &&
             def.bersaglio !== "nessuno" &&
-            def.bersaglio !== "progettoRicerca" &&
             def.bersaglio !== "civiltaScoperta";
           return (
             <button

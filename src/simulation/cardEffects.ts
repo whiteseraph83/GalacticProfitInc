@@ -1,14 +1,13 @@
 import { CARD_DEFINITIONS } from "../domain/cards";
 import { CARD_EFFECTS } from "../domain/cardEffectsConfig";
 import { FABBRICA_COSTO } from "../domain/refineRecipes";
-import { TECNOLOGIE } from "../domain/research";
 import { BALANCE } from "../domain/initialState";
 import type { SeededRng } from "../domain/rng";
 import type { CardCode, CardInstance, EntityId, GameState, MiningContract, Vector2 } from "../domain/types";
 import type { BersaglioCarta, CommandValidationResult } from "./commands";
 import { consumaTolleranzaRevisione, registraRicavo, registraSpesa } from "./economy";
 import { bonusEstrazioneModuli } from "./modules";
-import { applicaAvviaRicerca, bonusRicerca, validaAvviaRicerca } from "./research";
+import { bonusRicerca } from "./research";
 import { applicaSaltoIperspaziale, validaSaltoIperspaziale } from "./hyperspace";
 
 // Logica delle carte attivabili (Esplora, Investiga, Contratto minerario,
@@ -84,10 +83,11 @@ export function validaGiocaCarta(stato: GameState, cardInstanceId: EntityId, ber
       }
       return { ok: true };
     }
-    case "RSH-01": {
-      if (!bersaglio.tecnologiaId) return { ok: false, motivo: "nessun progetto di ricerca selezionato" };
-      return validaAvviaRicerca(stato, bersaglio.tecnologiaId);
-    }
+    case "RSH-01":
+      // Richiesta utente: giocare il comando Ricerca non avvia piu' subito
+      // un progetto, genera solo +1 punto ricerca; nessun bersaglio da
+      // validare (i progetti si avviano a parte, spendendo i punti).
+      return { ok: true };
     case "IPS-01":
       return validaSaltoIperspaziale(stato);
     case "RAR-01": {
@@ -254,9 +254,9 @@ export function applicaGiocaCarta(stato: GameState, cardInstanceId: EntityId, be
       break;
     }
     case "RSH-01": {
-      const tecnologiaId = bersaglio.tecnologiaId as string;
-      nuovoStato = applicaAvviaRicerca(nuovoStato, tecnologiaId);
-      notifiche.push(`Progetto di ricerca avviato: ${TECNOLOGIE[tecnologiaId]?.nome ?? tecnologiaId}.`);
+      const puntiRicerca = nuovoStato.ricerca.puntiRicerca + 1;
+      nuovoStato = { ...nuovoStato, ricerca: { ...nuovoStato.ricerca, puntiRicerca } };
+      notifiche.push(`+1 punto ricerca (totale: ${puntiRicerca}).`);
       break;
     }
     case "IPS-01": {

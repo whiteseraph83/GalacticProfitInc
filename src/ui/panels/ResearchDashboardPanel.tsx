@@ -22,8 +22,8 @@ export function ResearchDashboardPanel() {
     <section aria-label="Ricerche scoperte">
       <h2>Ricerca</h2>
       <p className="management-panel__note">
-        Progetti attivi: {state.ricerca.progettiAttivi.length}/{slotMax} · Completate: {state.ricerca.completate.length}/
-        {Object.keys(TECNOLOGIE).length}
+        Punti ricerca: {state.ricerca.puntiRicerca} · Progetti attivi: {state.ricerca.progettiAttivi.length}/{slotMax} · Completate:{" "}
+        {state.ricerca.completate.length}/{Object.keys(TECNOLOGIE).length}
       </p>
       {RAMI_RICERCA.map((ramo) => {
         const completateRamo = Object.values(TECNOLOGIE).filter((t) => t.ramo === ramo && state.ricerca.completate.includes(t.id));

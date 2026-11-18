@@ -290,19 +290,22 @@ describe("SimulationEngine - carte giocabili (ui/giocaCarta)", () => {
     expect(engine.getState().review.carteGiocateTotali).toBe(0);
   });
 
-  it("rifiuta Ricerca: non ancora attivabile in questo macrostep", () => {
+  it("Ricerca genera 1 punto ricerca invece di avviare subito un progetto", () => {
     const engine = new SimulationEngine("seed-carte-non-attivabili");
     const ricerca = engine.getState().manoCarte.find((c) => c.code === "RSH-01");
     expect(ricerca).toBeDefined();
     if (!ricerca) return;
 
+    const puntiPrima = engine.getState().ricerca.puntiRicerca;
     const risultatoRicerca = engine.dispatch({
       id: "gioca-ricerca",
       type: "ui/giocaCarta",
       payload: { cardInstanceId: ricerca.instanceId, bersaglio: {} },
     });
-    expect(risultatoRicerca.ok).toBe(false);
-    expect(engine.getState().manoCarte).toHaveLength(5);
+    expect(risultatoRicerca.ok).toBe(true);
+    expect(engine.getState().ricerca.puntiRicerca).toBe(puntiPrima + 1);
+    expect(engine.getState().ricerca.progettiAttivi).toHaveLength(0);
+    expect(engine.getState().manoCarte).toHaveLength(4);
   });
 
   it("costruisce la fabbrica con la carta Fabbrica e poi avvia/completa una raffinazione via comando libero", () => {

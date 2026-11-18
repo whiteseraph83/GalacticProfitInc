@@ -91,6 +91,14 @@ export function dettagliConfermaCarta(carta: CardInstance, bersaglio: BersaglioC
         { etichetta: "Reversibile", valore: "No, nessun ritorno alla regione attuale" },
       ];
     }
+    case "RSH-01": {
+      return [
+        { etichetta: "Bersaglio", valore: "Nessuno" },
+        { etichetta: "Effetto", valore: `+1 punto ricerca (totale attuale: ${stato.ricerca.puntiRicerca})` },
+        { etichetta: "Costo", valore: "Nessuno" },
+        { etichetta: "Reversibile", valore: "No" },
+      ];
+    }
     case "RAR-02": {
       const pericoliAttivi = stato.pericoli.filter((p) => p.scoperto).length;
       return [

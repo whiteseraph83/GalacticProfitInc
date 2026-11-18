@@ -13,7 +13,7 @@ describe("stato iniziale", () => {
     expect(stato.naviMinerarie).toHaveLength(1);
     expect(stato.navette).toHaveLength(2);
     for (const navetta of stato.navette) {
-      expect(navetta.capacitaCargo).toBe(40);
+      expect(navetta.capacitaCargo).toBe(20);
       expect(navetta.stato).toBe("libera");
     }
     expect(stato.review.quotaDaPagare).toBe(600);

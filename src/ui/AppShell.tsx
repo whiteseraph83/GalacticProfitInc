@@ -189,11 +189,10 @@ export function AppShell() {
       proponiAzioneCarta(carta, {});
       return;
     }
-    if (def.bersaglio === "progettoRicerca" || def.bersaglio === "civiltaScoperta") {
-      // Il bersaglio (tecnologia o civilta') si sceglie nel pannello
-      // dedicato (Ricerca / Civilta'), non sulla mappa: qui il click apre
-      // solo il tooltip (gestito da CardHandBar), nessuna modalita' di
-      // selezione da armare.
+    if (def.bersaglio === "civiltaScoperta") {
+      // Il bersaglio (civilta') si sceglie nel pannello dedicato, non sulla
+      // mappa: qui il click apre solo il tooltip (gestito da CardHandBar),
+      // nessuna modalita' di selezione da armare.
       return;
     }
     setCartaSelezionataClick((prev) => (prev?.instanceId === carta.instanceId ? null : carta));

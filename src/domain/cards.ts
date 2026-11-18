@@ -3,8 +3,9 @@ import type { CardCode, CardDefinition } from "./types";
 // Definizioni carte data-driven. Le 6 carte di base (OPS-01/02/03, IND-01/02,
 // RSH-01) sono CONFERMATE in B2; Rifornimento (LOG-01) e' una delle "altre
 // carte future" gia' citate in B2, introdotta operativamente al Macrostep 4.
-// Ricerca (RSH-01) e' attivabile dal Macrostep 7: bersaglio "progettoRicerca"
-// (id di una tecnologia disponibile, vedi src/domain/research.ts).
+// Ricerca (RSH-01) e' attivabile dal Macrostep 7: bersaglio "nessuno", ogni
+// comando giocato genera +1 punto ricerca (richiesta utente); i progetti si
+// avviano spendendo quei punti nel pannello Ricerca (vedi src/domain/research.ts).
 export const CARD_DEFINITIONS: Record<CardCode, CardDefinition> = {
   "OPS-01": {
     code: "OPS-01",
@@ -55,8 +56,8 @@ export const CARD_DEFINITIONS: Record<CardCode, CardDefinition> = {
     code: "RSH-01",
     nome: "Ricerca",
     categoria: "ricerca",
-    descrizione: "Avvia un progetto tecnologico disponibile tra i quattro rami di ricerca.",
-    bersaglio: "progettoRicerca",
+    descrizione: "Genera 1 punto ricerca, da spendere nel pannello Ricerca per avviare un progetto tecnologico.",
+    bersaglio: "nessuno",
     inManoIniziale: true,
     attivabile: true,
   },

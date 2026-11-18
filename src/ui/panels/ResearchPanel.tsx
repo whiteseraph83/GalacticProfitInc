@@ -19,29 +19,29 @@ function formattaContoAllaRovescia(msResidui: number): string {
 }
 
 /** Pannello Ricerca (B2, Macrostep 7): quattro rami, un progetto
- * contemporaneo iniziale (slot aggiuntivi via ricerca). Ogni ricerca
- * richiede una carta Ricerca giocata (A2: conferma prima di consumarla),
- * quindi questo pannello cerca da solo la prima istanza RSH-01 in mano e
- * dispaccia direttamente `ui/giocaCarta` con il bersaglio scelto, invece di
- * passare dalla selezione-su-mappa generica di AppShell (qui non c'e' una
- * mappa da cliccare: il bersaglio e' la tecnologia stessa). */
+ * contemporaneo iniziale (slot aggiuntivi via ricerca). Richiesta utente:
+ * "per avviare una ricerca ora servono punti ricerca che incrementano
+ * quando si clicca sull'azione ricerca" — giocare il comando Ricerca
+ * (RSH-01) genera +1 punto ricerca (dispacciato da CardHandBar/AppShell
+ * come qualunque altra carta a bersaglio "nessuno"); avviare un progetto
+ * e' invece un'azione separata di questo pannello (`ui/avviaRicerca`), che
+ * spende i punti accumulati oltre ai crediti, senza consumare altre carte. */
 export function ResearchPanel() {
   const engine = useEngine();
   const state = useGameState();
   const idBase = useId();
   const [tecnologiaProposta, setTecnologiaProposta] = useState<string | null>(null);
 
-  const cartaRicerca = state.manoCarte.find((c) => c.code === "RSH-01");
   const tecnologia = tecnologiaProposta ? TECNOLOGIE[tecnologiaProposta] : null;
   const slotMax = SLOT_RICERCA_BASE + calcolaBonusRicerca(state.ricerca.completate).slotRicercaBonus;
   const slotLibero = state.ricerca.progettiAttivi.length < slotMax;
 
   const confermaRicerca = () => {
-    if (!tecnologiaProposta || !cartaRicerca) return;
+    if (!tecnologiaProposta) return;
     engine.dispatch({
       id: `${idBase}-ricerca-${Date.now()}`,
-      type: "ui/giocaCarta",
-      payload: { cardInstanceId: cartaRicerca.instanceId, bersaglio: { tecnologiaId: tecnologiaProposta } },
+      type: "ui/avviaRicerca",
+      payload: { tecnologiaId: tecnologiaProposta },
     });
     setTecnologiaProposta(null);
   };
@@ -50,8 +50,7 @@ export function ResearchPanel() {
     <section aria-label="Ricerca">
       <h2>Ricerca</h2>
       <p className="management-panel__note">
-        Progetti attivi: {state.ricerca.progettiAttivi.length}/{slotMax}
-        {!cartaRicerca && " · nessun comando Ricerca in mano"}
+        Punti ricerca: {state.ricerca.puntiRicerca} · Progetti attivi: {state.ricerca.progettiAttivi.length}/{slotMax}
       </p>
       {RAMI_RICERCA.map((ramo) => (
         <div key={ramo} className="research-branch">
@@ -68,7 +67,7 @@ export function ResearchPanel() {
                 if (completata) stato = "Completata";
                 else if (progettoAttivo) stato = `In corso: ${formattaContoAllaRovescia(progettoAttivo.fineMs - state.tempoSimulatoMs)}`;
                 else if (prerequisitiMancanti.length > 0) stato = `Richiede: ${prerequisitiMancanti.map((id) => TECNOLOGIE[id]?.nome ?? id).join(", ")}`;
-                else stato = `${t.costoCrediti} Cr · ${Math.round(t.durataMs / 60000)} min`;
+                else stato = `${t.costoCrediti} Cr + ${t.costoPuntiRicerca} punti ricerca · ${Math.round(t.durataMs / 60000)} min`;
 
                 const disponibile = !completata && !progettoAttivo && prerequisitiMancanti.length === 0;
 
@@ -84,7 +83,7 @@ export function ResearchPanel() {
                         type="button"
                         className="btn btn-small"
                         onClick={() => setTecnologiaProposta(t.id)}
-                        disabled={!cartaRicerca || state.crediti < t.costoCrediti || !slotLibero}
+                        disabled={state.crediti < t.costoCrediti || state.ricerca.puntiRicerca < t.costoPuntiRicerca || !slotLibero}
                       >
                         Avvia
                       </button>
@@ -104,7 +103,7 @@ export function ResearchPanel() {
             ? [
                 { etichetta: "Ramo", valore: NOME_RAMO[tecnologia.ramo] },
                 { etichetta: "Effetto", valore: tecnologia.descrizione },
-                { etichetta: "Costo", valore: `${tecnologia.costoCrediti} Cr (dedotto subito) + 1 comando Ricerca` },
+                { etichetta: "Costo", valore: `${tecnologia.costoCrediti} Cr + ${tecnologia.costoPuntiRicerca} punti ricerca (dedotti subito)` },
                 { etichetta: "Durata", valore: `${Math.round(tecnologia.durataMs / 60000)} minuti` },
                 { etichetta: "Reversibile", valore: "No" },
               ]

@@ -31,7 +31,8 @@ describe("calcolaBonusRicerca", () => {
 
 describe("validaAvviaRicerca / applicaAvviaRicerca", () => {
   function statoBase(): GameState {
-    return { ...creaStatoIniziale("ricerca-base"), crediti: 10_000 };
+    const stato = creaStatoIniziale("ricerca-base");
+    return { ...stato, crediti: 10_000, ricerca: { ...stato.ricerca, puntiRicerca: 100 } };
   }
 
   it("rifiuta una tecnologia sconosciuta", () => {
@@ -57,7 +58,7 @@ describe("validaAvviaRicerca / applicaAvviaRicerca", () => {
     stato = applicaAvviaRicerca(stato, "ESP-01");
     expect(validaAvviaRicerca(stato, "ESP-01").ok).toBe(false); // gia' in corso
 
-    const completata: GameState = { ...stato, ricerca: { progettiAttivi: [], completate: ["ESP-01"] } };
+    const completata: GameState = { ...stato, ricerca: { ...stato.ricerca, progettiAttivi: [], completate: ["ESP-01"] } };
     expect(validaAvviaRicerca(completata, "ESP-01").ok).toBe(false); // gia' completata
   });
 
@@ -112,15 +113,14 @@ describe("integraRicerca", () => {
 describe("ricerca in pausa (via motore)", () => {
   it("un progetto di ricerca non avanza mentre il motore e' in pausa", () => {
     const engine = new SimulationEngine("ricerca-pausa");
-    // Da' crediti sufficienti direttamente sullo stato per il test (pattern gia' usato altrove).
+    // Da' crediti e punti ricerca sufficienti direttamente sullo stato per il test (pattern gia' usato altrove).
     // @ts-expect-error accesso diretto allo stato privato solo per fixture di test.
-    engine.state = { ...engine.getState(), crediti: 10_000 };
+    engine.state = { ...engine.getState(), crediti: 10_000, ricerca: { ...engine.getState().ricerca, puntiRicerca: 100 } };
 
-    const cartaRicerca = engine.getState().manoCarte.find((c) => c.code === "RSH-01")!;
     engine.dispatch({
       id: "avvia-ricerca",
-      type: "ui/giocaCarta",
-      payload: { cardInstanceId: cartaRicerca.instanceId, bersaglio: { tecnologiaId: "ESP-01" } },
+      type: "ui/avviaRicerca",
+      payload: { tecnologiaId: "ESP-01" },
     });
     expect(engine.getState().ricerca.progettiAttivi).toHaveLength(1);
 
