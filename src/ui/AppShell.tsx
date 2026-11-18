@@ -45,6 +45,7 @@ export function AppShell() {
   const state = useGameState();
   const mapRef = useRef<PixiMapViewHandle>(null);
   const chiacchiericcio = useNpcChatter(state);
+  const [dialogoAutoAvanza, setDialogoAutoAvanza] = useState(false);
 
   const pianetiScoperti = useMemo(() => state.pianeti.filter((p) => p.scoperto), [state.pianeti]);
   const relittiScoperti = useMemo(() => state.campiRelitti.filter((r) => r.scoperto), [state.campiRelitti]);
@@ -343,6 +344,8 @@ export function AppShell() {
           speaker={chiacchiericcio.attuale.speaker}
           text={chiacchiericcio.attuale.text}
           onChiudi={chiacchiericcio.chiudi}
+          autoAvanza={dialogoAutoAvanza}
+          onToggleAutoAvanza={() => setDialogoAutoAvanza((v) => !v)}
         />
       )}
     </div>

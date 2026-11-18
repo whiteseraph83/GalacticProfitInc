@@ -6,7 +6,16 @@ export interface NarrativeToastProps {
   speaker: string;
   text: string;
   onChiudi: () => void;
+  /** Modalita' "auto-avanza" (richiesta utente: bottone ">" che fa avanzare
+   * automaticamente al dialogo successivo 2 secondi dopo che il testo ha
+   * finito di scriversi). Lo stato vive nel genitore perche' questo
+   * componente viene rimontato a ogni nuova riga (key diversa), quindi deve
+   * restare attivo tra una riga e l'altra finche' l'utente non lo disattiva. */
+  autoAvanza: boolean;
+  onToggleAutoAvanza: () => void;
 }
+
+const AUTO_AVANZA_RITARDO_MS = 2000;
 
 const VELOCITA_MS_PER_CARATTERE = 18;
 const RIDUZIONE_MOVIMENTO =
@@ -30,7 +39,7 @@ const RIDUZIONE_MOVIMENTO =
  * gestisce i propri eventi pointer sul canvas, uno `stopPropagation`
  * sull'evento DOM "click" da solo non basta).
  */
-export function NarrativeToast({ speaker, text, onChiudi }: NarrativeToastProps) {
+export function NarrativeToast({ speaker, text, onChiudi, autoAvanza, onToggleAutoAvanza }: NarrativeToastProps) {
   const personaggio = personaggioPer(speaker);
   const [caratteriMostrati, setCaratteriMostrati] = useState(RIDUZIONE_MOVIMENTO ? text.length : 0);
   const caratteriMostratiRef = useRef(caratteriMostrati);
@@ -55,6 +64,12 @@ export function NarrativeToast({ speaker, text, onChiudi }: NarrativeToastProps)
   }, [text]);
 
   const testoCompleto = caratteriMostrati >= text.length;
+
+  useEffect(() => {
+    if (!autoAvanza || !testoCompleto) return;
+    const timer = window.setTimeout(() => onChiudiRef.current(), AUTO_AVANZA_RITARDO_MS);
+    return () => window.clearTimeout(timer);
+  }, [autoAvanza, testoCompleto]);
 
   const avanza = () => {
     if (caratteriMostratiRef.current < text.length) {
@@ -89,6 +104,19 @@ export function NarrativeToast({ speaker, text, onChiudi }: NarrativeToastProps)
             </svg>
           )}
         </div>
+        <button
+          type="button"
+          className={`narrative-toast__auto${autoAvanza ? " narrative-toast__auto--attivo" : ""}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleAutoAvanza();
+          }}
+          aria-label={autoAvanza ? "Disattiva avanzamento automatico" : "Attiva avanzamento automatico"}
+          aria-pressed={autoAvanza}
+          title="Avanza automaticamente dopo ogni messaggio"
+        >
+          &gt;
+        </button>
         <button
           type="button"
           className="narrative-toast__chiudi"

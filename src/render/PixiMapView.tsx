@@ -419,7 +419,10 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
   // navicelle quando faccio investiga o altro" — l'asset esisteva ma non era
   // mai stato collegato al rendering). Rotazione stimata dalla direzione
   // verso la destinazione corrente (le navette non hanno un campo
-  // `orientamento` proprio, a differenza della nave madre).
+  // `orientamento` proprio, a differenza della nave madre). Richiesta utente:
+  // le navette devono essere visibili SOLO durante un'azione (in viaggio,
+  // in attesa/carico, in ritorno...), non quando sono "libere" ferme alla
+  // nave madre — quindi niente sprite per quelle in stato "libera".
   useEffect(() => {
     const layer = navetteLayerRef.current;
     const texture = navettaTextureRef.current;
@@ -427,6 +430,7 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
 
     const idPresenti = new Set<string>();
     for (const navetta of navette) {
+      if (navetta.stato === "libera") continue;
       idPresenti.add(navetta.id);
       let sprite = navetteGfxRef.current.get(navetta.id);
       if (!sprite) {
@@ -442,9 +446,6 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         const dy = navetta.destinazione.y - navetta.posizione.y;
         if (Math.hypot(dx, dy) > 1) sprite.rotation = Math.atan2(dy, dx);
       }
-      // In attesa/carico: leggermente trasparente, per distinguerla a
-      // colpo d'occhio da una in transito verso il contratto.
-      sprite.alpha = navetta.stato === "libera" ? 0.55 : 1;
     }
 
     for (const [id, sprite] of navetteGfxRef.current) {

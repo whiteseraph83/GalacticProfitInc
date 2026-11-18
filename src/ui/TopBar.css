@@ -33,7 +33,7 @@
 
 .top-bar__stat {
   display: grid;
-  grid-template-columns: 18px 1fr;
+  grid-template-columns: 26px 1fr;
   grid-template-rows: auto auto;
   column-gap: 8px;
   align-items: center;

@@ -145,6 +145,13 @@ export function integraNavette(statoIniziale: GameState, dtMs: number): GameStat
       }
       case "inAttesa":
       case "caricamento": {
+        // Navetta mandata a investigare un pianeta (nessun contratto
+        // minerario associato): resta parcheggiata li' finche'
+        // `integraInvestigazioni` non la richiama a bordo al termine del
+        // timer, invece di essere liberata subito come farebbe una navetta
+        // senza contratto (vedi sotto).
+        if (navetta.pianetaInvestigazioneId) return navetta;
+
         const contratto = contratti.find((c) => c.id === navetta.contrattoAssegnatoId);
         if (!contratto) return { ...navetta, stato: "libera", contrattoAssegnatoId: null, tempoAttesaMs: 0 };
 
@@ -187,7 +194,7 @@ export function integraNavette(statoIniziale: GameState, dtMs: number): GameStat
         const caricoAttuale = cargoTotale(navetta.caricoAttuale);
         if (caricoAttuale === 0) {
           cambiato = true;
-          return { ...navetta, stato: "libera", contrattoAssegnatoId: null };
+          return { ...navetta, stato: "libera", contrattoAssegnatoId: null, pianetaInvestigazioneId: null };
         }
         const stivaOccupata = cargoTotale(mothership.stivaCarico);
         const spazioStiva = mothership.stivaCapacita - stivaOccupata;

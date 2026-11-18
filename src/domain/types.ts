@@ -188,6 +188,13 @@ export interface ShuttleEntity {
   contrattoAssegnatoId: EntityId | null;
   /** Tempo accumulato in attesa/caricamento, per il timeout di partenza (B1). */
   tempoAttesaMs: number;
+  /** Pianeta verso cui la navetta sta volando per un'investigazione in corso
+   * (richiesta utente: anche l'Investiga deve mostrare una navetta in volo,
+   * non solo il Contratto minerario); null se la navetta non e' impegnata in
+   * un'investigazione. Percorso gestito a parte da quello dei contratti
+   * minerari in `integraNavette` per non interferire con la logistica di
+   * carico/scarico. */
+  pianetaInvestigazioneId: EntityId | null;
 }
 
 export interface MiningShipEntity {

@@ -106,6 +106,7 @@ export function creaStatoIniziale(seed: string, vantaggioEreditatoId?: string): 
       destinazione: null,
       contrattoAssegnatoId: null,
       tempoAttesaMs: 0,
+      pianetaInvestigazioneId: null,
     })),
     manoCarte: mano,
     capacitaManoCarte: BALANCE.capacitaManoCarteBase,

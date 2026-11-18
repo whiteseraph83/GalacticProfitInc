@@ -119,6 +119,31 @@
   }
 }
 
+.narrative-toast__auto {
+  background: none;
+  border: 1px solid var(--border-faint);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-family: var(--font-digital);
+  font-size: 0.95rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 3px 7px;
+  flex-shrink: 0;
+}
+
+.narrative-toast__auto:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.narrative-toast__auto--attivo {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
 .narrative-toast__chiudi {
   background: none;
   border: none;

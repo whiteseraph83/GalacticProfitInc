@@ -151,9 +151,21 @@ export function applicaGiocaCarta(stato: GameState, cardInstanceId: EntityId, be
       if (!pianeta) break;
       const durataSec = rng.nextFloat(CARD_EFFECTS.investiga.durataMinSec, CARD_EFFECTS.investiga.durataMaxSec);
       const completataAlMs = nuovoStato.tempoSimulatoMs + durataSec * 1000;
+      // Richiesta utente: anche l'Investiga deve mandare visibilmente una
+      // navetta verso il pianeta (prima solo il Contratto minerario lo
+      // faceva); se nessuna navetta e' libera l'investigazione procede
+      // comunque, solo senza animazione.
+      const navettaLibera = nuovoStato.navette.find((n) => n.stato === "libera");
       nuovoStato = {
         ...nuovoStato,
         pianeti: nuovoStato.pianeti.map((p) => (p.id === pianeta.id ? { ...p, investigazioneCompletataAlMs: completataAlMs } : p)),
+        navette: navettaLibera
+          ? nuovoStato.navette.map((n) =>
+              n.id === navettaLibera.id
+                ? { ...n, stato: "inViaggio" as const, destinazione: pianeta.posizione, pianetaInvestigazioneId: pianeta.id, tempoAttesaMs: 0 }
+                : n,
+            )
+          : nuovoStato.navette,
       };
       notifiche.push(`Investigazione avviata su ${pianeta.nome}.`);
       break;
@@ -275,13 +287,23 @@ export function applicaGiocaCarta(stato: GameState, cardInstanceId: EntityId, be
 export function integraInvestigazioni(stato: GameState): RisultatoGiocaCarta {
   let cambiato = false;
   const notifiche: string[] = [];
+  const idPianetiCompletati = new Set<EntityId>();
   const pianeti = stato.pianeti.map((p) => {
     if (p.investigazioneCompletataAlMs === null || stato.tempoSimulatoMs < p.investigazioneCompletataAlMs) return p;
     cambiato = true;
+    idPianetiCompletati.add(p.id);
     notifiche.push(`Investigazione completata: ${p.nome}.`);
     return { ...p, investigato: true, investigazioneCompletataAlMs: null };
   });
-  return cambiato ? { stato: { ...stato, pianeti }, notifiche } : { stato, notifiche };
+  if (!cambiato) return { stato, notifiche };
+  // Richiama a bordo la navetta mandata a investigare il pianeta, cosi'
+  // riparte visibilmente verso la nave madre invece di restare ferma li'.
+  const navette = stato.navette.map((n) =>
+    n.pianetaInvestigazioneId && idPianetiCompletati.has(n.pianetaInvestigazioneId)
+      ? { ...n, stato: "ritorno" as const, destinazione: stato.mothership.posizione, tempoAttesaMs: 0 }
+      : n,
+  );
+  return { stato: { ...stato, pianeti, navette }, notifiche };
 }
 
 /** Deduce il costo operativo dei contratti minerari attivi (B1); se i
