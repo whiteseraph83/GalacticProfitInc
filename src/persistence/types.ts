@@ -14,7 +14,15 @@ import type { GameState } from "../domain/types";
 // comunque incrementato quando la forma dello stato cambia in modo
 // sostanziale, cosi' un salvataggio esplicitamente incompatibile puo'
 // essere scartato prima ancora di validarne i campi.
-export const SAVE_SCHEMA_VERSION = 2;
+// Portato a 3 (richiesta utente, bug "Punti ricerca: NaN"): questa sessione
+// ha aggiunto piu' campi obbligatori allo stato (RicercaState.puntiRicerca,
+// ShuttleEntity.pianetaInvestigazioneId) senza incrementare la versione.
+// Un salvataggio catturato prima di questi campi aveva comunque
+// schemaVersion 2 (identica), quindi veniva accettato e ricaricato con quei
+// campi `undefined` — da cui il NaN (`undefined + 1`). Incrementare qui
+// scarta in sicurezza quei salvataggi incompatibili, facendo ripartire una
+// nuova carriera invece di uno stato corrotto.
+export const SAVE_SCHEMA_VERSION = 3;
 
 export interface SaveFile {
   schemaVersion: number;

@@ -15,6 +15,7 @@ import { EventoCriticoModal } from "./components/EventoCriticoModal";
 import { EVENTO_DEFINITIONS } from "../domain/events";
 import { PixiMapView, type PixiMapViewHandle } from "../render/PixiMapView";
 import { useEngine, useGameState } from "./useEngine";
+import { useAutosave } from "./useAutosave";
 import { CARD_DEFINITIONS } from "../domain/cards";
 import type { CardDefinition } from "../domain/types";
 import { CardActionFlash } from "./components/CardActionFlash";
@@ -44,6 +45,11 @@ export function AppShell() {
   const engine = useEngine();
   const state = useGameState();
   const mapRef = useRef<PixiMapViewHandle>(null);
+  // Richiesta utente: il gioco non si salvava, perche' l'autosave viveva
+  // dentro SavePanel (montato solo a overlay Impostazioni aperto) e quindi
+  // smetteva di girare non appena l'utente lo chiudeva. Qui in AppShell,
+  // sempre montato, gira per tutta la durata della partita.
+  const ultimoSalvataggio = useAutosave(engine);
   const chiacchiericcio = useNpcChatter(state);
   const [dialogoAutoAvanza, setDialogoAutoAvanza] = useState(false);
   // Bottone ">>>" per debug/test (richiesta utente): avanza a raffica
@@ -361,7 +367,7 @@ export function AppShell() {
       )}
       {overlayAperto === "impostazioni" && (
         <OverlayPanel ariaLabel="Impostazioni" onChiudi={() => setOverlayAperto(null)}>
-          <SettingsPanel onNuovaPartita={() => setOverlayAperto(null)} />
+          <SettingsPanel onNuovaPartita={() => setOverlayAperto(null)} ultimoSalvataggio={ultimoSalvataggio} />
         </OverlayPanel>
       )}
       {pianetaSelezionato && !pannelloPianetaChiuso && (

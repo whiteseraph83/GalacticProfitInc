@@ -1,6 +1,5 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { useEngine, useGameState } from "../useEngine";
-import { useAutosave } from "../useAutosave";
 import { validaStato, creaStatoIniziale } from "../../domain/initialState";
 import { persistenceAdapter } from "../../persistence/indexedDbAdapter";
 import { SAVE_SCHEMA_VERSION, type SaveFile } from "../../persistence/types";
@@ -18,12 +17,17 @@ function formattaOra(data: Date): string {
  * simulato a posteriori al prossimo avvio. */
 export interface SavePanelProps {
   onNuovaPartita?: () => void;
+  /** Istante dell'ultimo autosave riuscito, calcolato in AppShell (richiesta
+   * utente: il salvataggio non funzionava perche' l'hook useAutosave girava
+   * solo mentre questo pannello era montato, cioe' solo a overlay
+   * Impostazioni aperto — ora gira sempre, qui si riceve solo il valore da
+   * mostrare). */
+  ultimoSalvataggio: Date | null;
 }
 
-export function SavePanel({ onNuovaPartita }: SavePanelProps = {}) {
+export function SavePanel({ onNuovaPartita, ultimoSalvataggio }: SavePanelProps) {
   const engine = useEngine();
   const state = useGameState();
-  const ultimoSalvataggio = useAutosave(engine);
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [importProposto, setImportProposto] = useState<GameState | null>(null);
   const [erroreImport, setErroreImport] = useState<string | null>(null);
