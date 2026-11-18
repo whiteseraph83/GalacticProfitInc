@@ -1,0 +1,176 @@
+{
+  "_nota": "Valori di bilanciamento. 'confermato: true' = fissato in B1/B2 del documento di design, non modificabile senza richiesta esplicita dell'utente. 'confermato: false' = provvisorio/DA BILANCIARE, usato come default per permettere i test.",
+  "economia": {
+    "creditiIniziali": { "valore": 2000, "confermato": true },
+    "primaQuotaRevisione": { "valore": 600, "confermato": true },
+    "sogliaCarteProssimaRevisione": { "valore": 40, "confermato": true },
+    "fiduciaIniziale": { "valore": 100, "confermato": true }
+  },
+  "mothership": {
+    "stivaCapacita": { "valore": 500, "confermato": true },
+    "serbatoioCapacita": { "valore": 150, "confermato": true },
+    "carburanteIniziale": { "valore": 120, "confermato": false, "note": "proposto 120/150, non ancora approvato come definitivo" },
+    "velocitaMax": { "valore": 60, "confermato": false, "note": "unita'/s, Macrostep 2" },
+    "accelerazione": { "valore": 40, "confermato": false, "note": "unita'/s^2, DA BILANCIARE con playtest" },
+    "velocitaAngolare": { "valore": 3, "confermato": false, "note": "radianti/s, limita quanto in fretta la nave ruota verso la rotta" },
+    "consumoCarburantePerUnitaDistanza": { "valore": 0.04, "confermato": false, "note": "impatto moderato (A4): a velocita' max consuma ~2.4 carburante/s" },
+    "margineOstacolo": { "valore": 14, "confermato": false, "note": "distanza extra tenuta dal bordo di un pianeta nel pathfinding" }
+  },
+  "navette": {
+    "numeroIniziale": { "valore": 2, "confermato": true },
+    "capacitaCargo": { "valore": 40, "confermato": true },
+    "velocita": { "valore": 70, "confermato": false, "note": "unita'/s, movimento semplice senza inerzia (solo la nave madre ha accelerazione/rotazione, A4)" },
+    "timeoutPartenza": { "valore": "3 min", "confermato": false, "note": "proposta, non decisione definitiva" }
+  },
+  "soccorsoCarburante": {
+    "quantita": { "valore": 30, "confermato": true },
+    "costoFiducia": { "valore": 10, "confermato": true }
+  },
+  "estrazione": {
+    "baseAlMinuto": { "valore": 4, "confermato": true }
+  },
+  "mano": {
+    "capacitaBase": { "valore": 5, "confermato": true },
+    "intervalloNuovaCartaMinuti": { "valore": 5, "confermato": true }
+  },
+  "mondo": {
+    "pianetiMin": { "valore": 50, "confermato": true, "note": "range confermato in B4 (50-100)" },
+    "pianetiMax": { "valore": 100, "confermato": true },
+    "quotaArchetipiRari": { "valore": "~2-3%", "confermato": true, "note": "in pratica l'archetipo anomalo pesa 3/97 ~= 3.1%" },
+    "areaSicuraRaggio": { "valore": 380, "confermato": false, "note": "provvisorio: raggio entro cui i pianeti sono gia' scoperti a inizio partita" },
+    "areaSicuraPianetiMinMax": { "valore": "4-6", "confermato": false },
+    "visibilitaRaggio": { "valore": 380, "confermato": false, "note": "raggio di scoperta attorno alla nave madre; ancora separato dal raggio della carta Esplora" },
+    "sistemiStellariMinMax": { "valore": "4-8", "confermato": false },
+    "relittiMinMax": { "valore": "3-6", "confermato": false },
+    "giacimentoPianetaComune": { "valore": "400-900", "confermato": false, "note": "unita' totali estraibili per pianeta di archetipo comune" },
+    "giacimentoPianetaRaro": { "valore": "250-600", "confermato": false }
+  },
+  "carte": {
+    "esploraRaggioRivelazione": { "valore": 420, "confermato": false, "note": "unita'; raggio entro cui Esplora rivela pianeti/relitti dal punto cliccato" },
+    "investigaDurataSec": { "valore": "10-30", "confermato": true, "note": "range confermato nel documento di design (B2)" },
+    "contrattoCostoIniziale": { "valore": 30, "confermato": false, "note": "proposto in B3, non approvato" },
+    "contrattoCostoOperativoAlMinuto": { "valore": 4, "confermato": false, "note": "proposto in B3, non approvato" },
+    "recuperaRottamiRicompensaCrediti": { "valore": "50-150", "confermato": false, "note": "nessun valore proposto nel documento: stima per rendere testabile OPS-03" }
+  },
+  "fabbrica": {
+    "costoCrediti": { "valore": 200, "confermato": true, "note": "confermato in B1" },
+    "costoFerroGrezzo": { "valore": 50, "confermato": false, "note": "quantita' non specificata nel documento (\"minerali grezzi comuni, da bilanciare\")" },
+    "linee": { "valore": 1, "confermato": true, "note": "una linea iniziale, espandibile con la ricerca al Macrostep 7" }
+  },
+  "raffinazione": {
+    "_nota": "Tutte le ricette (input/output/costo/durata) sono DA BILANCIARE: il documento non fornisce valori, solo il principio che i raffinati sono piu' redditizi dei grezzi al netto di spese/tempo (B4).",
+    "raffinaFerro": { "valore": "30 ferro -> 18 ferroRaffinato, 40 Cr, 40s", "confermato": false },
+    "raffinaCristalli": { "valore": "25 cristalliSilicio -> 15 cristalliRaffinati, 60 Cr, 50s", "confermato": false },
+    "raffinaTitanio": { "valore": "20 titanioStellare -> 12 titanioRaffinato, 90 Cr, 60s", "confermato": false },
+    "raffinaIridio": { "valore": "15 iridioQuantico -> 9 iridioRaffinato, 150 Cr, 75s", "confermato": false },
+    "raffinaMateriaEsotica": { "valore": "10 materiaEsotica -> 6 materiaEsoticaRaffinata, 250 Cr, 90s", "confermato": false },
+    "raffinaCarburante": { "valore": "20 ferro -> 25 carburante, 30 Cr, 35s", "confermato": false, "note": "l'unica ricetta che produce carburante utilizzabile dal motore (via carta Rifornimento)" }
+  },
+  "mercato": {
+    "_nota": "I prezzi dei grezzi sono i valori PROPOSTI in B3 (confermati solo come proposta, non come bilanciamento definitivo). Quelli dei raffinati/carburante non sono specificati nel documento: stimati come multiplo del grezzo corrispondente.",
+    "ferro": { "valore": 5, "confermato": false },
+    "cristalliSilicio": { "valore": 12, "confermato": false },
+    "titanioStellare": { "valore": 25, "confermato": false },
+    "iridioQuantico": { "valore": 55, "confermato": false },
+    "materiaEsotica": { "valore": 120, "confermato": false },
+    "fluttuazioneMassima": { "valore": "±20%", "confermato": true, "note": "B3, confermato" },
+    "intervalloAggiornamentoMinuti": { "valore": 5, "confermato": true, "note": "B3, confermato" }
+  },
+  "revisioni": {
+    "sogliaCarte": { "valore": 40, "confermato": true },
+    "primaQuota": { "valore": 600, "confermato": true },
+    "carteTolleranza": { "valore": 5, "confermato": true, "note": "B3, confermato" },
+    "formulaQuotaSuccessiva": {
+      "valore": "euristica su utile medio ultimi 3 periodi, crescita max +25%, calo max -15%, mai sotto 600 Cr",
+      "confermato": false,
+      "note": "B3 chiede 'formula adattiva in base alle prestazioni... e al livello aziendale, con limiti di crescita DA BILANCIARE': il 'livello aziendale' non esiste ancora come concetto di gioco (nessun sistema di progressione lo definisce), quindi la formula usa solo l'utile recente"
+    },
+    "prestiti": { "valore": null, "confermato": false, "note": "esplicitamente rimandati, vedi docs/game-rules.md; il campo contabilita.debito esiste per compatibilita' futura" }
+  },
+  "missioni": {
+    "_nota": "Macrostep 6 (B5/B6): generazione missioni e ricompense. Nessun valore numerico e' specificato nel documento di design oltre al principio 'generalmente 1 carta, raramente 2, talvolta 0' e alle 4 carte extra garantite nel tutorial: tutto il resto e' una stima ragionevole per rendere il sistema testabile.",
+    "missioniIntroduttiveGarantite": { "valore": 4, "confermato": true, "note": "B6: 4 carte extra garantite all'inizio, una per ciascuna delle 4 missioni introduttive" },
+    "missioniTotaliMinMax": { "valore": "20-30", "confermato": false },
+    "secondarieAttiveMax": { "valore": 3, "confermato": false, "note": "limite di missioni secondarie (non principali) attive contemporaneamente, per evitare un elenco ingestibile" },
+    "distribuzioneRicompensaCarte": { "valore": "20% zero carte, 70% una carta, 10% due carte", "confermato": false, "note": "approssima il principio B6 'generalmente 1 carta, raramente 2, talvolta 0'" },
+    "probabilitaRicompensaNascosta": { "valore": "25%", "confermato": false, "note": "missione principale: possibilita' di un bonus nascosto oltre alla ricompensa dichiarata" },
+    "rotazioneMercatoCarteMinuti": { "valore": 15, "confermato": false, "note": "intervallo di rinnovo degli slot del mercato carte (tempo simulato)" },
+    "mercatoCarteSlot": { "valore": 5, "confermato": false },
+    "prezziCarteMercato": { "valore": "150-320 Cr a seconda della carta", "confermato": false, "note": "stima; nessun prezzo specificato nel documento per l'acquisto diretto di carte" }
+  },
+  "ricerca": {
+    "_nota": "Macrostep 7 (B2): quattro rami di ricerca, costi/durate/effetti non specificati numericamente dal documento oltre al principio generale ('costi e durata da 1-15 minuti', elenco dei tipi di bonus globali): 13 tecnologie (3 per ramo + Salto iperspaziale in Esplorazione, Macrostep 8), vedi src/domain/research.ts.",
+    "slotRicercaIniziale": { "valore": 1, "confermato": true, "note": "B2: 'un progetto contemporaneo iniziale'" },
+    "slotRicercaBonusTotale": { "valore": 1, "confermato": false, "note": "una sola tecnologia (Logistica: Pianificazione progetti) concede +1 slot in questo macrostep" },
+    "costiDurateRicerca": { "valore": "300-900 Cr, 3-14 minuti", "confermato": false },
+    "intervalloGenerazioneCarteMinimoMinuti": { "valore": 2, "confermato": true, "note": "B2: 'migliorabile via ricerca fino a minimo 2 minuti'" },
+    "secondaNaveMineraria": { "valore": "1.000 Cr + 50 ferro raffinato", "confermato": false, "note": "costo in crediti confermato (B2); la quantita' di raffinato non e' specificata" },
+    "moduli": {
+      "slotPerNaveIniziale": { "valore": 1, "confermato": true, "note": "B2: 'uno slot per nave iniziale'" },
+      "slotBonusMassimoViaRicerca": { "valore": 2, "confermato": true, "note": "B2: 'massimo due via ricerca'" },
+      "costiEffetti": { "valore": "150-250 Cr + raffinati, +0.8/+1.5 estrazione al minuto", "confermato": false, "note": "nessun valore specificato nel documento, vedi src/domain/modules.ts" }
+    }
+  },
+  "iperspazio": {
+    "_nota": "Macrostep 8 (B6, CONFERMATO). L'unico valore numerico specificato dal documento e' il costo in carburante; il costo/durata della tecnologia di sblocco e il prezzo della carta al mercato sono stime.",
+    "costoCarburante": { "valore": 60, "confermato": true, "note": "B6: 'il salto costa 60 unita' di carburante'" },
+    "tecnologiaSalto": { "valore": "900 Cr, 15 minuti, ramo Esplorazione, richiede Catalogazione avanzata", "confermato": false },
+    "prezzoCartaMercato": { "valore": 400, "confermato": false },
+    "sogliaRicchezzaAnteprima": { "valore": "giacimento medio <500 scarsa, <750 media, altrimenti abbondante", "confermato": false, "note": "soglie di presentazione per l'anteprima pre-salto, non un valore citato dal documento" }
+  },
+  "civilta": {
+    "_nota": "Macrostep 9 (B9, CONFERMATO nel principio: 'relazioni locali alla regione, richieste, bonus commerciali e diplomazia; nessun punteggio reputazione galattica obbligatorio'). Nessun valore numerico specificato: tutto stimato, vedi src/domain/civilizations.ts.",
+    "numeroPerRegione": { "valore": "1-3", "confermato": false },
+    "relazioneIniziale": { "valore": 30, "confermato": false },
+    "sogliaBonusCommerciale": { "valore": 60, "confermato": false },
+    "bonusCommercialeMassimo": { "valore": "+15% al prezzo di vendita", "confermato": false },
+    "donoMinimo": { "valore": "50 Cr, +1 relazione ogni 20 Cr", "confermato": false },
+    "richiesta": { "valore": "15-40 unita' di una risorsa grezza, ricompensa 8 Cr/unita' + 15 relazione", "confermato": false }
+  },
+  "pericoli": {
+    "_nota": "Macrostep 9 (B9, CONFERMATO nel principio: 'tempeste, gravita'/radiazioni, rischi con avvisi proporzionati'). Nessun valore numerico specificato: vedi src/domain/hazards.ts.",
+    "numeroPerRegione": { "valore": "2-4", "confermato": false },
+    "intensita": { "valore": "0.3-1, scala linearmente l'effetto", "confermato": false },
+    "tempestaConsumoCarburanteMax": { "valore": "3/min a intensita' 1", "confermato": false },
+    "gravitaRiduzioneVelocitaMax": { "valore": "-50% a intensita' 1", "confermato": false },
+    "radiazioniFiduciaMax": { "valore": "-3/min a intensita' 1", "confermato": false }
+  },
+  "eventi": {
+    "_nota": "Macrostep 9 (B9, CONFERMATO: 'eventi aziendali, economici, diplomatici e misteriosi circa ogni 8-10 carte, con scelte e conseguenze'; pirateria aggiunta come da B9 ma trattata come quinta categoria di evento). Conseguenze concrete, vedi src/domain/events.ts.",
+    "sogliaCarte": { "valore": "8-10, confermato", "confermato": true, "note": "B9: 'circa ogni 8-10 carte'" },
+    "eventiAttiviMax": { "valore": 3, "confermato": false, "note": "limite di eventi ordinari contemporanei in attesa di scelta" },
+    "numeroDefinizioni": { "valore": 10, "confermato": false, "note": "2 per categoria aziendale/economico/diplomatico/misterioso, 2 pirateria (di cui 1 critico)" }
+  },
+  "carteRare": {
+    "_nota": "Macrostep 9 (B9: 'carte rare che consentono azioni originali; no semplice +10% travestito da rarita''). Due carte introdotte, azioni unicamente situazionali, non acquistabili al mercato generico.",
+    "diplomaziaLampoBonusRelazione": { "valore": 25, "confermato": false },
+    "fugaDEmergenzaDurata": { "valore": "3 minuti di immunita' ai pericoli regionali", "confermato": false }
+  },
+  "campagna": {
+    "_nota": "Macrostep 10 (B7, CONFERMATO nei 5 titoli dei capitoli e nei 4 finali + epilogo segreto opzionale; B10, CONFERMATO: 'integrare la campagna senza alterare la simulation engine'). Nessun valore numerico e' specificato nel documento per le condizioni di sblocco o il peso delle scelte: vedi src/domain/narrative.ts.",
+    "numeroCapitoli": { "valore": 5, "confermato": true, "note": "B7: titoli dei 5 capitoli confermati" },
+    "numeroScene": { "valore": 14, "confermato": false, "note": "2-3 scene per capitolo, di cui una decisione nei capitoli 1/2/3/4 e la scelta finale nel capitolo 5" },
+    "numeroFinali": { "valore": "4 + 1 epilogo segreto", "confermato": true, "note": "B7: 'quattro finali principali (promozione aziendale, indipendenza economica, ribellione/esposizione, liquidazione narrativa) più possibile epilogo segreto'" },
+    "pesoScelte": { "valore": "2-5 punti di allineamento per scelta", "confermato": false },
+    "margineEpilogoSegreto": { "valore": 2, "confermato": false, "note": "scostamento massimo tra i tre assi per sbloccare l'epilogo segreto" },
+    "sogliaFiduciaLiquidazione": { "valore": 20, "confermato": false, "note": "sotto questa fiducia al momento del finale, la liquidazione sovrasta qualunque allineamento" }
+  },
+  "vantaggiEreditati": {
+    "_nota": "Macrostep 11 (B11, CONFERMATO: 'scelta di 1 tra 3 piccoli vantaggi casuali ereditati'). Quattro vantaggi definiti, 3 sorteggiati a ogni nuova carriera dopo Game Over; nessun valore numerico specificato dal documento, vedi src/domain/legacy.ts.",
+    "numeroDefiniti": { "valore": 4, "confermato": false },
+    "numeroPropostiPerScelta": { "valore": 3, "confermato": true, "note": "B11: '1 tra 3'" },
+    "creditiIniziali": { "valore": 500, "confermato": false },
+    "carburanteIniziale": { "valore": 30, "confermato": false },
+    "capacitaManoCarte": { "valore": 1, "confermato": false },
+    "fiduciaIniziale": { "valore": 15, "confermato": false }
+  },
+  "audio": {
+    "_nota": "Macrostep 11 (B11: 'audio originale di atmosfera, feedback UI, mute/volumi separati'). Nessun asset audio e' stato fornito dall'utente: sintetizzato via Web Audio API (oscillatori), coerente con A1 sui placeholder chiaramente segnalati applicato all'audio. Vedi src/audio/audioEngine.ts.",
+    "volumeMusicaDefault": { "valore": 0.35, "confermato": false },
+    "volumeEffettiDefault": { "valore": 0.5, "confermato": false }
+  },
+  "rendering": {
+    "_nota": "Macrostep 11 (B11: 'ottimizzazione shader/LOD'). Soglia di LOD per i dettagli secondari dei pianeti (alone, atmosfera), vedi src/render/planetSprite.ts.",
+    "sogliaDettaglioLOD": { "valore": 0.6, "confermato": false, "note": "scala della camera (0.3-3) sotto la quale alone/atmosfera si nascondono e smettono di aggiornarsi" }
+  }
+}

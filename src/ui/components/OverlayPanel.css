@@ -1,0 +1,45 @@
+.overlay-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 8, 16, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.overlay-panel {
+  position: relative;
+  width: min(480px, 92vw);
+  max-height: min(640px, 86vh);
+  overflow-y: auto;
+  background: var(--panel-bg);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 22px 24px;
+  box-shadow: 0 0 28px rgba(55, 214, 255, 0.25);
+}
+
+.overlay-panel__chiudi {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-faint);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.overlay-panel__chiudi:hover,
+.overlay-panel__chiudi:focus-visible {
+  color: var(--text);
+  border-color: var(--accent);
+}

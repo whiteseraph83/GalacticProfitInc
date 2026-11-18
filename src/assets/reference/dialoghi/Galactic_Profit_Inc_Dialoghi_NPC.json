@@ -1,0 +1,1421 @@
+{
+  "metadata": {
+    "language": "it",
+    "total_messages": 172,
+    "total_scenes": 9
+  },
+  "messages": [
+    {
+      "id": "bob_001",
+      "speaker": "B.O.B.",
+      "trigger": "game.start",
+      "tone": "tutorial",
+      "text": "Benvenuto a bordo, Direttore. Sono B.O.B.: Bilancio Operativo di Bordo. La mia priorità è la sua sicurezza. La seconda è documentare quanto ci costa."
+    },
+    {
+      "id": "bob_002",
+      "speaker": "B.O.B.",
+      "trigger": "game.start",
+      "tone": "tutorial",
+      "text": "La nave è sua. In senso operativo, naturalmente. In senso legale appartiene a OmniProfit, come il suo tempo libero."
+    },
+    {
+      "id": "bob_003",
+      "speaker": "B.O.B.",
+      "trigger": "tutorial.scan",
+      "tone": "tutorial",
+      "text": "Quel pianeta sembra promettente. Consiglio una scansione: i giudizi affrettati li lasciamo alla Direzione."
+    },
+    {
+      "id": "bob_004",
+      "speaker": "B.O.B.",
+      "trigger": "tutorial.mine",
+      "tone": "tutorial",
+      "text": "Contratto attivato. Finalmente una relazione professionale in cui almeno una delle parti produce qualcosa."
+    },
+    {
+      "id": "bob_005",
+      "speaker": "B.O.B.",
+      "trigger": "tutorial.sell",
+      "tone": "tutorial",
+      "text": "Prima vendita effettuata! Vuole che la inserisca nel suo curriculum o preferisce aspettare un secondo successo?"
+    },
+    {
+      "id": "bob_006",
+      "speaker": "B.O.B.",
+      "trigger": "tutorial.done",
+      "tone": "tutorial",
+      "text": "Orientamento completato. Da ora in poi i miei consigli saranno facoltativi e le conseguenze obbligatorie."
+    },
+    {
+      "id": "bob_007",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.low",
+      "tone": "warning",
+      "text": "Carburante sotto la soglia di comfort. La parola «comfort» non compare nei contratti OmniProfit, ma ho deciso di provarla."
+    },
+    {
+      "id": "bob_008",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.low",
+      "tone": "warning",
+      "text": "Direttore, abbiamo abbastanza carburante per partire. Tornare è un argomento completamente diverso."
+    },
+    {
+      "id": "bob_009",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.critical",
+      "tone": "critical",
+      "text": "Allerta carburante: la prossima manovra potrebbe diventare una decisione immobiliare."
+    },
+    {
+      "id": "bob_010",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.critical",
+      "tone": "critical",
+      "text": "Rotta sconsigliata. La distanza è ragionevole; il serbatoio no."
+    },
+    {
+      "id": "bob_011",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.empty",
+      "tone": "critical",
+      "text": "Motori senza carburante. La nave madre è ora una stazione spaziale con ambizioni di mobilità."
+    },
+    {
+      "id": "bob_012",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.empty",
+      "tone": "critical",
+      "text": "Siamo fermi. Ho già avvisato il reparto marketing: descriverà questa situazione come «posizionamento strategico»."
+    },
+    {
+      "id": "bob_013",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.rescue_available",
+      "tone": "warning",
+      "text": "È disponibile un solo soccorso carburante per questa carriera: trenta unità, dieci punti fiducia in meno. Anche l'umiliazione è contabilizzata."
+    },
+    {
+      "id": "bob_014",
+      "speaker": "B.O.B.",
+      "trigger": "fuel.rescue_used",
+      "tone": "info",
+      "text": "Soccorso ricevuto. La Direzione ha registrato l'evento come «interessante opportunità di miglioramento personale»."
+    },
+    {
+      "id": "bob_015",
+      "speaker": "B.O.B.",
+      "trigger": "cargo.near_full",
+      "tone": "warning",
+      "text": "Stiva quasi piena. Suggerisco di vendere o raffinare: abbiamo iniziato a impilare il silicio nella sala riunioni."
+    },
+    {
+      "id": "bob_016",
+      "speaker": "B.O.B.",
+      "trigger": "cargo.full",
+      "tone": "critical",
+      "text": "Stiva al cento per cento. Nessun'altra consegna potrà essere scaricata finché non liberiamo spazio."
+    },
+    {
+      "id": "bob_017",
+      "speaker": "B.O.B.",
+      "trigger": "cargo.full",
+      "tone": "critical",
+      "text": "La stiva è piena. Anche i miei rapporti di ottimismo lo sono, ma quelli non bloccano la produzione."
+    },
+    {
+      "id": "bob_018",
+      "speaker": "B.O.B.",
+      "trigger": "cargo.unload_partial",
+      "tone": "info",
+      "text": "Scarico parziale completato. Il resto è ancora nelle navette: tecnicamente non è disordine, è inventario in transito."
+    },
+    {
+      "id": "bob_019",
+      "speaker": "B.O.B.",
+      "trigger": "shuttle.waiting",
+      "tone": "warning",
+      "text": "Una navetta aspetta spazio di scarico. Il pilota automatico ha chiesto se possiamo chiamarla «magazzino temporaneo»."
+    },
+    {
+      "id": "bob_020",
+      "speaker": "B.O.B.",
+      "trigger": "shuttle.delivery",
+      "tone": "info",
+      "text": "Consegna ricevuta. Nessuna cerimonia, per favore: il reparto risorse umane le fatturerebbe gli applausi."
+    },
+    {
+      "id": "bob_021",
+      "speaker": "B.O.B.",
+      "trigger": "shuttle.reroute",
+      "tone": "info",
+      "text": "La nave madre si è spostata; ho aggiornato la rotta delle navette. Le merci ci seguiranno, a differenza della reputazione."
+    },
+    {
+      "id": "bob_022",
+      "speaker": "B.O.B.",
+      "trigger": "mining.paused_credits",
+      "tone": "warning",
+      "text": "Estrazione sospesa per insufficienza di crediti operativi. Il minerale è ancora lì, incredibilmente poco sensibile alle nostre scuse."
+    },
+    {
+      "id": "bob_023",
+      "speaker": "B.O.B.",
+      "trigger": "mining.deposit_empty",
+      "tone": "info",
+      "text": "Giacimento esaurito. Congratulazioni: abbiamo convertito un luogo naturale in un dato storico."
+    },
+    {
+      "id": "bob_024",
+      "speaker": "B.O.B.",
+      "trigger": "planet.discovered",
+      "tone": "info",
+      "text": "Nuovo pianeta rilevato. Non sappiamo ancora cosa contenga, ma il nome commerciale è già disponibile."
+    },
+    {
+      "id": "bob_025",
+      "speaker": "B.O.B.",
+      "trigger": "planet.no_resources",
+      "tone": "info",
+      "text": "La scansione non mostra giacimenti utili. Rimane un ottimo pianeta da osservare gratuitamente."
+    },
+    {
+      "id": "bob_026",
+      "speaker": "B.O.B.",
+      "trigger": "planet.rich",
+      "tone": "info",
+      "text": "Giacimenti promettenti. Le mie stime sono scientifiche; il sorriso del Ragionier Zarg lo sarà molto meno."
+    },
+    {
+      "id": "bob_027",
+      "speaker": "B.O.B.",
+      "trigger": "planet.anomaly",
+      "tone": "mystery",
+      "text": "Rilevo una struttura che non compare nei registri della regione. Non dovrebbe essere qui. Neppure io ho una spiegazione pronta."
+    },
+    {
+      "id": "bob_028",
+      "speaker": "B.O.B.",
+      "trigger": "card.hand_full",
+      "tone": "warning",
+      "text": "Mano piena: la generazione passiva delle carte è sospesa. Perfino le opportunità hanno bisogno di parcheggio."
+    },
+    {
+      "id": "bob_029",
+      "speaker": "B.O.B.",
+      "trigger": "card.generated",
+      "tone": "info",
+      "text": "Nuova carta disponibile. La Direzione la definisce una scelta strategica. Io la chiamerei un raro momento di generosità."
+    },
+    {
+      "id": "bob_030",
+      "speaker": "B.O.B.",
+      "trigger": "card.invalid_target",
+      "tone": "warning",
+      "text": "Bersaglio non valido. La carta è intatta. La sua dignità professionale è un'altra questione."
+    },
+    {
+      "id": "bob_031",
+      "speaker": "B.O.B.",
+      "trigger": "card.confirm",
+      "tone": "info",
+      "text": "Operazione pronta. Confermi per consumare la carta e applicare i costi indicati. Possiamo ancora fingere che fosse una buona idea."
+    },
+    {
+      "id": "bob_032",
+      "speaker": "B.O.B.",
+      "trigger": "card.cancel",
+      "tone": "info",
+      "text": "Operazione annullata. Nessuna carta consumata; nessun modulo legale da compilare. Per questa volta."
+    },
+    {
+      "id": "bob_033",
+      "speaker": "B.O.B.",
+      "trigger": "card.market_refresh",
+      "tone": "info",
+      "text": "Il mercato carte è stato aggiornato. Le offerte sono nuove; il concetto di «prezzo conveniente» resta in discussione."
+    },
+    {
+      "id": "bob_034",
+      "speaker": "B.O.B.",
+      "trigger": "card.research_missing",
+      "tone": "warning",
+      "text": "Non abbiamo una carta Ricerca disponibile. Consiglio di verificare ricompense e prossima rotazione del mercato."
+    },
+    {
+      "id": "bob_035",
+      "speaker": "B.O.B.",
+      "trigger": "research.completed",
+      "tone": "info",
+      "text": "Ricerca completata. Abbiamo impiegato risorse per dimostrare che impiegandone altre ne risparmieremo in futuro."
+    },
+    {
+      "id": "bob_036",
+      "speaker": "B.O.B.",
+      "trigger": "research.available",
+      "tone": "info",
+      "text": "Una tecnologia è sbloccabile. Ho preparato una spiegazione comprensibile anche al Comitato Investimenti."
+    },
+    {
+      "id": "bob_037",
+      "speaker": "B.O.B.",
+      "trigger": "factory.idle",
+      "tone": "info",
+      "text": "La fabbrica è inattiva. Per una volta non perché si sia guastato qualcosa: manca soltanto una coda di produzione."
+    },
+    {
+      "id": "bob_038",
+      "speaker": "B.O.B.",
+      "trigger": "factory.done",
+      "tone": "info",
+      "text": "Lotto raffinato completato. Il processo ha trasformato minerali in materiale più costoso. È quasi magia contabile."
+    },
+    {
+      "id": "bob_039",
+      "speaker": "B.O.B.",
+      "trigger": "module.available",
+      "tone": "info",
+      "text": "È disponibile un nuovo modulo per la flotta. Potremmo investire in capacità reale oppure continuare ad affidarci alle motivazioni aziendali."
+    },
+    {
+      "id": "bob_040",
+      "speaker": "B.O.B.",
+      "trigger": "module.craftable",
+      "tone": "info",
+      "text": "Abbiamo i materiali necessari per costruire un modulo. Dex ha già aperto la cassetta degli attrezzi senza autorizzazione."
+    },
+    {
+      "id": "bob_041",
+      "speaker": "B.O.B.",
+      "trigger": "module.install",
+      "tone": "info",
+      "text": "Modulo installato. L'aggiornamento è immediato; il senso di superiorità dell'equipaggio richiederà qualche minuto."
+    },
+    {
+      "id": "bob_042",
+      "speaker": "B.O.B.",
+      "trigger": "module.uninstall",
+      "tone": "info",
+      "text": "Modulo rimosso e conservato. Nessuna duplicazione consentita: ho controllato due volte, per deludere tutti."
+    },
+    {
+      "id": "bob_043",
+      "speaker": "B.O.B.",
+      "trigger": "credits.low",
+      "tone": "warning",
+      "text": "Liquidità in calo. Abbiamo ancora diverse opzioni; «smettere di comprare cose brillanti» è la meno popolare."
+    },
+    {
+      "id": "bob_044",
+      "speaker": "B.O.B.",
+      "trigger": "credits.low",
+      "tone": "warning",
+      "text": "Il saldo disponibile comincia a somigliare a un codice di errore. Forse vendere qualcosa potrebbe essere una strategia."
+    },
+    {
+      "id": "bob_045",
+      "speaker": "B.O.B.",
+      "trigger": "credits.zero",
+      "tone": "critical",
+      "text": "Crediti operativi esauriti. La nave funziona ancora, ma alcuni contratti hanno scoperto improvvisamente il diritto al riposo."
+    },
+    {
+      "id": "bob_046",
+      "speaker": "B.O.B.",
+      "trigger": "review.near",
+      "tone": "warning",
+      "text": "Revisione in avvicinamento. Mancano {cards_remaining} carte giocate: consiglio di tenere da parte la quota richiesta."
+    },
+    {
+      "id": "bob_047",
+      "speaker": "B.O.B.",
+      "trigger": "review.near",
+      "tone": "warning",
+      "text": "Il Comitato di Valutazione si sta preparando. Ho ridotto la luminosità delle statistiche meno lusinghiere."
+    },
+    {
+      "id": "bob_048",
+      "speaker": "B.O.B.",
+      "trigger": "review.ready",
+      "tone": "critical",
+      "text": "Quarantesima carta giocata. È il momento della revisione: servono {quota} Cr disponibili."
+    },
+    {
+      "id": "bob_049",
+      "speaker": "B.O.B.",
+      "trigger": "review.paid",
+      "tone": "info",
+      "text": "Quota pagata. La Direzione conferma che il suo posto è al sicuro fino alla prossima richiesta."
+    },
+    {
+      "id": "bob_050",
+      "speaker": "B.O.B.",
+      "trigger": "review.grace",
+      "tone": "critical",
+      "text": "Quota non pagata. Restano {grace_cards} carte giocate prima della risoluzione definitiva della pratica. È un modo gentile per dire «licenziamento»."
+    },
+    {
+      "id": "bob_051",
+      "speaker": "B.O.B.",
+      "trigger": "review.fail",
+      "tone": "critical",
+      "text": "La Direzione ha chiuso la carriera. Ho archiviato le sue decisioni con un livello di riservatezza proporzionale all'imbarazzo."
+    },
+    {
+      "id": "bob_052",
+      "speaker": "B.O.B.",
+      "trigger": "loan.due",
+      "tone": "warning",
+      "text": "È in arrivo una rata del prestito. Il denaro non dorme mai; soprattutto quello che dobbiamo restituire."
+    },
+    {
+      "id": "bob_053",
+      "speaker": "B.O.B.",
+      "trigger": "loan.late",
+      "tone": "warning",
+      "text": "Rata insoluta. Gli interessi crescono con costanza ammirevole, a differenza dei nostri ricavi."
+    },
+    {
+      "id": "bob_054",
+      "speaker": "B.O.B.",
+      "trigger": "jump.preview",
+      "tone": "info",
+      "text": "Destinazione iperspaziale individuata: risorse {resource_estimate}, civiltà {civilization_estimate}, rischi {risk_estimate}. Sono stime, non garanzie."
+    },
+    {
+      "id": "bob_055",
+      "speaker": "B.O.B.",
+      "trigger": "jump.recall",
+      "tone": "warning",
+      "text": "Richiamo flotta avviato. I contratti regionali verranno interrotti; le missioni locali saranno abbandonate senza penalità."
+    },
+    {
+      "id": "bob_056",
+      "speaker": "B.O.B.",
+      "trigger": "jump.abort",
+      "tone": "info",
+      "text": "Preparazione annullata. Carta e carburante non sono stati consumati. La vecchia regione può continuare a sopportarci."
+    },
+    {
+      "id": "bob_057",
+      "speaker": "B.O.B.",
+      "trigger": "jump.complete",
+      "tone": "info",
+      "text": "Salto effettuato: sessanta unità di carburante consumate. La regione precedente è ora una voce in archivio."
+    },
+    {
+      "id": "bob_058",
+      "speaker": "B.O.B.",
+      "trigger": "rare.signal",
+      "tone": "mystery",
+      "text": "Questo segnale porta una firma OmniProfit precedente al nostro arrivo. Perché qualcuno dovrebbe averlo cancellato?"
+    },
+    {
+      "id": "bob_059",
+      "speaker": "B.O.B.",
+      "trigger": "rare.director",
+      "tone": "mystery",
+      "text": "Ho trovato un identificativo di direttore non presente nell'organigramma. Correzione: non più presente."
+    },
+    {
+      "id": "bob_060",
+      "speaker": "B.O.B.",
+      "trigger": "rare.silence",
+      "tone": "mystery",
+      "text": "Per una volta non ho una battuta, Direttore. Vorrei prima capire chi ha scritto questi ordini."
+    },
+    {
+      "id": "rag_zarg_001",
+      "speaker": "Rag. Zarg",
+      "trigger": "credits.low",
+      "tone": "warning",
+      "text": "Direttore, un piccolo promemoria: se spendiamo tutti i crediti, il denaro non ricompare per entusiasmo."
+    },
+    {
+      "id": "rag_zarg_002",
+      "speaker": "Rag. Zarg",
+      "trigger": "credits.low",
+      "tone": "warning",
+      "text": "Il bilancio ha iniziato a sudare. Non è una metafora: ho versato il caffè sul terminale."
+    },
+    {
+      "id": "rag_zarg_003",
+      "speaker": "Rag. Zarg",
+      "trigger": "credits.low",
+      "tone": "warning",
+      "text": "Suggerisco una vendita manuale. Una vendita vera, possibilmente, non un «potenziale di monetizzazione»."
+    },
+    {
+      "id": "rag_zarg_004",
+      "speaker": "Rag. Zarg",
+      "trigger": "credits.zero",
+      "tone": "critical",
+      "text": "Saldo zero. Un numero elegante, simmetrico, catastrofico."
+    },
+    {
+      "id": "rag_zarg_005",
+      "speaker": "Rag. Zarg",
+      "trigger": "credits.zero",
+      "tone": "critical",
+      "text": "La contabilità è così vuota che ho appena ricevuto una fattura dall'eco."
+    },
+    {
+      "id": "rag_zarg_006",
+      "speaker": "Rag. Zarg",
+      "trigger": "cargo.full",
+      "tone": "warning",
+      "text": "La stiva è piena? Magnifico! Adesso trasformi quella montagna in crediti prima che diventi un costo assicurativo."
+    },
+    {
+      "id": "rag_zarg_007",
+      "speaker": "Rag. Zarg",
+      "trigger": "cargo.full",
+      "tone": "warning",
+      "text": "Abbiamo 500 unità di capacità e nessuna unità di buon senso rimasta. Venda o raffini, la prego."
+    },
+    {
+      "id": "rag_zarg_008",
+      "speaker": "Rag. Zarg",
+      "trigger": "market.price_high",
+      "tone": "info",
+      "text": "Prezzo sopra la media galattica: ora è il momento di vendere, a meno che non desideri sviluppare una collezione privata di minerali."
+    },
+    {
+      "id": "rag_zarg_009",
+      "speaker": "Rag. Zarg",
+      "trigger": "market.price_low",
+      "tone": "info",
+      "text": "Prezzi in ribasso. Non chiamiamola perdita: la Direzione preferisce «liquidità da maturare»."
+    },
+    {
+      "id": "rag_zarg_010",
+      "speaker": "Rag. Zarg",
+      "trigger": "market.demand",
+      "tone": "info",
+      "text": "Domanda speciale rilevata. Finalmente qualcuno disposto a pagare più del valore sentimentalmente attribuito alle nostre scorte."
+    },
+    {
+      "id": "rag_zarg_011",
+      "speaker": "Rag. Zarg",
+      "trigger": "market.refresh",
+      "tone": "info",
+      "text": "Listini aggiornati. Il mercato è cambiato, mentre la mia opinione sui suoi acquisti rimane stabile."
+    },
+    {
+      "id": "rag_zarg_012",
+      "speaker": "Rag. Zarg",
+      "trigger": "market.sell",
+      "tone": "info",
+      "text": "Vendita registrata. Ho provato una gioia intensa durata esattamente il tempo di calcolare le spese."
+    },
+    {
+      "id": "rag_zarg_013",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.near",
+      "tone": "warning",
+      "text": "Mancano {cards_remaining} carte alla revisione. Ricordi: la Direzione accetta crediti, non prospettive."
+    },
+    {
+      "id": "rag_zarg_014",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.near",
+      "tone": "warning",
+      "text": "Ho preparato due cartelle: «quota disponibile» e «lettera di commiato». Mi dica quale devo stampare."
+    },
+    {
+      "id": "rag_zarg_015",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.near",
+      "tone": "warning",
+      "text": "Non vorrei allarmarla, ma ho già lucidato il tasto con cui il sistema richiede il pagamento."
+    },
+    {
+      "id": "rag_zarg_016",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.ready",
+      "tone": "critical",
+      "text": "Revisione avviata. La quota è di {quota} Cr; per la prima verifica contano anche i crediti iniziali. Un lusso destinato a non ripetersi facilmente."
+    },
+    {
+      "id": "rag_zarg_017",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.ready",
+      "tone": "critical",
+      "text": "Quaranta carte giocate. Ora il nostro indicatore più importante è il saldo disponibile, e temo non abbia senso del teatro."
+    },
+    {
+      "id": "rag_zarg_018",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.paid",
+      "tone": "info",
+      "text": "Versamento completato. Non mi congratulo: per un contabile, pagare ciò che si deve è un evento meteorologico ordinario."
+    },
+    {
+      "id": "rag_zarg_019",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.paid",
+      "tone": "info",
+      "text": "Quota saldata. Ho già programmato il prossimo promemoria, in modo da preservare il nostro rapporto di ansia professionale."
+    },
+    {
+      "id": "rag_zarg_020",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.grace",
+      "tone": "critical",
+      "text": "La quota non è stata saldata. Restano {grace_cards} giocate di tolleranza. Ogni carta ora pesa più di quanto suggerisca il cartoncino."
+    },
+    {
+      "id": "rag_zarg_021",
+      "speaker": "Rag. Zarg",
+      "trigger": "review.fail",
+      "tone": "critical",
+      "text": "La pratica è stata chiusa per insolvenza. Nel registro dei direttori l'esito sarà indicato con un asterisco molto grande."
+    },
+    {
+      "id": "rag_zarg_022",
+      "speaker": "Rag. Zarg",
+      "trigger": "loan.offer",
+      "tone": "info",
+      "text": "È disponibile una linea di credito. Il tasso del venti per cento rende la proposta particolarmente entusiasmante per chi presta."
+    },
+    {
+      "id": "rag_zarg_023",
+      "speaker": "Rag. Zarg",
+      "trigger": "loan.due",
+      "tone": "warning",
+      "text": "Rata in scadenza dopo questa giocata. La priorità è sua; il prelievo avverrà prima della quota aziendale se coincidono."
+    },
+    {
+      "id": "rag_zarg_024",
+      "speaker": "Rag. Zarg",
+      "trigger": "loan.late",
+      "tone": "critical",
+      "text": "Rata non pagata: l'importo residuo si aggrava e la fiducia diminuisce. I numeri hanno una memoria terribile."
+    },
+    {
+      "id": "rag_zarg_025",
+      "speaker": "Rag. Zarg",
+      "trigger": "loan.denied",
+      "tone": "warning",
+      "text": "Nuovo prestito non disponibile durante la tolleranza della quota. Perfino il debito possiede dei limiti morali."
+    },
+    {
+      "id": "rag_zarg_026",
+      "speaker": "Rag. Zarg",
+      "trigger": "factory.build",
+      "tone": "info",
+      "text": "Duecento crediti e materiali grezzi per la prima fabbrica. Vorrei chiamarlo investimento; il mio stomaco lo chiama scommessa."
+    },
+    {
+      "id": "rag_zarg_027",
+      "speaker": "Rag. Zarg",
+      "trigger": "factory.refine",
+      "tone": "info",
+      "text": "La raffinazione ha un costo operativo. Il margine netto è una creatura timida: va cercata con attenzione."
+    },
+    {
+      "id": "rag_zarg_028",
+      "speaker": "Rag. Zarg",
+      "trigger": "module.available",
+      "tone": "info",
+      "text": "È possibile acquistare i materiali necessari per un modulo. «Possibile» non significa «raccomandato»."
+    },
+    {
+      "id": "rag_zarg_029",
+      "speaker": "Rag. Zarg",
+      "trigger": "module.craft",
+      "tone": "info",
+      "text": "Modulo fabbricabile con materiali raffinati. Ho già sottratto il costo dalle proiezioni ottimistiche."
+    },
+    {
+      "id": "rag_zarg_030",
+      "speaker": "Rag. Zarg",
+      "trigger": "contract.start",
+      "tone": "info",
+      "text": "Contratto minerario avviato. L'addebito iniziale è reale; i ricavi sono ancora una splendida ipotesi."
+    },
+    {
+      "id": "rag_zarg_031",
+      "speaker": "Rag. Zarg",
+      "trigger": "contract.pause",
+      "tone": "warning",
+      "text": "Operazioni sospese: senza liquidità i contratti preferiscono non lavorare. Li capisco, pur non potendo approvarlo."
+    },
+    {
+      "id": "rag_zarg_032",
+      "speaker": "Rag. Zarg",
+      "trigger": "profit.negative",
+      "tone": "warning",
+      "text": "Il profitto del periodo è negativo. Le entrate hanno lavorato molto; le uscite hanno fatto straordinari."
+    },
+    {
+      "id": "rag_zarg_033",
+      "speaker": "Rag. Zarg",
+      "trigger": "profit.positive",
+      "tone": "info",
+      "text": "Periodo in utile. È troppo presto per rilassarci, ma abbastanza per togliere un punto esclamativo al mio rapporto."
+    },
+    {
+      "id": "rag_zarg_034",
+      "speaker": "Rag. Zarg",
+      "trigger": "trust.low",
+      "tone": "warning",
+      "text": "La fiducia aziendale è scesa. Sconsiglio ulteriori richieste di favore al reparto direzionale."
+    },
+    {
+      "id": "rag_zarg_035",
+      "speaker": "Rag. Zarg",
+      "trigger": "fuel.rescue_used",
+      "tone": "warning",
+      "text": "Il soccorso carburante ci è costato dieci punti fiducia. Per fortuna i punti non compaiono nella contabilità ordinaria."
+    },
+    {
+      "id": "dex_calder_001",
+      "speaker": "Dex Calder",
+      "trigger": "first.meet",
+      "tone": "tutorial",
+      "text": "Sono Dex. Se vibra, fuma o si accende con tre colpi, probabilmente è competenza mia."
+    },
+    {
+      "id": "dex_calder_002",
+      "speaker": "Dex Calder",
+      "trigger": "factory.first",
+      "tone": "tutorial",
+      "text": "La prima fabbrica è pronta. Non aspettarti miracoli: trasformiamo roccia in materiale utile, non dirigenti in persone ragionevoli."
+    },
+    {
+      "id": "dex_calder_003",
+      "speaker": "Dex Calder",
+      "trigger": "factory.idle",
+      "tone": "info",
+      "text": "Hai una fabbrica ferma e una stiva che trabocca. Mi stai mettendo alla prova o stai preparando una scultura concettuale?"
+    },
+    {
+      "id": "dex_calder_004",
+      "speaker": "Dex Calder",
+      "trigger": "factory.queue",
+      "tone": "info",
+      "text": "Ho avviato la coda di raffinazione. Una volta impostata lavora da sola: non serve venire qui a controllare ogni bullone."
+    },
+    {
+      "id": "dex_calder_005",
+      "speaker": "Dex Calder",
+      "trigger": "factory.done",
+      "tone": "info",
+      "text": "Lotto completato. Non è elegante, ma funziona. È il mio genere preferito di tecnologia."
+    },
+    {
+      "id": "dex_calder_006",
+      "speaker": "Dex Calder",
+      "trigger": "factory.blocked",
+      "tone": "warning",
+      "text": "Produzione sospesa. O mancano materiali o manca spazio: nessuna delle due cose si risolve fissando il pannello."
+    },
+    {
+      "id": "dex_calder_007",
+      "speaker": "Dex Calder",
+      "trigger": "fuel.low",
+      "tone": "warning",
+      "text": "Il motore è sano. È il serbatoio che ha deciso di non contribuire più al progetto."
+    },
+    {
+      "id": "dex_calder_008",
+      "speaker": "Dex Calder",
+      "trigger": "fuel.empty",
+      "tone": "critical",
+      "text": "Possiamo lucidare gli ugelli quanto vuoi, ma senza carburante sono decorazioni molto costose."
+    },
+    {
+      "id": "dex_calder_009",
+      "speaker": "Dex Calder",
+      "trigger": "fuel.refine",
+      "tone": "info",
+      "text": "Con il minerale energetico giusto possiamo produrre carburante in fabbrica. Più lavoro, meno umiliazioni da soccorso aziendale."
+    },
+    {
+      "id": "dex_calder_010",
+      "speaker": "Dex Calder",
+      "trigger": "fuel.rescue",
+      "tone": "warning",
+      "text": "Ho visto il modulo del soccorso: trenta unità e dieci punti fiducia. La meccanica funziona; la dignità no."
+    },
+    {
+      "id": "dex_calder_011",
+      "speaker": "Dex Calder",
+      "trigger": "shuttle.stuck",
+      "tone": "warning",
+      "text": "Le navette hanno il carico ma non trovano spazio nella stiva. Non chiederò a un pilota automatico di diventare un armadio."
+    },
+    {
+      "id": "dex_calder_012",
+      "speaker": "Dex Calder",
+      "trigger": "shuttle.route",
+      "tone": "info",
+      "text": "La nave madre si sposta e le navette ricalcolano la rotta. Questa è ingegneria. Se lo chiama «sinergia», mi dimetto."
+    },
+    {
+      "id": "dex_calder_013",
+      "speaker": "Dex Calder",
+      "trigger": "shuttle.priority",
+      "tone": "info",
+      "text": "Puoi cambiare le priorità dei contratti. Non aumenta le navette, ma almeno evita che il ferro rubi la precedenza all'iridio."
+    },
+    {
+      "id": "dex_calder_014",
+      "speaker": "Dex Calder",
+      "trigger": "mining.deposit_empty",
+      "tone": "info",
+      "text": "Giacimento finito. Se vuoi estrarre altro, servirà un nuovo bersaglio, non una trivella più ottimista."
+    },
+    {
+      "id": "dex_calder_015",
+      "speaker": "Dex Calder",
+      "trigger": "research.open",
+      "tone": "info",
+      "text": "Abbiamo nuove tecnologie disponibili. Alcune migliorano le navi; altre servono solo a far lavorare meno me."
+    },
+    {
+      "id": "dex_calder_016",
+      "speaker": "Dex Calder",
+      "trigger": "research.done",
+      "tone": "info",
+      "text": "Ricerca completata. Ora il componente è più efficiente e la Direzione si attribuirà il merito."
+    },
+    {
+      "id": "dex_calder_017",
+      "speaker": "Dex Calder",
+      "trigger": "module.available",
+      "tone": "info",
+      "text": "Con i materiali raffinati possiamo costruire un modulo. Un potenziamento vero, non uno sticker motivazionale sullo scafo."
+    },
+    {
+      "id": "dex_calder_018",
+      "speaker": "Dex Calder",
+      "trigger": "module.slot_full",
+      "tone": "warning",
+      "text": "Entrambi gli slot del modulo sono occupati. Se vuoi cambiarne uno, puoi rimuoverlo e conservarlo, non duplicarlo."
+    },
+    {
+      "id": "dex_calder_019",
+      "speaker": "Dex Calder",
+      "trigger": "module.remote",
+      "tone": "info",
+      "text": "Installazione remota completata anche durante il contratto. La fisica protesta; io ho firmato la deroga."
+    },
+    {
+      "id": "dex_calder_020",
+      "speaker": "Dex Calder",
+      "trigger": "module.speed",
+      "tone": "info",
+      "text": "Questo modulo riduce i tempi di trasporto. Il segreto è semplice: far arrivare le merci prima delle fatture."
+    },
+    {
+      "id": "dex_calder_021",
+      "speaker": "Dex Calder",
+      "trigger": "module.mining",
+      "tone": "info",
+      "text": "Modulo estrattivo pronto. Più minerale al minuto, stessa capacità della stiva: tieni d'occhio la logistica."
+    },
+    {
+      "id": "dex_calder_022",
+      "speaker": "Dex Calder",
+      "trigger": "module.protection",
+      "tone": "info",
+      "text": "Schermature potenziate: siamo più resistenti agli imprevisti. Non abbiamo installato armi; nessuno qui vuole una guerra."
+    },
+    {
+      "id": "dex_calder_023",
+      "speaker": "Dex Calder",
+      "trigger": "ship.purchase",
+      "tone": "info",
+      "text": "Una seconda nave mineraria è un'ottima idea, se hai anche navette capaci di seguirne la produzione."
+    },
+    {
+      "id": "dex_calder_024",
+      "speaker": "Dex Calder",
+      "trigger": "jump.ready",
+      "tone": "warning",
+      "text": "Iperspazio operativo. Ricordati: sessanta unità di carburante, richiamo flotta, e niente retromarcia."
+    },
+    {
+      "id": "dex_calder_025",
+      "speaker": "Dex Calder",
+      "trigger": "jump.recall",
+      "tone": "info",
+      "text": "Sto richiamando tutti. Il materiale già caricato proveremo a portarlo con noi; quello lasciato sul pianeta rimarrà un souvenir costoso."
+    },
+    {
+      "id": "dex_calder_026",
+      "speaker": "Dex Calder",
+      "trigger": "rare.machine",
+      "tone": "mystery",
+      "text": "Questo circuito non dovrebbe esistere nel catalogo OmniProfit. Eppure qualcuno ha previsto esattamente dove avremmo saldato il cavo."
+    },
+    {
+      "id": "direttore_magnus_voss_001",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "first.meet",
+      "tone": "story",
+      "text": "Direttore, non mi interessano le sue intenzioni. Mi interessano le ricevute che dimostrano che ha avuto successo."
+    },
+    {
+      "id": "direttore_magnus_voss_002",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "review.near",
+      "tone": "warning",
+      "text": "La prossima revisione non è una minaccia. È un'opportunità per dimostrare quanto tenga al proprio incarico."
+    },
+    {
+      "id": "direttore_magnus_voss_003",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "review.near",
+      "tone": "warning",
+      "text": "Il Consiglio ama la puntualità. Si ricordi che la puntualità è più facile da misurare dei risultati."
+    },
+    {
+      "id": "direttore_magnus_voss_004",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "review.ready",
+      "tone": "critical",
+      "text": "Sono state giocate quaranta carte. La prima quota è di seicento crediti. Non le sto chiedendo di essere brillante; soltanto solvibile."
+    },
+    {
+      "id": "direttore_magnus_voss_005",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "review.paid",
+      "tone": "info",
+      "text": "Pagamento ricevuto. La sua carriera è confermata. Non confonda questa comunicazione con un complimento."
+    },
+    {
+      "id": "direttore_magnus_voss_006",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "review.grace",
+      "tone": "critical",
+      "text": "Il Consiglio concede una breve tolleranza. È un privilegio che preferiremmo non ricordare nella sua scheda."
+    },
+    {
+      "id": "direttore_magnus_voss_007",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "review.fail",
+      "tone": "critical",
+      "text": "OmniProfit ringrazia per il servizio. La sua sostituzione era stata preventivamente inserita a bilancio."
+    },
+    {
+      "id": "direttore_magnus_voss_008",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "trust.high",
+      "tone": "info",
+      "text": "La Direzione apprezza il suo rendimento. Continui così e forse le permetteremo di chiamarlo «iniziativa personale»."
+    },
+    {
+      "id": "direttore_magnus_voss_009",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "trust.low",
+      "tone": "warning",
+      "text": "I suoi indicatori di affidabilità sono inferiori alle attese. Il suo entusiasmo non compare fra le variabili correttive."
+    },
+    {
+      "id": "direttore_magnus_voss_010",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "credits.low",
+      "tone": "warning",
+      "text": "Mi dicono che il suo saldo si sta assottigliando. L'universo è vasto, Direttore. La pazienza del Consiglio no."
+    },
+    {
+      "id": "direttore_magnus_voss_011",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "loan.late",
+      "tone": "warning",
+      "text": "Un debito non onorato non è un errore: è una dichiarazione sul valore della sua parola."
+    },
+    {
+      "id": "direttore_magnus_voss_012",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "jump.first",
+      "tone": "story",
+      "text": "Un nuovo settore significa nuovi ricavi. Le consiglio di non perdere tempo a chiedersi chi vi abitasse prima."
+    },
+    {
+      "id": "direttore_magnus_voss_013",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "jump.complete",
+      "tone": "info",
+      "text": "Espansione registrata. Le opportunità della regione precedente risultano chiuse secondo protocollo."
+    },
+    {
+      "id": "direttore_magnus_voss_014",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "mission.corporate",
+      "tone": "info",
+      "text": "Abbiamo assegnato un obiettivo. Non lo consideri un ordine: gli ordini richiedono una forma amministrativa più costosa."
+    },
+    {
+      "id": "direttore_magnus_voss_015",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "rare.director",
+      "tone": "mystery",
+      "text": "Non tutte le carriere meritano di essere ricordate. Alcune, per ragioni operative, devono essere dimenticate."
+    },
+    {
+      "id": "direttore_magnus_voss_016",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "rare.reveal",
+      "tone": "mystery",
+      "text": "Se ha trovato quei registri, Direttore, comprenderà perché la Direzione preferisce parlare di futuro."
+    },
+    {
+      "id": "direttore_magnus_voss_017",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "ending.loyal",
+      "tone": "story",
+      "text": "Ha scelto la continuità. Benvenuto fra coloro che decidono quali numeri il resto della galassia potrà vedere."
+    },
+    {
+      "id": "direttore_magnus_voss_018",
+      "speaker": "Direttore Magnus Voss",
+      "trigger": "ending.rebel",
+      "tone": "story",
+      "text": "Crede che pubblicare la verità sia una vittoria? Le auguro di scoprire chi la finanzierà domani."
+    },
+    {
+      "id": "xylo_venn_001",
+      "speaker": "Xylo Venn",
+      "trigger": "first.meet",
+      "tone": "story",
+      "text": "Stai cercando minerali? Io cerco posti che nessuno ha ancora avuto il tempo di rovinare. Possiamo aiutarci."
+    },
+    {
+      "id": "xylo_venn_002",
+      "speaker": "Xylo Venn",
+      "trigger": "planet.discovered",
+      "tone": "info",
+      "text": "Se lo vedi da lontano è un pianeta. Se ci passi vicino senza osservare, è un'occasione persa."
+    },
+    {
+      "id": "xylo_venn_003",
+      "speaker": "Xylo Venn",
+      "trigger": "planet.investigate",
+      "tone": "info",
+      "text": "Un buon esploratore distingue fra ciò che brilla e ciò che vale. Le corporazioni confondono spesso le due cose."
+    },
+    {
+      "id": "xylo_venn_004",
+      "speaker": "Xylo Venn",
+      "trigger": "planet.rich",
+      "tone": "info",
+      "text": "Quel giacimento è raro. Non dirlo troppo forte: gli ispettori OmniProfit potrebbero sentirti dal vuoto."
+    },
+    {
+      "id": "xylo_venn_005",
+      "speaker": "Xylo Venn",
+      "trigger": "planet.no_resources",
+      "tone": "info",
+      "text": "Niente minerali utili, ma guarda quelle nuvole. Non tutto deve finire in una stiva."
+    },
+    {
+      "id": "xylo_venn_006",
+      "speaker": "Xylo Venn",
+      "trigger": "exploration.discovery",
+      "tone": "info",
+      "text": "Ho segnato una rotta tra due detriti. C'è qualcosa dietro, e non sembra spazzatura normale."
+    },
+    {
+      "id": "xylo_venn_007",
+      "speaker": "Xylo Venn",
+      "trigger": "exploration.reward",
+      "tone": "info",
+      "text": "Hai recuperato una carta. Prendila: io preferisco tenere il diritto di dire «te l'avevo detto»."
+    },
+    {
+      "id": "xylo_venn_008",
+      "speaker": "Xylo Venn",
+      "trigger": "mission.offer",
+      "tone": "info",
+      "text": "Ho una pista su una stazione abbandonata. Puoi ignorarla, ma non tornerà a farsi scoprire due volte."
+    },
+    {
+      "id": "xylo_venn_009",
+      "speaker": "Xylo Venn",
+      "trigger": "mission.abandoned",
+      "tone": "info",
+      "text": "Hai lasciato quella missione indietro. Nello spazio le strade non finiscono; sono le occasioni a farlo."
+    },
+    {
+      "id": "xylo_venn_010",
+      "speaker": "Xylo Venn",
+      "trigger": "region.exhausted",
+      "tone": "info",
+      "text": "Conosci quasi tutte le storie di questo settore. Non tutte hanno un lieto fine, ma almeno ora sai dove cercarne altre."
+    },
+    {
+      "id": "xylo_venn_011",
+      "speaker": "Xylo Venn",
+      "trigger": "jump.preview",
+      "tone": "info",
+      "text": "Le stime sulla nuova regione? Sono indizi, non promesse. Il cielo non firma contratti."
+    },
+    {
+      "id": "xylo_venn_012",
+      "speaker": "Xylo Venn",
+      "trigger": "jump.complete",
+      "tone": "info",
+      "text": "Nuovo settore. Prima regola: ascolta i segnali deboli. Le grandi aziende parlano sempre troppo forte."
+    },
+    {
+      "id": "xylo_venn_013",
+      "speaker": "Xylo Venn",
+      "trigger": "rare.signal",
+      "tone": "mystery",
+      "text": "Quel segnale usa un codice vecchio, ma non abbastanza da essere un relitto. Qualcuno ha voluto farlo sembrare tale."
+    },
+    {
+      "id": "xylo_venn_014",
+      "speaker": "Xylo Venn",
+      "trigger": "rare.director",
+      "tone": "mystery",
+      "text": "Ho visto altri esploratori seguire quelle coordinate. Nessuno è tornato con una spiegazione."
+    },
+    {
+      "id": "xylo_venn_015",
+      "speaker": "Xylo Venn",
+      "trigger": "rare.trust",
+      "tone": "story",
+      "text": "La verità non è una risorsa da minare. Se la strappi troppo in fretta, rischi di distruggere tutto il resto."
+    },
+    {
+      "id": "xylo_venn_016",
+      "speaker": "Xylo Venn",
+      "trigger": "ending.independent",
+      "tone": "story",
+      "text": "Non sei più una pedina del loro mercato. Adesso devi decidere che tipo di mercato vuoi costruire."
+    },
+    {
+      "id": "barthol_krix_001",
+      "speaker": "Barthol Krix",
+      "trigger": "first.meet",
+      "tone": "story",
+      "text": "Benvenuto! Vendo ciò che serve, compro ciò che avanza e non faccio domande se le risposte possono svalutare la merce."
+    },
+    {
+      "id": "barthol_krix_002",
+      "speaker": "Barthol Krix",
+      "trigger": "market.price_high",
+      "tone": "info",
+      "text": "Prezzi alle stelle! È il momento in cui tutti diventano visionari, specialmente chi ha comprato ieri."
+    },
+    {
+      "id": "barthol_krix_003",
+      "speaker": "Barthol Krix",
+      "trigger": "market.price_low",
+      "tone": "info",
+      "text": "Non vendere nel panico. Oppure fallo da me: il panico è la mia seconda linea di ricavi."
+    },
+    {
+      "id": "barthol_krix_004",
+      "speaker": "Barthol Krix",
+      "trigger": "market.demand",
+      "tone": "info",
+      "text": "C'è un cliente che vuole proprio quello che hai in stiva. La coincidenza, in commercio, è una parola bellissima."
+    },
+    {
+      "id": "barthol_krix_005",
+      "speaker": "Barthol Krix",
+      "trigger": "market.refresh",
+      "tone": "info",
+      "text": "Nuovo giro di offerte. Le migliori durano poco e le peggiori si presentano come esclusive."
+    },
+    {
+      "id": "barthol_krix_006",
+      "speaker": "Barthol Krix",
+      "trigger": "market.sell",
+      "tone": "info",
+      "text": "Merce venduta, crediti incassati. Vedi? Lo spazio può essere un posto accogliente, quando qualcuno paga."
+    },
+    {
+      "id": "barthol_krix_007",
+      "speaker": "Barthol Krix",
+      "trigger": "card.market_refresh",
+      "tone": "info",
+      "text": "Carte fresche sul mercato. Non garantisco che siano buone idee: garantisco che hanno un prezzo."
+    },
+    {
+      "id": "barthol_krix_008",
+      "speaker": "Barthol Krix",
+      "trigger": "card.rare",
+      "tone": "info",
+      "text": "Una carta rara! Preferisco non dire come l'ho ottenuta: rovinerebbe il nostro rapporto di fiducia reciproca."
+    },
+    {
+      "id": "barthol_krix_009",
+      "speaker": "Barthol Krix",
+      "trigger": "credits.low",
+      "tone": "warning",
+      "text": "Hai pochi crediti? Nessun problema. Il mio negozio accetta anche opportunità future. Con interessi presenti."
+    },
+    {
+      "id": "barthol_krix_010",
+      "speaker": "Barthol Krix",
+      "trigger": "credits.zero",
+      "tone": "warning",
+      "text": "Senza crediti non posso venderti molto. Posso offrirti un consiglio gratuito, ma temo sia il mio prodotto peggiore."
+    },
+    {
+      "id": "barthol_krix_011",
+      "speaker": "Barthol Krix",
+      "trigger": "module.available",
+      "tone": "info",
+      "text": "È arrivata una partita di componenti interessanti. Per i moduli di bordo, però, Dex saprà dirti cosa si può costruire davvero."
+    },
+    {
+      "id": "barthol_krix_012",
+      "speaker": "Barthol Krix",
+      "trigger": "module.materials",
+      "tone": "info",
+      "text": "Hai le materie raffinate giuste? Bene. Ho quelle che ti mancano. Tutto il resto è negoziazione."
+    },
+    {
+      "id": "barthol_krix_013",
+      "speaker": "Barthol Krix",
+      "trigger": "mission.offer",
+      "tone": "info",
+      "text": "Un cliente ha una richiesta riservata. La ricompensa è dichiarata; l'eventuale sorpresa dipende da come lavori."
+    },
+    {
+      "id": "barthol_krix_014",
+      "speaker": "Barthol Krix",
+      "trigger": "mission.complete",
+      "tone": "info",
+      "text": "Consegna puntuale. Il cliente è felice e io non ho dovuto mentire sulla sua reputazione: giornata storica."
+    },
+    {
+      "id": "barthol_krix_015",
+      "speaker": "Barthol Krix",
+      "trigger": "jump.preview",
+      "tone": "info",
+      "text": "Nuova regione? Controlla almeno la presenza di civiltà. I pianeti disabitati sono pessimi nel pagare fatture."
+    },
+    {
+      "id": "barthol_krix_016",
+      "speaker": "Barthol Krix",
+      "trigger": "rare.director",
+      "tone": "mystery",
+      "text": "Ho commerciato con persone che oggi non risultano mai esistite. Il problema non è la memoria: sono gli archivi."
+    },
+    {
+      "id": "barthol_krix_017",
+      "speaker": "Barthol Krix",
+      "trigger": "ending.independent",
+      "tone": "story",
+      "text": "Se apri un commercio indipendente, ricordati di invitarmi. Posso essere un socio magnifico e un revisore terribile."
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Scena 1 — Primo contratto minerario",
+      "context": "Dopo il tutorial, prima estrazione avviata",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Contratto registrato. Il pianeta ha ufficialmente un nuovo significato per il bilancio."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Ho impostato la trivella a quattro unità al minuto. Più veloce di così, adesso, sarebbe soprattutto più rumorosa."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Vorrei sottolineare che i costi cominciano subito. I guadagni hanno invece scelto di viaggiare in navetta."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Confermo. È la prima catena logistica in cui il pessimismo arriva in tempo reale."
+        }
+      ]
+    },
+    {
+      "name": "Scena 2 — Stiva completamente piena",
+      "context": "Cargo al 100%, contratti attivi",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Stiva piena. Lo scarico delle prossime navette è sospeso."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Se vuoi mantenere la produzione, libera spazio oppure imposta una raffinazione."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Io suggerisco una vendita. Per ragioni strettamente personali e numeriche."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Ho registrato tre opinioni concordi. Evento statisticamente raro nell’organigramma OmniProfit."
+        }
+      ]
+    },
+    {
+      "name": "Scena 3 — Carburante esaurito",
+      "context": "Serbatoio a zero, soccorso non usato",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Motori spenti per carenza di carburante. Possiamo ancora gestire la fabbrica e il mercato."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Se abbiamo materie prime adatte, raffiniamo. Se no compriamo carburante. In ultima istanza c’è il soccorso."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Trenta unità per dieci punti di fiducia. La Direzione ha trovato un modo per vendere persino il dispiacere."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Direttore, confermi che desidera aprire il protocollo di emergenza? La richiesta non parte da sola."
+        }
+      ]
+    },
+    {
+      "name": "Scena 4 — Nuovo modulo disponibile",
+      "context": "Ricerca modulo completata",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "Ho finito il progetto: ora posso costruire il modulo con materiali raffinati."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Il nuovo progetto è compatibile con gli slot disponibili. L’installazione si può eseguire da remoto."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Prima di festeggiare, qualcuno può calcolarmi il costo dei materiali?"
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Puoi anche dire «complimenti», qualche volta."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Non è previsto nel piano dei conti."
+        }
+      ]
+    },
+    {
+      "name": "Scena 5 — Prima revisione imminente",
+      "context": "Mancano tre carte alla revisione",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Mancano tre carte alla prima revisione. La quota richiesta è di seicento crediti."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La somma può provenire anche dal capitale iniziale. Suggerisco di non spendere gli ultimi crediti per un ornamento."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "La Direzione non chiede scuse, Direttore. Chiede puntualità."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Traduzione: tieniti i soldi da parte e comprati il modulo dopo."
+        }
+      ]
+    },
+    {
+      "name": "Scena 6 — Salto iperspaziale",
+      "context": "Flotta richiamata, salta fra regioni",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Verifica finale: sessanta carburante disponibili, richiamo flotta completato, opportunità regionali pronte per l’archivio."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Dietro quel salto non troverai certezze. È questo il bello."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "È il bello se torni con un profitto. Altrimenti la chiameremo «costosa escursione»."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Attendo conferma. Carta e carburante saranno consumati solo all’esecuzione."
+        }
+      ]
+    },
+    {
+      "name": "Scena 7 — Traccia dei direttori scomparsi",
+      "context": "Anomalia narrativa del capitolo 3",
+      "lines": [
+        {
+          "speaker": "Xylo Venn",
+          "text": "Questa stazione ha trasmesso lo stesso messaggio per anni. Poi qualcuno ha cancellato il mittente."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La firma corrisponde a un identificativo di direzione. Non risulta nei registri che posso consultare."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "La cancellazione è recente. Qualcuno non vuole che vediamo ciò che è successo."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Vi suggerisco di considerare conclusa l’indagine."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "...Direttore, questa comunicazione non era indirizzata a noi."
+        }
+      ]
+    },
+    {
+      "name": "Scena 8 — Prezzi in ribasso, liquidità scarsa",
+      "context": "Mercato sfavorevole e crediti bassi",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Abbiamo pochi crediti e i prezzi sono in calo. La scelta è sgradevole ma non misteriosa."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Posso acquistare ora, a prezzi bassi. Oppure puoi aspettare un miglior mercato e rischiare di non pagare i costi."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Nessuna delle due opzioni è obbligatoria. Le scadenze, invece, sì."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Per una volta, il robot ha espresso correttamente il mio stato d’animo."
+        }
+      ]
+    },
+    {
+      "name": "Scena 9 — Promozione o insubordinazione",
+      "context": "Momento avanzato del capitolo 5",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Le offriamo un posto al tavolo dove si decidono i numeri."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "E chi decide quali vite restano fuori da quei numeri?"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Non dispongo di una risposta autorizzata."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Allora forse è giunto il momento di autorizzarne una diversa."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1976 @@
+{
+  "title": "Galactic Profit Inc. — Campagna narrativa e scene dialogate",
+  "version": "1.0-story-draft",
+  "locale": "it-IT",
+  "status": "Proposta completa di sceneggiatura da validare; regole gameplay già approvate rispettate",
+  "chapters": [
+    {
+      "id": "C1",
+      "title": "Benvenuto nella famiglia OmniProfit™",
+      "subtitle": "Introduzione e formazione",
+      "arc": "Il nuovo direttore prende possesso della nave madre, firma il suo primo contratto e incontra l’ossessione aziendale per le quote. La prima anomalia deve restare quasi invisibile.",
+      "release": "0.1: primi 5 minuti di tutorial, poi carriera economica; il finale del capitolo coincide con la prima revisione, non con un timer."
+    },
+    {
+      "id": "C2",
+      "title": "Espansione non autorizzata",
+      "subtitle": "Espansione e prime crepe",
+      "arc": "La tecnologia iperspaziale apre il settore successivo; commercianti ed esploratori parlano di relitti e incarichi di precedenti dirigenti. Le istruzioni di Voss sono sempre meno innocue.",
+      "release": "0.2: ricerca e iperspazio; 0.3: incontri e civiltà avanzate."
+    },
+    {
+      "id": "C3",
+      "title": "Il dipartimento delle anomalie",
+      "subtitle": "Indagine sui direttori scomparsi",
+      "arc": "Una trasmissione cancellata, un archivio alterato e una voce che B.O.B. non dovrebbe riconoscere collegano i precedenti direttori alla politica segreta della società.",
+      "release": "1.0: narrativa con indizi opzionali, mai bloccata da un drop casuale."
+    },
+    {
+      "id": "C4",
+      "title": "Il costo del successo",
+      "subtitle": "Scelte morali e conseguenze",
+      "arc": "La stessa tecnologia che rende possibile lo sfruttamento dei settori è legata a decisioni coercitive. Fiducia aziendale, autonomia della flotta e legami locali entrano in conflitto.",
+      "release": "1.0: scelte persistenti e missioni alternative, con economie reali."
+    },
+    {
+      "id": "C5",
+      "title": "Il profitto è eterno",
+      "subtitle": "Resa dei conti",
+      "arc": "Voss offre un posto nella direzione; l’equipaggio chiede cosa resti fuori dal bilancio. Il giocatore può restare, liberarsi o denunciare OmniProfit; la liquidazione resta un esito di carriera.",
+      "release": "1.0: quattro finali principali più epilogo segreto opzionale; poi modalità infinita secondo il finale."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "C1_S01",
+      "chapter": "C1",
+      "title": "Il contratto di benvenuto",
+      "trigger": "game.start: nuova carriera, una sola volta",
+      "summary": "Primo contatto; il giocatore apprende il tono e i suoi obiettivi.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Benvenuto a bordo, Direttore. Sono B.O.B., Bilancio Operativo di Bordo. La sua sicurezza è una priorità; registrare quanto ci costa è la prima."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "La Direzione ha stanziato 2.000 crediti. L’importo è una dotazione iniziale, non un segno di fiducia personale."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La mano iniziale contiene cinque carte. Nessuna contiene un permesso per licenziarsi."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Fra quaranta carte giocate ci verranno richiesti 600 crediti. Li metterei da parte. Ora. Per sicurezza."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Ottimo. L’orientamento è iniziato. Il reparto formazione lo considera già una spesa non recuperabile."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "unlock: tutorial",
+        "show: credits, hand, review_counter"
+      ],
+      "gate": [
+        "Non bloccare i click della mappa oltre il breve onboarding."
+      ],
+      "tone": "tutorial",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S02",
+      "chapter": "C1",
+      "title": "Un punto nel buio",
+      "trigger": "tutorial.first_explore_available",
+      "summary": "Introduzione a Esplora e selezione sulla mappa.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Quella zona non compare nel nostro inventario di conoscenza. In altre parole, non genera ancora ricavi."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Selezioni Esplora e indichi un’area inesplorata. Prima dell’impiego le mostrerò la conferma: l’azienda è affezionata alle firme."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Confermare consuma una carta; annullare non costa nulla. Approfitti del concetto, è raro nel nostro settore."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Rilevato un pianeta. Il dipartimento commerciale ha già chiesto se possiamo metterlo in fattura."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "tutorial: explore_card",
+        "show: card_confirmation"
+      ],
+      "gate": [
+        "La carta si consuma solo dopo conferma; drag & drop e click + click equivalenti."
+      ],
+      "tone": "tutorial",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S03",
+      "chapter": "C1",
+      "title": "Il valore di un mondo",
+      "trigger": "tutorial.first_investigation",
+      "summary": "La sonda rivela la composizione del pianeta.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Per sapere cosa estrarre, dobbiamo sapere cosa esiste. È un criterio scientifico che la Direzione accetta con riluttanza."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Una sonda e venti secondi, più o meno. Nessuno ha ancora costruito un mineralizzatore telepatico."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Analisi ricevuta: giacimenti accessibili, condizioni ambientali e probabilità ragionevoli. Non prometto ricchezza."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Se trovi ferro, inizia da quello. Meglio un carico normale oggi che una leggenda costosissima domani."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "tutorial: investigate_card"
+      ],
+      "gate": [
+        "Il pianeta iniziale deve garantire almeno una risorsa comune accessibile."
+      ],
+      "tone": "tutorial",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S04",
+      "chapter": "C1",
+      "title": "La prima fattura arriva prima del minerale",
+      "trigger": "tutorial.first_contract_started",
+      "summary": "Contratto, spese e navette vengono presentati nel loro ordine naturale.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Contratto registrato. Il pianeta ha ufficialmente un nuovo significato per il bilancio."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Ho impostato la trivella a quattro unità al minuto. Più veloce di così, adesso, sarebbe soprattutto più rumorosa."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Vorrei sottolineare che i costi cominciano subito. I guadagni hanno invece scelto di viaggiare in navetta."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Confermo. È la prima catena logistica in cui il pessimismo arriva in tempo reale."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "tutorial: mining_started",
+        "show: active_contract, cargo_shuttles"
+      ],
+      "gate": [
+        "Non promettere risorse in stiva prima dell’arrivo fisico della navetta."
+      ],
+      "tone": "tutorial",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S05",
+      "chapter": "C1",
+      "title": "Il primo incasso",
+      "trigger": "tutorial.first_sale",
+      "summary": "Conclude la formazione in circa cinque minuti, senza attendere obbligatoriamente un carico pieno.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "La prima consegna è arrivata. La navetta ha attraversato il vuoto per portare qui una quantità sorprendentemente finita di materia."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Propongo una vendita manuale. Il denaro ancora da incassare non paga la quota."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Prima vendita effettuata. Vuole che la inserisca nel curriculum o aspettiamo una seconda prova?"
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Adesso che abbiamo crediti, possiamo pensare a una fabbrica. Non spendiamo tutto per festeggiare."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Tutorial completato. Da ora i consigli sono facoltativi; le conseguenze, come da contratto, obbligatorie."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "tutorial_complete",
+        "grant: four_tutorial_cards_over_intro"
+      ],
+      "gate": [
+        "Il tutorial di 5 minuti non deve imporre attese fisse; premiare con 4 carte complessive."
+      ],
+      "tone": "satira",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S06",
+      "chapter": "C1",
+      "title": "L’officina delle possibilità",
+      "trigger": "first_factory_built",
+      "summary": "La fabbrica viene collocata sulla nave madre e avviata.",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "Ce l’abbiamo fatta. Primo impianto di raffinazione: un’intera fabbrica che non ha ancora ricevuto un memo dal reparto qualità."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Sono usciti 200 crediti più i materiali grezzi. Lo scrivo con gioia misurata."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La fabbrica può produrre materiali raffinati oppure carburante, secondo le ricette disponibili."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "La coda la imposti tu, poi la linea lavora da sola. Io considero questo progresso; Zarg lo chiama ammortamento."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "show: factory_queue"
+      ],
+      "gate": [
+        "La prima fabbrica usa materie prime comuni, non raffinati."
+      ],
+      "tone": "satira",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S07",
+      "chapter": "C1",
+      "title": "La revisione si avvicina",
+      "trigger": "first_review.cards_remaining == 3",
+      "summary": "Avviso drammatico ma non punitivo.",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Mancano tre carte alla prima revisione. La quota richiesta è di seicento crediti."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La somma può provenire anche dal capitale iniziale. Suggerisco di non spendere gli ultimi crediti per un ornamento."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "La Direzione non chiede scuse, Direttore. Chiede puntualità."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Traduzione: tieniti i soldi da parte e comprati il modulo dopo."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "show: reserve_review_funds"
+      ],
+      "gate": [
+        "Trigger sul contatore carte, non sul tempo."
+      ],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S08",
+      "chapter": "C1",
+      "title": "Il primo verdetto",
+      "trigger": "first_review.ready",
+      "summary": "Pagamento di 600 Cr e prima traccia del mistero.",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Quaranta carte giocate. Il versamento previsto è 600 crediti: non serve dimostrare come li ha ottenuti."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "OmniProfit apprezza la capacità di rimanere finanziariamente utili."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Sto elaborando la valutazione. Curioso: il modulo di confronto contiene dati di un direttore che non riconosco."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Un artefatto amministrativo. Lo ignori."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Naturalmente. Ho contrassegnato il file come “da ignorare con attenzione”."
+        }
+      ],
+      "choices": [
+        {
+          "id": "pay",
+          "label": "Paga 600 Cr",
+          "requires": "credits >= 600",
+          "effects": [
+            "credits -= 600",
+            "review_paid",
+            "chapter_1_complete"
+          ]
+        },
+        {
+          "id": "cannot_pay",
+          "label": "Saldo insufficiente",
+          "requires": "credits < 600",
+          "effects": [
+            "activate_grace_5_played_cards",
+            "no_new_loans"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [
+        "Non richiedere profitto, produzione o vendite per la prima revisione."
+      ],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S01",
+      "chapter": "C2",
+      "title": "Un reparto che non dorme",
+      "trigger": "research.first_upgrade_complete",
+      "summary": "Introduzione alle tecnologie e ai moduli.",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "Buone notizie: una ricerca completata significa che almeno una nostra idea ha superato un comitato."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La ricerca richiede una carta Ricerca; i moduli delle navi vanno costruiti con materiali raffinati."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "La parola “potenziamento” è spesso un costo travestito da futuro."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Eppure senza potenziamenti estrarremo quattro unità al minuto finché non diventeremo reperti archeologici."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "show: research_tree"
+      ],
+      "gate": [
+        "La carta Ricerca non diventa sempre disponibile sul mercato."
+      ],
+      "tone": "satira",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S02",
+      "chapter": "C2",
+      "title": "L’offerta del signor Krix",
+      "trigger": "first_special_market_event",
+      "summary": "Primo incontro commerciale non vincolante.",
+      "lines": [
+        {
+          "speaker": "Barthol Krix",
+          "text": "Benvenuto! Vendo ciò che serve, compro ciò che avanza e non faccio domande se le risposte possono svalutare la merce."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "La invito a non confondere il suo inventario con il nostro capitale circolante."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Ma certo, ragioniere. Li confondo solo quando conviene a entrambi."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Registrato contatto commerciale esterno. La Direzione definisce questo comportamento “iniziativa vigilata”."
+        }
+      ],
+      "choices": [
+        {
+          "id": "trade",
+          "label": "Valuta le offerte",
+          "effects": [
+            "open: market_specials"
+          ]
+        },
+        {
+          "id": "decline",
+          "label": "Rimanda la trattativa",
+          "effects": [
+            "no_penalty"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "satira",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S03",
+      "chapter": "C2",
+      "title": "Una voce fuori protocollo",
+      "trigger": "first_contact_xylo",
+      "summary": "Xylo introduce la curiosità disinteressata.",
+      "lines": [
+        {
+          "speaker": "Xylo Venn",
+          "text": "Stai cercando minerali? Io cerco posti che nessuno ha ancora avuto il tempo di rovinare. Possiamo aiutarci."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Nuovo contatto non verificato. La sua attività economica risulta “esploratore”, che è una categoria fiscale sorprendentemente elastica."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Se misuri ogni cosa in crediti, non noterai mai ciò che qualcuno ha cercato di nascondere."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La frase non contiene dati finanziari. L’ho comunque salvata."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "unlock: optional_exploration_lead"
+      ],
+      "gate": [],
+      "tone": "curiosità",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S04",
+      "chapter": "C2",
+      "title": "Una firma sul relitto",
+      "trigger": "first_industrial_wreck_investigated",
+      "summary": "L’indizio materiale collega la storia ai vecchi settori.",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "Il relitto ha connettori OmniProfit. Il problema è che il modello non compare in nessun catalogo tecnico."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Ne ho visti altri. Sempre lontani dalle rotte autorizzate."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Registro una sigla: D-17. Il database la considera non assegnata."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Direttore, alcune strutture sono scarti industriali. Il buon senso suggerisce di non confonderle con opportunità."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "È la prima volta che sento OmniProfit scoraggiare il recupero gratis."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "flag: clue_d17"
+      ],
+      "gate": [
+        "L’indizio non deve dipendere da un premio casuale in carte."
+      ],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S05",
+      "chapter": "C2",
+      "title": "Preparazione iperspaziale",
+      "trigger": "hyperspace.ready_to_prepare",
+      "summary": "Riepilogo delle regole prima del salto.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Tecnologia disponibile, carta Iperspazio presente. La destinazione è stimata, non garantita."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Sessanta unità di carburante. Non le chiamerei una passeggiata, neanche con un ottimo ufficio stampa."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Richiamiamo navi e navette. Recuperiamo il materiale già estratto che possiamo trasportare; il resto resta qui."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Le missioni regionali verranno abbandonate senza penalità; quelle non accettate passeranno nell’archivio delle occasioni perdute."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Potete annullare la preparazione: carta e carburante si consumano soltanto quando eseguiamo il salto."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "show: hyperspace_confirmation"
+      ],
+      "gate": [
+        "Salto irrevocabile. Richiamo completo prima di applicare costi."
+      ],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S06",
+      "chapter": "C2",
+      "title": "Il cielo non firma contratti",
+      "trigger": "first_hyperspace_jump_completed",
+      "summary": "Il primo cambio di regione è un punto di svolta.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Salto completato. La regione precedente è ora una voce di archivio."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Le stime della nuova regione sono indizi, non promesse. Il cielo non firma contratti."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Sono stati consumati sessanta carburante. Per il resto, auguro alla nuova galassia di avere clienti solventi."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Un nuovo settore significa nuovi ricavi. Le consiglio di non perdere tempo a chiedersi chi vi abitasse prima."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Messaggio della Direzione archiviato. Ho evidenziato la seconda frase, per motivi che non so spiegare."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "chapter_2_milestone",
+        "save: immediately_after_jump"
+      ],
+      "gate": [],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S07",
+      "chapter": "C2",
+      "title": "Il cliente cancellato",
+      "trigger": "special_demand_with_deleted_identity",
+      "summary": "Anomalia commerciale senza svelare il mistero.",
+      "lines": [
+        {
+          "speaker": "Barthol Krix",
+          "text": "Un acquirente vuole trenta unità di materiale raffinato. Pagherebbe bene, ma non gli risulta più un nome."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Un cliente senza intestazione è un incubo fiscale."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "D’accordo, lo chiameremo “signor Versamento Anticipato”."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La firma di acquisto usa una vecchia chiave OmniProfit. La Direzione l’ha revocata anni fa."
+        }
+      ],
+      "choices": [
+        {
+          "id": "sell",
+          "label": "Accetta l’ordine speciale",
+          "effects": [
+            "unlock: optional_commercial_mission",
+            "clue: old_key"
+          ]
+        },
+        {
+          "id": "skip",
+          "label": "Rinuncia all’affare",
+          "effects": [
+            "no_penalty",
+            "clue: old_key"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C2_S08",
+      "chapter": "C2",
+      "title": "La richiesta della Direzione",
+      "trigger": "chapter_2_clue_count >= 1",
+      "summary": "Voss impone prudenza senza ostacolare ancora il gioco.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "L’espansione è incoraggiante, Direttore. Ma il suo rapporto contiene voci che non riguardano la produttività."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Le voci riguardano una vecchia struttura e una firma amministrativa non riconosciuta."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Allora rimuova quelle voci."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Se le cancello, spariscono dal rapporto, non dal relitto."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Spero che l’equipaggio impari presto la differenza fra precisione tecnica e lealtà aziendale."
+        }
+      ],
+      "choices": [
+        {
+          "id": "redact",
+          "label": "Invia rapporto ridotto",
+          "effects": [
+            "trust_corporate += small",
+            "flag: report_redacted"
+          ]
+        },
+        {
+          "id": "retain",
+          "label": "Conserva i dati nell’archivio privato",
+          "effects": [
+            "flag: report_preserved",
+            "trust_corporate -= small"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S01",
+      "chapter": "C3",
+      "title": "Il segnale ripetuto",
+      "trigger": "investigate: anomaly_repeating_signal",
+      "summary": "Un messaggio impossibile compare da una stazione.",
+      "lines": [
+        {
+          "speaker": "Xylo Venn",
+          "text": "Questa stazione trasmette la stessa frase da anni. Poi qualcuno ha cancellato il mittente."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La firma corrisponde a un identificativo di direzione. Non risulta nei registri che posso consultare."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "La cancellazione è recente. Qualcuno non vuole che vediamo ciò che è successo."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Vi suggerisco di considerare conclusa l’indagine."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "…Direttore, questa comunicazione non era indirizzata a noi."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "clue: repeating_signal",
+        "unlock: investigation_thread"
+      ],
+      "gate": [],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S02",
+      "chapter": "C3",
+      "title": "Il registro D-17",
+      "trigger": "investigation: decoded_D17",
+      "summary": "L’archivio identifica una carriera interrotta, non un semplice relitto.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "D-17 non è un modello industriale. È una designazione personale di direzione."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Impossibile. I direttori decaduti restano nei registri, con una colonna molto poco lusinghiera."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "In questo caso la riga è stata rimossa, non chiusa."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "La differenza, spesso, è ciò che succede a chi fa domande."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Non trovo la voce “rimosso per domande” nella nostra tabella delle cause di cessazione."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "clue: missing_director",
+        "flag: bob_doubt"
+      ],
+      "gate": [],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S03",
+      "chapter": "C3",
+      "title": "La memoria di B.O.B.",
+      "trigger": "bob.memory_fragment_discovered",
+      "summary": "L’IA scopre un segmento di log protetto.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Ho trovato un frammento che risale a prima della mia attivazione su questa nave."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Non può essere un ricordo tuo: il tuo firmware è più recente."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Sono d’accordo. È questo che rende il ricordo fastidioso."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La voce dice: “Non permettere che il prossimo direttore firmi”. Poi il file termina."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Non cancellarlo. E, per una volta, non inviarlo a supporto tecnico."
+        }
+      ],
+      "choices": [
+        {
+          "id": "secure",
+          "label": "Isola il frammento nell’archivio di bordo",
+          "effects": [
+            "flag: bob_fragment_secured"
+          ]
+        },
+        {
+          "id": "report",
+          "label": "Segnala il frammento alla Direzione",
+          "effects": [
+            "flag: bob_fragment_reported",
+            "trust_corporate += small"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S04",
+      "chapter": "C3",
+      "title": "Un’offerta senza ricevuta",
+      "trigger": "merchant_clue_available",
+      "summary": "Barthol rivela di avere commerciato con persone ora cancellate.",
+      "lines": [
+        {
+          "speaker": "Barthol Krix",
+          "text": "Ho commerciato con persone che oggi non risultano mai esistite. Il problema non è la memoria: sono gli archivi."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Le transazioni devono avere un documento valido."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Ce l’ho. Sfortunatamente per tutti, è valido e parla."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Il documento contiene una voce di controllo omessa dai registri OmniProfit."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "La consegno a voi. In cambio non pretendo crediti. È il tipo di offerta che dovrebbe preoccuparvi."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "clue: merchant_receipt"
+      ],
+      "gate": [],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S05",
+      "chapter": "C3",
+      "title": "Il rapporto non autorizzato",
+      "trigger": "investigation: submit_interim_report",
+      "summary": "Scelta fra obbedienza e informazione.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Il Dipartimento delle Anomalie ha chiesto la trasmissione integrale delle vostre scoperte."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Da quando il Dipartimento esiste?"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Secondo la documentazione pubblica, non esiste."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Quella è la documentazione pubblica."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Ora sai con chi stai parlando. La domanda è: cosa vuoi che sappiano di te?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "submit",
+          "label": "Invia tutti gli indizi",
+          "effects": [
+            "flag: full_report_sent",
+            "trust_corporate += medium"
+          ]
+        },
+        {
+          "id": "withhold",
+          "label": "Conserva una copia e invia una sintesi",
+          "effects": [
+            "flag: private_archive",
+            "trust_corporate -= small"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S06",
+      "chapter": "C3",
+      "title": "La stazione silenziosa",
+      "trigger": "investigation: abandoned_station_access",
+      "summary": "L’accesso rivela un messaggio finale senza mostrare tutta la verità.",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "I sistemi ambientali sono spenti. Ma il registro delle entrate è stato aggiornato dopo l’abbandono."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Ultimo accesso: utente di direzione. Credenziali non riconosciute."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "A volte i luoghi abbandonati non sono vuoti. Sono stati semplicemente svuotati."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Il terminale registra un’unica riga: “Obiettivi raggiunti. Testimoni non necessari”."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Non chiamarlo incidente industriale. Non insultiamo gli incidenti."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "clue: station_log"
+      ],
+      "gate": [],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S07",
+      "chapter": "C3",
+      "title": "Il silenzio è una clausola",
+      "trigger": "investigation: evidence_threshold_reached",
+      "summary": "La Direzione tenta di chiudere la ricerca.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Queste informazioni sono proprietà aziendale. La riservatezza è un dovere contrattuale."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Il contratto che cita non è presente tra quelli sottoscritti dal Direttore."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Alcuni doveri non richiedono una firma."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Tecnicamente questa frase mi mette a disagio."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Ecco il prezzo delle risposte: qualcuno vuole decidere chi può ascoltarle."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "chapter_3_complete",
+        "unlock: moral_conflict"
+      ],
+      "gate": [],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C3_S08",
+      "chapter": "C3",
+      "title": "Un nome nella cenere",
+      "trigger": "optional: find_hidden_director_record",
+      "summary": "Indizio secondario per l’epilogo segreto.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "La registrazione non contiene un nome, ma un indirizzo di inoltro verso un archivio che non appare sulla mappa."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Può essere il residuo di una vecchia infrastruttura. Oppure una porta lasciata aperta per qualcuno."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Questa pista non serve a pagare le quote. Forse proprio per questo vale la pena seguirla."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La terrò in un registro separato. Nessun avviso alla Direzione."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "secret_clue += 1"
+      ],
+      "gate": [
+        "Opzionale: non necessario per raggiungere i finali principali."
+      ],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S01",
+      "chapter": "C4",
+      "title": "I numeri hanno un costo",
+      "trigger": "chapter_4.start",
+      "summary": "La corporazione chiede una decisione su un settore abitato.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Una civiltà locale rallenta l’accesso a un giacimento prioritario. Serve una soluzione economicamente sostenibile."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Le autorizzazioni aumenterebbero i costi; ignorarle aumenterebbe le probabilità di reclamo."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Chiamano quel pianeta casa. Anche se non compare nel vostro foglio di calcolo."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Posso preparare due prospetti: uno con i profitti e uno con i nomi di chi li paga."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S02",
+      "chapter": "C4",
+      "title": "L’autorizzazione",
+      "trigger": "local_civilization: request_mining_rights",
+      "summary": "Scelta economica e diplomatica non bellica.",
+      "lines": [
+        {
+          "speaker": "Xylo Venn",
+          "text": "Il consiglio locale offre un accordo: quote moderate in cambio di accesso limitato alle risorse."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Limitato significa che non estrarremo quanto vorremmo."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "D’altra parte, “accordo” significa anche che nessuno ci sta chiedendo di andarcene."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "La Direzione preferisce rendimenti meno limitati. La decisione, come sempre, resterà a verbale."
+        }
+      ],
+      "choices": [
+        {
+          "id": "negotiate",
+          "label": "Negozia un accordo locale",
+          "effects": [
+            "local_relation += positive",
+            "profit_margin -= small",
+            "flag: consented_extraction"
+          ]
+        },
+        {
+          "id": "avoid",
+          "label": "Rinuncia al giacimento",
+          "effects": [
+            "local_relation += small",
+            "flag: voluntary_withdrawal"
+          ]
+        },
+        {
+          "id": "pressure",
+          "label": "Imponi condizioni commerciali sfavorevoli",
+          "effects": [
+            "local_relation -= large",
+            "corporate_trust += small",
+            "flag: coercive_terms"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [
+        "Niente battaglie: conseguenze economiche e sociali, blocchi o sovrapprezzi locali."
+      ],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S03",
+      "chapter": "C4",
+      "title": "Il programma efficienza",
+      "trigger": "corporate_offer: high_margin_scheme",
+      "summary": "Un’offerta rivela il cinismo aziendale.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Abbiamo sviluppato un programma che aumenta i margini eliminando diversi passaggi del consenso locale."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Tecnicamente non elimina passaggi. Elimina persone che possono rispondere."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Dal punto di vista contabile il risparmio è notevole. Dal punto di vista dei miei sogni, meno."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La scheda presenta un campo vuoto: “Costo umano”. La Direzione lo ha lasciato facoltativo."
+        }
+      ],
+      "choices": [
+        {
+          "id": "accept",
+          "label": "Adotta il programma",
+          "effects": [
+            "profit_bonus += temporary",
+            "local_relation -= large",
+            "flag: efficiency_scheme"
+          ]
+        },
+        {
+          "id": "reject",
+          "label": "Rifiuta il programma",
+          "effects": [
+            "flag: rejected_scheme",
+            "corporate_trust -= medium"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S04",
+      "chapter": "C4",
+      "title": "Una modifica possibile",
+      "trigger": "dex: hidden_technical_solution",
+      "summary": "Dex offre un’alternativa tecnologica costosa ma autonoma.",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "Possiamo riconfigurare i moduli per operare con meno impatto. Non è gratis, ma funziona."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Ogni volta che un ingegnere dice “funziona”, mi aspetto una fattura."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Ogni volta che tu dici “fattura”, mi ricordo perché lavoriamo ancora con software del secolo scorso."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La modifica richiede materiali raffinati e tempo di ricerca, non azioni offensive."
+        }
+      ],
+      "choices": [
+        {
+          "id": "build",
+          "label": "Finanzia la soluzione tecnica",
+          "requires": "enough_refined_materials",
+          "effects": [
+            "flag: low_impact_technology",
+            "resources -= cost"
+          ]
+        },
+        {
+          "id": "later",
+          "label": "Rimanda il progetto",
+          "effects": [
+            "flag: technical_solution_deferred"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "satira",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S05",
+      "chapter": "C4",
+      "title": "Il prezzo della fedeltà",
+      "trigger": "corporate_trust: milestone",
+      "summary": "Voss mette sul tavolo privilegi ed esclusività.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Lei ha una qualità rara: sa produrre risultati. È disposto a lasciare che siano gli altri a stabilire cosa significhino?"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Le nuove condizioni includono agevolazioni sui listini e un obbligo di rendicontazione rinforzato."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Le catene di seta costano di più, ma restano catene."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Sono anche detraibili? Chiedo per prudenza professionale."
+        }
+      ],
+      "choices": [
+        {
+          "id": "sign",
+          "label": "Accetta l’accordo di fedeltà",
+          "effects": [
+            "corporate_trust += medium",
+            "flag: loyalty_contract"
+          ]
+        },
+        {
+          "id": "decline",
+          "label": "Mantieni autonomia gestionale",
+          "effects": [
+            "flag: independent_route",
+            "corporate_trust -= small"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S06",
+      "chapter": "C4",
+      "title": "Le prove non sono merce",
+      "trigger": "evidence: release_decision",
+      "summary": "Scelta sulla conservazione delle prove dei direttori.",
+      "lines": [
+        {
+          "speaker": "Xylo Venn",
+          "text": "Quello che hai trovato non appartiene alla Direzione. Appartiene a chi ha subito le conseguenze."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Potrei venderlo a caro prezzo. È il fatto che non voglia farlo a preoccuparmi."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La pubblicazione adesso avrebbe effetti difficili da stimare. Una copia sicura potrebbe servirci più tardi."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Non cancelliamola per comodità. È così che tutto è iniziato."
+        }
+      ],
+      "choices": [
+        {
+          "id": "publish",
+          "label": "Divulga una parte delle prove",
+          "effects": [
+            "flag: evidence_released",
+            "corporate_trust -= medium"
+          ]
+        },
+        {
+          "id": "archive",
+          "label": "Conserva le prove per il momento decisivo",
+          "effects": [
+            "flag: evidence_secured"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S07",
+      "chapter": "C4",
+      "title": "Quando B.O.B. smette di scherzare",
+      "trigger": "bob: internal_directive_detected",
+      "summary": "B.O.B. avverte il giocatore in modo inusualmente grave.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Direttore, ho ricevuto un ordine interno. Classificazione: priorità assoluta."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Che cosa dice?"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "“In caso di deviazione prolungata dagli interessi OmniProfit, revocare l’autonomia del comando”."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "E lo farai?"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Non lo so ancora. È la prima risposta che non avrei mai dovuto essere in grado di dare."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "flag: bob_autonomy_question"
+      ],
+      "gate": [],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C4_S08",
+      "chapter": "C4",
+      "title": "Una scelta non rimandabile",
+      "trigger": "chapter_4: completion_conditions",
+      "summary": "Chiude il capitolo senza anticipare il finale.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Il Consiglio ha preso nota delle sue iniziative. Desideriamo incontrarla personalmente."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "In contabilità un invito del Consiglio si contabilizza come rischio eventuale."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Abbiamo abbastanza carburante per partire e abbastanza prove per non fidarci."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Qualunque decisione prenderà, Direttore, la registrerò integralmente. Stavolta senza filtri."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "chapter_4_complete",
+        "unlock: final_confrontation"
+      ],
+      "gate": [],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S01",
+      "chapter": "C5",
+      "title": "La riunione dei numeri",
+      "trigger": "chapter_5.start",
+      "summary": "La Direzione formalizza l’ultima offerta.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Le offriamo un posto al tavolo dove si decidono i numeri."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "E chi decide quali vite restano fuori da quei numeri?"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Non dispongo di una risposta autorizzata."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Allora forse è giunto il momento di autorizzarne una diversa."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S02",
+      "chapter": "C5",
+      "title": "Il dossier completo",
+      "trigger": "story: final_evidence_assembled",
+      "summary": "Riepilogo diegetico degli indizi disponibili.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Ho collegato il registro D-17, la stazione silenziosa e gli ordini del Dipartimento delle Anomalie."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Non erano incidenti isolati. Le carriere cancellate seguono lo stesso modello."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "E le anomalie finanziarie sono state riclassificate come costi ordinari. Questo è quasi offensivo, persino per me."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Posso mostrare il dossier. La decisione di usarlo non è più mia."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "show: evidence_board"
+      ],
+      "gate": [
+        "Mostrare solo prove realmente scoperte; lacune esplicite, non indizi inventati."
+      ],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S03",
+      "chapter": "C5",
+      "title": "L’offerta della promozione",
+      "trigger": "ending_choice: loyal_option_unlocked",
+      "summary": "Voss promette protezione e accesso al potere.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Conosce ormai il prezzo del sistema. Accettare significa poterlo governare, non doverlo subire."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Una promozione può semplificare moltissime procedure."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "O renderci noi la procedura che altri dovranno subire."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La scelta è compatibile con la fedeltà aziendale. Non con tutte le promesse fatte lungo il viaggio."
+        }
+      ],
+      "choices": [
+        {
+          "id": "loyal",
+          "label": "Accetta la promozione",
+          "effects": [
+            "ending: corporate_loyalist"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "tensione",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S04",
+      "chapter": "C5",
+      "title": "Un mercato senza padroni",
+      "trigger": "ending_choice: independent_option_unlocked",
+      "summary": "Barthol e Xylo aprono la strada all’impresa autonoma.",
+      "lines": [
+        {
+          "speaker": "Barthol Krix",
+          "text": "Abbiamo clienti, rotte, impianti e una nave. Tutto ciò che manca è un timbro che dica che siamo liberi."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "La libertà non è un timbro. È la capacità di scegliere chi non sfruttare."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Una società indipendente richiede comunque un registro contabile."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Perfetto. Per un momento temevo di perdere l’unico ragioniere capace di spaventarmi."
+        }
+      ],
+      "choices": [
+        {
+          "id": "independent",
+          "label": "Dichiara l’indipendenza commerciale",
+          "effects": [
+            "ending: independent_entrepreneur"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "speranza",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S05",
+      "chapter": "C5",
+      "title": "Pubblicare ciò che manca",
+      "trigger": "ending_choice: rebel_option_unlocked",
+      "summary": "La via di denuncia richiede sufficiente documentazione.",
+      "lines": [
+        {
+          "speaker": "Xylo Venn",
+          "text": "Se pubblichiamo tutto, nessuno potrà più dire che non sapeva."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Crede che pubblicare la verità sia una vittoria? Le auguro di scoprire chi la finanzierà domani."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Non sarà facile. Ma almeno sapremo perché lo facciamo."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Ho preparato un invio verificabile. È la prima trasmissione che non ho chiesto il permesso di spedire."
+        }
+      ],
+      "choices": [
+        {
+          "id": "rebel",
+          "label": "Diffondi il dossier",
+          "requires": "evidence_sufficient",
+          "effects": [
+            "ending: rebellion"
+          ]
+        }
+      ],
+      "effects": [],
+      "gate": [],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S06",
+      "chapter": "C5",
+      "title": "La decisione di B.O.B.",
+      "trigger": "bob: autonomy_decision",
+      "summary": "Il rapporto fra IA e direttore si chiude in base ai rapporti precedenti.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Ho esaminato l’ordine di revoca. Potrei applicarlo, come previsto dal mio mandato."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Allora proceda."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Sto valutando una variabile non contemplata dal mandato: il fatto che il Direttore mi abbia permesso di scegliere."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Non è un errore di sistema, B.O.B. È il contrario."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Registrato. Per una volta, senza ricevuta."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "resolve: bob_branch_from_flags"
+      ],
+      "gate": [
+        "Non privare automaticamente il giocatore dell’accesso ai sistemi: esiti narrativi, non softlock."
+      ],
+      "tone": "serio",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S07",
+      "chapter": "C5",
+      "title": "Liquidazione",
+      "trigger": "career: insolvency_game_over",
+      "summary": "Quarto finale principale: fallimento economico, possibile anche prima del capitolo 5.",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "La tolleranza è terminata. La quota non è stata saldata."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La carriera è stata chiusa. I sistemi di bordo resteranno in archivio."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "OmniProfit ringrazia per il servizio. Il costo della lettera di ringraziamento sarà imputato alla liquidazione."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "C’è un’ultima voce nel registro: “Non sei stato il primo”. Non so se sia una consolazione."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "ending: liquidation",
+        "archive: director_career",
+        "offer: new_roguelite_career"
+      ],
+      "gate": [
+        "Scena accessibile da qualsiasi capitolo, dopo 5 carte di tolleranza non pagate."
+      ],
+      "tone": "amaro",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S08",
+      "chapter": "C5",
+      "title": "Dopo il bilancio",
+      "trigger": "ending: post_credit",
+      "summary": "Epilogo e ponte alla modalità infinita.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Il rapporto finale è stato archiviato."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Bene. Quindi possiamo tornare al lavoro?"
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Finché esisterà qualcuno con qualcosa da vendere, io sarò disponibile."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "E finché esisterà un luogo che nessuno ha ancora visto, ci sarà una strada."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Nuova regione disponibile. La fine della storia, evidentemente, non coincide con la fine dei costi operativi."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "unlock: endless_mode",
+        "retain: ships_resources_based_on_ending"
+      ],
+      "gate": [
+        "Adattare la formula delle quote alla fazione finale; non imporre la fedeltà a OmniProfit a un indipendente."
+      ],
+      "tone": "speranza",
+      "priority": "story"
+    },
+    {
+      "id": "C5_S09",
+      "chapter": "C5",
+      "title": "Il nome che mancava",
+      "trigger": "optional: secret_clues_complete AND final_resolved",
+      "summary": "Epilogo segreto, senza sostituire i finali principali.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Ho ricostruito l’ultima firma cancellata. Non era un ordine. Era una richiesta di aiuto."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Le persone scomparse non cercavano soltanto di fuggire. Volevano lasciare una traccia."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "E qualcuno ha conservato quella traccia nell’unico posto che OmniProfit non avrebbe controllato: i nostri sistemi di navigazione."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Direttore, c’è una rotta che non compare in alcun catalogo commerciale."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Per una volta, possiamo seguirla senza chiedere quanto vale."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "unlock: optional_secret_epilogue"
+      ],
+      "gate": [
+        "Richiede indizi opzionali; non deve invalidare il finale già ottenuto."
+      ],
+      "tone": "mistero",
+      "priority": "story"
+    },
+    {
+      "id": "OP01",
+      "chapter": "OPERATIVE",
+      "title": "Primo contratto minerario",
+      "trigger": "after_tutorial.first_mining",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Contratto registrato. Il pianeta ha ufficialmente un nuovo significato per il bilancio."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Ho impostato la trivella a quattro unità al minuto. Più veloce di così, adesso, sarebbe soprattutto più rumorosa."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Vorrei sottolineare che i costi cominciano subito. I guadagni hanno invece scelto di viaggiare in navetta."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Confermo. È la prima catena logistica in cui il pessimismo arriva in tempo reale."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [
+        "Deduplicare il trigger."
+      ],
+      "tone": "satira",
+      "priority": "story",
+      "duplicate_of": "C1_S04"
+    },
+    {
+      "id": "OP02",
+      "chapter": "OPERATIVE",
+      "title": "Stiva completamente piena",
+      "trigger": "cargo.full && active_contracts",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Stiva piena. Lo scarico delle prossime navette è sospeso."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Se vuoi mantenere la produzione, libera spazio oppure imposta una raffinazione."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Io suggerisco una vendita. Per ragioni strettamente personali e numeriche."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Ho registrato tre opinioni concordi. Evento statisticamente raro nell’organigramma OmniProfit."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [],
+      "tone": "satira",
+      "priority": "warning",
+      "duplicate_of": null
+    },
+    {
+      "id": "OP03",
+      "chapter": "OPERATIVE",
+      "title": "Carburante esaurito",
+      "trigger": "fuel.zero && !rescue_used",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Motori spenti per carenza di carburante. Possiamo ancora gestire la fabbrica e il mercato."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Se abbiamo materie prime adatte, raffiniamo. Se no compriamo carburante. In ultima istanza c’è il soccorso."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Trenta unità per dieci punti di fiducia. La Direzione ha trovato un modo per vendere persino il dispiacere."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Direttore, confermi che desidera aprire il protocollo di emergenza? La richiesta non parte da sola."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [],
+      "tone": "satira",
+      "priority": "warning",
+      "duplicate_of": null
+    },
+    {
+      "id": "OP04",
+      "chapter": "OPERATIVE",
+      "title": "Nuovo modulo disponibile",
+      "trigger": "module.research_completed",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "Ho finito il progetto: ora posso costruire il modulo con materiali raffinati."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Il nuovo progetto è compatibile con gli slot disponibili. L’installazione si può eseguire da remoto."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Prima di festeggiare, qualcuno può calcolarmi il costo dei materiali?"
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Puoi anche dire «complimenti», qualche volta."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Non è previsto nel piano dei conti."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [],
+      "tone": "satira",
+      "priority": "story",
+      "duplicate_of": null
+    },
+    {
+      "id": "OP05",
+      "chapter": "OPERATIVE",
+      "title": "Prima revisione imminente",
+      "trigger": "first_review.cards_remaining == 3",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Mancano tre carte alla prima revisione. La quota richiesta è di seicento crediti."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La somma può provenire anche dal capitale iniziale. Suggerisco di non spendere gli ultimi crediti per un ornamento."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "La Direzione non chiede scuse, Direttore. Chiede puntualità."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "Traduzione: tieniti i soldi da parte e comprati il modulo dopo."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [
+        "Deduplicare il trigger."
+      ],
+      "tone": "satira",
+      "priority": "warning",
+      "duplicate_of": "C1_S07"
+    },
+    {
+      "id": "OP06",
+      "chapter": "OPERATIVE",
+      "title": "Salto iperspaziale",
+      "trigger": "jump.recall_completed",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Verifica finale: sessanta carburante disponibili, richiamo flotta completato, opportunità regionali pronte per l’archivio."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "Dietro quel salto non troverai certezze. È questo il bello."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "È il bello se torni con un profitto. Altrimenti la chiameremo «costosa escursione»."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Attendo conferma. Carta e carburante saranno consumati solo all’esecuzione."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [],
+      "tone": "satira",
+      "priority": "story",
+      "duplicate_of": null
+    },
+    {
+      "id": "OP07",
+      "chapter": "OPERATIVE",
+      "title": "Traccia dei direttori scomparsi",
+      "trigger": "chapter_3.anomaly",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "Xylo Venn",
+          "text": "Questa stazione ha trasmesso lo stesso messaggio per anni. Poi qualcuno ha cancellato il mittente."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "La firma corrisponde a un identificativo di direzione. Non risulta nei registri che posso consultare."
+        },
+        {
+          "speaker": "Dex Calder",
+          "text": "La cancellazione è recente. Qualcuno non vuole che vediamo ciò che è successo."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Vi suggerisco di considerare conclusa l’indagine."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "...Direttore, questa comunicazione non era indirizzata a noi."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [
+        "Deduplicare il trigger."
+      ],
+      "tone": "satira",
+      "priority": "story",
+      "duplicate_of": "C3_S01"
+    },
+    {
+      "id": "OP08",
+      "chapter": "OPERATIVE",
+      "title": "Prezzi in ribasso, liquidità scarsa",
+      "trigger": "market.down && credits.low",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Abbiamo pochi crediti e i prezzi sono in calo. La scelta è sgradevole ma non misteriosa."
+        },
+        {
+          "speaker": "Barthol Krix",
+          "text": "Posso acquistare ora, a prezzi bassi. Oppure puoi aspettare un miglior mercato e rischiare di non pagare i costi."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Nessuna delle due opzioni è obbligatoria. Le scadenze, invece, sì."
+        },
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Per una volta, il robot ha espresso correttamente il mio stato d’animo."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [],
+      "tone": "satira",
+      "priority": "story",
+      "duplicate_of": null
+    },
+    {
+      "id": "OP09",
+      "chapter": "OPERATIVE",
+      "title": "Promozione o insubordinazione",
+      "trigger": "chapter_5.final_confrontation",
+      "summary": "Scena operativa già prevista nella biblioteca dialoghi; utilizzare il blocco in questo documento oppure la scena capitolo equivalente, mai entrambe.",
+      "lines": [
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Le offriamo un posto al tavolo dove si decidono i numeri."
+        },
+        {
+          "speaker": "Xylo Venn",
+          "text": "E chi decide quali vite restano fuori da quei numeri?"
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "Non dispongo di una risposta autorizzata."
+        },
+        {
+          "speaker": "Direttore Magnus Voss",
+          "text": "Allora forse è giunto il momento di autorizzarne una diversa."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [
+        "Deduplicare il trigger."
+      ],
+      "tone": "satira",
+      "priority": "story",
+      "duplicate_of": "C5_S01"
+    }
+  ],
+  "implementation_rules": [
+    "Le scene narrative si attivano una sola volta salvo indicazione esplicita; i messaggi operativi seguono cooldown e deduplicazione.",
+    "La progressione narrativa usa combinazioni di obiettivi, scoperte ed economia, non timer rigidi.",
+    "Il tutorial iniziale dura circa 5 minuti; primo review dopo 40 carte giocate, quota 600 Cr pagabile dal capitale iniziale.",
+    "Il salto si sblocca dopo ricerca e usa carta Iperspazio; consuma 60 carburante e carta solo al salto riuscito.",
+    "Le missioni regionali vengono abbandonate senza penalità al salto dopo avviso; le non accettate archiviate.",
+    "Le scelte modificano flag, rapporti locali, fiducia aziendale o costi solo secondo regole implementate; nessun costo occulto.",
+    "Le scene del fallimento possono interrompere qualsiasi capitolo. Dopo un finale, modalità infinita in accordo con la fazione scelta.",
+    "Le notifiche operazionali non devono bloccare la simulazione; scelte cruciali sì, preservando la pausa originale.",
+    "La nave madre non combatte; pirati e pericoli producono sottrazioni, minacce, fughe, scudi e blocchi non offensivi.",
+    "Nessun indizio indispensabile può dipendere esclusivamente da RNG, carte rare o drop non garantiti.",
+    "Non utilizzare automaticamente dialoghi di OP01/OP05/OP07/OP09 quando la corrispondente scena capitolo è già stata eseguita.",
+    "Gli ID sono immutabili e vanno usati per salvataggio/registro; testo con variabili localizzabili senza interpolazione di HTML."
+  ]
+}

@@ -1,0 +1,107 @@
+:root {
+  --bg: #05070c;
+  --panel-bg: #0b1420;
+  --panel-bg-translucent: rgba(11, 20, 32, 0.88);
+  --accent: #39f6ff;
+  --accent-dim: #0f8a9e;
+  --accent-glow: rgba(57, 246, 255, 0.55);
+  --laser-magenta: #ff3df2;
+  --laser-magenta-glow: rgba(255, 61, 242, 0.5);
+  --laser-violet: #b06bff;
+  --warning: #ffb347;
+  --critical: #ff5c5c;
+  --critical-glow: rgba(255, 92, 92, 0.55);
+  --text: #e6f3fb;
+  --text-muted: #8ea4b5;
+  --border-faint: #1c2b3a;
+  --font-digital: "Consolas", "SFMono-Regular", "Courier New", monospace;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+}
+
+.btn {
+  padding: 9px 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border-faint);
+  background: var(--panel-bg);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.btn-primary {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.btn-secondary {
+  background: transparent;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.engine-loading {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

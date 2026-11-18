@@ -1,0 +1,134 @@
+/* Backdrop fisico a schermo intero: intercetta il click PRIMA che
+ * raggiunga il canvas PixiJS sottostante (vedi commento in
+ * NarrativeToast.tsx), cosi' avanzare il dialogo non muove piu' la nave
+ * madre. Trasparente: non oscura la vista sul resto del gioco. */
+.narrative-toast-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 118px;
+}
+
+.narrative-toast {
+  width: min(620px, calc(100vw - 32px));
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
+  background: var(--panel-bg-translucent);
+  box-shadow: 0 0 22px var(--accent-glow), 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 45;
+  cursor: pointer;
+  animation: narrative-toast-in 220ms ease-out;
+}
+
+@keyframes narrative-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .narrative-toast {
+    animation: none;
+  }
+}
+
+.narrative-toast__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  flex-shrink: 0;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.narrative-toast__corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.narrative-toast__nome {
+  font-family: var(--font-digital);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.narrative-toast__testo {
+  margin: 0;
+  font-family: var(--font-digital);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.narrative-toast__cursore {
+  display: inline-block;
+  width: 7px;
+  height: 0.9em;
+  margin-left: 1px;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: narrative-toast-cursor 500ms step-end infinite;
+}
+
+@keyframes narrative-toast-cursor {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.narrative-toast__attesa-click {
+  display: block;
+  margin-top: 4px;
+  color: var(--accent);
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+  animation: narrative-toast-attesa 1100ms ease-in-out infinite;
+}
+
+@keyframes narrative-toast-attesa {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .narrative-toast__attesa-click {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+.narrative-toast__chiudi {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.narrative-toast__chiudi:hover {
+  color: var(--text);
+}

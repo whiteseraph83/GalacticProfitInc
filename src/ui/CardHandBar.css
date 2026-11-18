@@ -1,0 +1,128 @@
+.card-hand-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 10px 16px;
+  background: linear-gradient(0deg, #0a121c 0%, #0b1622 100%);
+  border-top: 1px solid var(--border-faint);
+  min-height: 108px;
+}
+
+.card-hand-bar__cards {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.game-card {
+  position: relative;
+  box-sizing: border-box;
+  width: 110px;
+  height: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 6px 8px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--border-faint);
+  background-color: var(--panel-bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.game-card:hover,
+.game-card:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  z-index: 5;
+}
+
+.game-card--active {
+  border-color: var(--accent);
+}
+
+.game-card--armata {
+  border-color: #6bffb0;
+  box-shadow: 0 0 10px rgba(107, 255, 176, 0.45);
+}
+
+.game-card--non-attivabile {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.game-card--non-attivabile:hover,
+.game-card--non-attivabile:focus-visible {
+  transform: none;
+  border-color: var(--border-faint);
+}
+
+.game-card__tooltip-nota {
+  color: var(--warning);
+  display: block;
+  margin-top: 4px;
+}
+
+.game-card--operazioni {
+  border-top: 3px solid #37d6ff;
+}
+.game-card--industria {
+  border-top: 3px solid #ffb347;
+}
+.game-card--ricerca {
+  border-top: 3px solid #b47bff;
+}
+
+.game-card__code {
+  font-size: 0.71rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.game-card__name {
+  font-size: 0.97rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.game-card__level {
+  font-size: 0.77rem;
+  color: var(--text-muted);
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.game-card__tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 8px;
+  width: 200px;
+  background: var(--panel-bg-translucent);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.85rem;
+  color: var(--text);
+  white-space: normal;
+  z-index: 10;
+}
+
+.card-hand-bar__capacity {
+  margin-left: 12px;
+  font-size: 0.89rem;
+  color: var(--text-muted);
+  align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card {
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .game-card:hover,
+  .game-card:focus-visible {
+    transform: none;
+  }
+}
