@@ -35,6 +35,14 @@ body {
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   font-size: 17px;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 button {
