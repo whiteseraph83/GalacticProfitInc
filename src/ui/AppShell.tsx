@@ -298,6 +298,7 @@ export function AppShell() {
             pianetiScoperti={pianetiScoperti}
             relittiScoperti={relittiScoperti}
             tempoSimulatoMs={state.tempoSimulatoMs}
+            contrattiMinerari={state.contrattiMinerari}
             mothershipPosizione={state.mothership.posizione}
             mothershipOrientamento={state.mothership.orientamento}
             mothershipPercorso={state.mothership.percorso}

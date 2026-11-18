@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type DragEvent } from "react";
 import { Application, Assets, Container, FederatedPointerEvent, Graphics, Point, Sprite, Text } from "pixi.js";
-import type { Planet, ShuttleEntity, Vector2, WreckField } from "../domain/types";
+import type { MiningContract, Planet, ShuttleEntity, Vector2, WreckField } from "../domain/types";
+import { NOMI_RISORSA } from "../ui/resourceNames";
 import { WORLD } from "../domain/worldConstants";
 import { BALANCE } from "../domain/initialState";
 import { calcolaPercorso } from "../simulation/pathfinding";
@@ -29,6 +30,10 @@ export interface PixiMapViewProps {
   /** Orologio simulato di gioco, usato per calcolare il tempo residuo delle
    * azioni a tempo (es. investigazione) da mostrare sul pianeta. */
   tempoSimulatoMs: number;
+  /** Contratti minerari attivi, per mostrare sul pianeta il contatore di
+   * carico accumulato in attesa di ritiro (richiesta utente: "un contatore
+   * che fa vedere a quanto e' il carico e di che materiale"). */
+  contrattiMinerari: MiningContract[];
   mothershipPosizione: Vector2;
   mothershipOrientamento: number;
   mothershipPercorso: Vector2[];
@@ -59,6 +64,7 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
     pianetiScoperti,
     relittiScoperti,
     tempoSimulatoMs,
+    contrattiMinerari,
     mothershipPosizione,
     mothershipOrientamento,
     mothershipPercorso,
@@ -526,23 +532,33 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
     }
   }, [pianetiScoperti, pixiReady]);
 
-  // Aggiorna il timer "ben visibile" sul pianeta per l'investigazione in
-  // corso (richiesta utente), col tempo residuo in secondi mm:ss.
+  // Aggiorna l'etichetta "ben visibile" sul pianeta per l'azione a tempo in
+  // corso (richiesta utente): investigazione (tempo residuo mm:ss) oppure,
+  // una volta investigato, il contratto minerario attivo (carico
+  // accumulato in attesa di ritiro / capacita' navetta e materiale, es.
+  // "2/40 Ferro"). Le due situazioni sono mutuamente esclusive nel tempo
+  // (un contratto minerario richiede il pianeta gia' investigato), quindi
+  // condividono la stessa etichetta sul pianeta.
   useEffect(() => {
     for (const pianeta of pianetiScoperti) {
       const sprite = planetSpritesRef.current.get(pianeta.id);
       if (!sprite) continue;
-      if (pianeta.investigazioneCompletataAlMs === null) {
-        sprite.impostaTimer(null);
+      if (pianeta.investigazioneCompletataAlMs !== null) {
+        const residuoMs = Math.max(0, pianeta.investigazioneCompletataAlMs - tempoSimulatoMs);
+        const residuoSec = Math.ceil(residuoMs / 1000);
+        const minuti = Math.floor(residuoSec / 60);
+        const secondi = residuoSec % 60;
+        sprite.impostaTimer(`Investigazione: ${minuti}:${secondi.toString().padStart(2, "0")}`);
         continue;
       }
-      const residuoMs = Math.max(0, pianeta.investigazioneCompletataAlMs - tempoSimulatoMs);
-      const residuoSec = Math.ceil(residuoMs / 1000);
-      const minuti = Math.floor(residuoSec / 60);
-      const secondi = residuoSec % 60;
-      sprite.impostaTimer(`Investigazione: ${minuti}:${secondi.toString().padStart(2, "0")}`);
+      const contratto = contrattiMinerari.find((c) => c.pianetaId === pianeta.id && c.attivo);
+      if (contratto) {
+        sprite.impostaTimer(`${Math.floor(contratto.depositoAccumulato)}/${BALANCE.capacitaNavetta} ${NOMI_RISORSA[contratto.risorsa]}`);
+        continue;
+      }
+      sprite.impostaTimer(null);
     }
-  }, [pianetiScoperti, tempoSimulatoMs, pixiReady]);
+  }, [pianetiScoperti, tempoSimulatoMs, contrattiMinerari, pixiReady]);
 
   // Crea le grafiche per i relitti/campi di asteroidi scoperti.
   useEffect(() => {
