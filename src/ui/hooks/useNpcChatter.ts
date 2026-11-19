@@ -90,7 +90,18 @@ export interface ChatterAttivo extends ChatterMessage {
   mostratoAlleMs: number;
 }
 
-export function useNpcChatter(stato: GameState): { attuale: ChatterAttivo | null; chiudi: () => void } {
+export interface NpcChatterHandle {
+  attuale: ChatterAttivo | null;
+  chiudi: () => void;
+  /** Richiesta utente: alcuni passi del tutorial (Radar/Investiga/Contratto
+   * minerario) devono bloccare le altre carte finche' quella giusta non
+   * viene usata, a partire dal momento in cui la battuta che lo chiede e'
+   * comparsa. Espone se una scena della sceneggiatura e' gia' stata
+   * mostrata, cosi' il chiamante puo' derivare il passo attivo. */
+  sceneVista: (id: string) => boolean;
+}
+
+export function useNpcChatter(stato: GameState): NpcChatterHandle {
   const [coda, setCoda] = useState<ChatterAttivo[]>([]);
   const prevSegnaliRef = useRef<Segnali | null>(null);
   const vistiRef = useRef<Set<string>>(new Set());
@@ -191,6 +202,7 @@ export function useNpcChatter(stato: GameState): { attuale: ChatterAttivo | null
   }, [stato, coda.length]);
 
   const chiudi = () => setCoda((attuale) => attuale.slice(1));
+  const sceneVista = (id: string) => sceneVisteRef.current.has(id);
 
-  return { attuale: coda[0] ?? null, chiudi };
+  return { attuale: coda[0] ?? null, chiudi, sceneVista };
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CARD_DEFINITIONS } from "../domain/cards";
-import type { CardInstance } from "../domain/types";
+import type { CardCode, CardInstance } from "../domain/types";
 import { useEngine, useGameState } from "./useEngine";
 import "./CardHandBar.css";
 
@@ -16,6 +16,11 @@ export interface CardHandBarProps {
   onCliccaCarta: (carta: CardInstance) => void;
   onInizioTrascinamento: (carta: CardInstance) => void;
   onFineTrascinamento: () => void;
+  /** Richiesta utente: durante un passo guidato del tutorial (Radar,
+   * Investiga, Contratto minerario) solo questo codice resta utilizzabile
+   * e va evidenziato; tutti gli altri comandi, l'Esplora e il cestino
+   * restano visibili ma non interagibili finche' il passo non si completa. */
+  cartaSbloccataCode: CardCode | null;
 }
 
 /**
@@ -29,7 +34,13 @@ export interface CardHandBarProps {
  * avviano a parte, nel pannello Ricerca, spendendo i punti accumulati. In
  * tutti i casi l'effetto si applica solo dopo conferma esplicita.
  */
-export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinamento, onFineTrascinamento }: CardHandBarProps) {
+export function CardHandBar({
+  cartaArmataId,
+  onCliccaCarta,
+  onInizioTrascinamento,
+  onFineTrascinamento,
+  cartaSbloccataCode = null,
+}: CardHandBarProps) {
   const engine = useEngine();
   const state = useGameState();
   const [cartaConTooltip, setCartaConTooltip] = useState<string | null>(null);
@@ -47,8 +58,14 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
           const def = CARD_DEFINITIONS[carta.code];
           const tooltipAperto = cartaConTooltip === carta.instanceId;
           const armata = cartaArmataId === carta.instanceId;
+          // Richiesta utente: durante un passo guidato del tutorial, solo il
+          // comando indicato resta usabile; gli altri restano visibili ma
+          // bloccati, cosi' il giocatore capisce subito cosa deve fare.
+          const bloccataDalTutorial = cartaSbloccataCode !== null && carta.code !== cartaSbloccataCode;
+          const evidenziataDalTutorial = cartaSbloccataCode !== null && carta.code === cartaSbloccataCode;
           const trascinabile =
             def.attivabile &&
+            !bloccataDalTutorial &&
             def.bersaglio !== "nave" &&
             def.bersaglio !== "nessuno" &&
             def.bersaglio !== "civiltaScoperta";
@@ -58,8 +75,11 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
               key={carta.instanceId}
               className={`game-card game-card--${def.categoria} ${tooltipAperto || armata ? "game-card--active" : ""} ${
                 armata ? "game-card--armata" : ""
-              } ${!def.attivabile ? "game-card--non-attivabile" : ""}`}
+              } ${!def.attivabile ? "game-card--non-attivabile" : ""} ${bloccataDalTutorial ? "game-card--bloccata-tutorial" : ""} ${
+                evidenziataDalTutorial ? "game-card--evidenziata-tutorial" : ""
+              }`}
               draggable={trascinabile}
+              disabled={bloccataDalTutorial}
               onDragStart={(e) => {
                 if (!trascinabile) {
                   e.preventDefault();
@@ -71,6 +91,7 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
               }}
               onDragEnd={onFineTrascinamento}
               onClick={() => {
+                if (bloccataDalTutorial) return;
                 setCartaConTooltip(tooltipAperto ? null : carta.instanceId);
                 if (def.attivabile) onCliccaCarta(carta);
               }}
@@ -99,9 +120,11 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
         {(slotLibero || esplorazioneInCorso) && (
           <button
             type="button"
-            className={`game-card game-card--esplora ${esplorazioneInCorso ? "game-card--esplora-attiva" : ""}`}
+            className={`game-card game-card--esplora ${esplorazioneInCorso ? "game-card--esplora-attiva" : ""} ${
+              cartaSbloccataCode !== null ? "game-card--bloccata-tutorial" : ""
+            }`}
             onClick={avviaEsplorazione}
-            disabled={esplorazioneInCorso}
+            disabled={esplorazioneInCorso || cartaSbloccataCode !== null}
           >
             {esplorazioneInCorso ? (
               <span className="game-card__esplora-countdown">
@@ -127,8 +150,8 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
       <button
         type="button"
         className="card-hand-bar__cestino"
-        disabled={!cartaConTooltip}
-        title={cartaConTooltip ? "Vendi il comando selezionato" : "Seleziona un comando per venderlo"}
+        disabled={!cartaConTooltip || cartaSbloccataCode !== null}
+        title={cartaSbloccataCode !== null ? "Non disponibile durante il tutorial guidato" : cartaConTooltip ? "Vendi il comando selezionato" : "Seleziona un comando per venderlo"}
         aria-label="Vendi il comando selezionato"
         onClick={() => {
           if (!cartaConTooltip) return;

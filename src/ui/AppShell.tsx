@@ -21,6 +21,7 @@ import type { CardDefinition, ResourceType } from "../domain/types";
 import { CardActionFlash } from "./components/CardActionFlash";
 import { NarrativeToast } from "./components/NarrativeToast";
 import { useNpcChatter } from "./hooks/useNpcChatter";
+import { trovaPassoTutorialAttivo } from "../domain/tutorialLocks";
 import { validaGiocaCarta } from "../simulation/cardEffects";
 import { dettagliConfermaCarta } from "./cardConfirmDetails";
 import { ConfirmModal } from "./components/ConfirmModal";
@@ -88,6 +89,10 @@ export function AppShell() {
   // nessuno. Si autodisattiva da solo quando non c'e' piu' nulla da saltare.
   const [saltaVeloceAttivo, setSaltaVeloceAttivo] = useState(false);
   const dialogoAttuale = chiacchiericcio.attuale;
+  // Richiesta utente: dopo che il tutorial ha chiesto esplicitamente di
+  // usare Radar/Investiga/Contratto minerario, solo quel comando resta
+  // utilizzabile finche' non viene usato davvero (vedi tutorialLocks.ts).
+  const passoTutorialAttivo = trovaPassoTutorialAttivo(state, chiacchiericcio.sceneVista);
   // `chiacchiericcio.chiudi` e' una funzione nuova a ogni render di
   // AppShell (il game loop fa ri-renderizzare spesso): tenuta in un ref
   // cosi' l'effetto sotto non si cancella/riarma a ogni render, altrimenti
@@ -231,6 +236,17 @@ export function AppShell() {
     engine.dispatch({ id: nextCommandId("move"), type: "ui/moveMothership", payload: { destinazione } });
 
   function proponiAzioneCarta(carta: CardInstance, bersaglio: BersaglioCarta) {
+    // Difesa in profondita' (A2): CardHandBar gia' blocca il click/drag
+    // delle carte non indicate durante un passo guidato, ma qui si rifiuta
+    // comunque qualunque altro comando arrivasse per altra via.
+    if (passoTutorialAttivo && carta.code !== passoTutorialAttivo.cardCode) {
+      avvisoRequisitoIdRef.current += 1;
+      setAvvisoRequisito({
+        id: avvisoRequisitoIdRef.current,
+        testo: `Segui prima il tutorial: usa ${CARD_DEFINITIONS[passoTutorialAttivo.cardCode].nome}.`,
+      });
+      return;
+    }
     const risultato = validaGiocaCarta(state, carta.instanceId, bersaglio);
     if (!risultato.ok) {
       // Bersaglio/requisiti non validi: nessun effetto, nessuna carta
@@ -399,6 +415,7 @@ export function AppShell() {
         onCliccaCarta={onCliccaCarta}
         onInizioTrascinamento={setCartaInTrascinamento}
         onFineTrascinamento={() => setCartaInTrascinamento(null)}
+        cartaSbloccataCode={passoTutorialAttivo?.cardCode ?? null}
       />
 
       {propostaCarta && (

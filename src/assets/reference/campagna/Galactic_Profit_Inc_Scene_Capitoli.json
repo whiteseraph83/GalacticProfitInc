@@ -111,10 +111,6 @@
         {
           "speaker": "SISTEMA DI BORDO",
           "text": "Tutorial avviato. Obiettivo iniziale: esplorare un’area della galassia."
-        },
-        {
-          "speaker": "B.O.B.",
-          "text": "«Rilevo un giacimento di ferro a portata di sensori, già scoperto. Prima mossa consigliata: Investiga quel pianeta. Appena ne confermiamo la composizione, avvii subito un Contratto minerario sullo stesso.»"
         }
       ],
       "choices": [],
@@ -180,6 +176,28 @@
       "priority": "story"
     },
     {
+      "id": "C1_S02I",
+      "chapter": "C1",
+      "title": "Il prossimo passo",
+      "trigger": "tutorial.investigate_instructed",
+      "summary": "Istruzione esplicita a usare Investiga (richiesta utente: bloccare le altre carte e illuminare solo questa finche' non viene usata).",
+      "lines": [
+        {
+          "speaker": "Dex Calder",
+          "text": "Ora che l'abbiamo sulla mappa, Investighi quel pianeta: senza sapere cosa contiene non possiamo pianificare nulla."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "tutorial: lock_to_card: OPS-02"
+      ],
+      "gate": [
+        "Compare subito dopo la conferma del Radar; sblocca le altre carte solo quando Investiga viene usata."
+      ],
+      "tone": "tutorial",
+      "priority": "story"
+    },
+    {
       "id": "C1_S03",
       "chapter": "C1",
       "title": "Il valore di un mondo",
@@ -209,6 +227,28 @@
       ],
       "gate": [
         "Il pianeta iniziale deve garantire almeno una risorsa comune accessibile."
+      ],
+      "tone": "tutorial",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S03I",
+      "chapter": "C1",
+      "title": "Dal dato al profitto",
+      "trigger": "tutorial.contract_instructed",
+      "summary": "Istruzione esplicita ad avviare il Contratto minerario (richiesta utente: stesso blocco/illuminazione del passo precedente).",
+      "lines": [
+        {
+          "speaker": "Rag. Zarg",
+          "text": "Risorse note, Direttore. Ora avvii un Contratto minerario su quello stesso pianeta: i dati da soli non pagano le quote."
+        }
+      ],
+      "choices": [],
+      "effects": [
+        "tutorial: lock_to_card: IND-01"
+      ],
+      "gate": [
+        "Compare subito dopo l'investigazione; sblocca le altre carte solo quando il contratto viene avviato."
       ],
       "tone": "tutorial",
       "priority": "story"

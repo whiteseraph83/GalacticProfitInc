@@ -191,6 +191,38 @@
   align-self: center;
 }
 
+/* Passo guidato del tutorial (richiesta utente: "illuminare la carta...
+ * e rendermi impossibile usare le altre"): le carte non indicate restano
+ * visibili ma spente e non cliccabili, quella giusta pulsa per farsi notare. */
+.game-card--bloccata-tutorial {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+}
+
+.game-card--bloccata-tutorial:hover,
+.game-card--bloccata-tutorial:focus-visible {
+  transform: none;
+  border-color: var(--border-faint);
+  box-shadow: none;
+}
+
+.game-card--evidenziata-tutorial {
+  border-color: #ffe27a;
+  box-shadow: 0 0 14px rgba(255, 226, 122, 0.55);
+  animation: tutorial-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes tutorial-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 226, 122, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 226, 122, 0.85);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .game-card {
     transition: border-color 120ms ease, box-shadow 120ms ease;
@@ -198,5 +230,8 @@
   .game-card:hover,
   .game-card:focus-visible {
     transform: none;
+  }
+  .game-card--evidenziata-tutorial {
+    animation: none;
   }
 }
