@@ -47,6 +47,25 @@ function distanza(a: Vector2, b: Vector2): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+/** Richiesta utente: "i pianeti devono essere sparsi in tutta l'intera
+ * mappa... non tutti vicini alla nave madre" — un sistema stellare (cluster)
+ * o un corpo sparso liberamente potevano capitare per puro caso proprio
+ * intorno all'area sicura iniziale, affollandola ben oltre i 2-3 pianeti
+ * previsti li'. Questo wrapper ricampiona (entro un limite di tentativi,
+ * per restare deterministico) finche' il candidato non cade fuori dal
+ * cerchio dell'area sicura, cosi' tutto il resto della generazione
+ * (cluster, pianeti sparsi, relitti, civilta', pericoli) resta escluso da
+ * quella zona per costruzione invece che per fortuna statistica. */
+function campionaFuoriAreaSicura(centro: Vector2, raggioEsclusione: number, campiona: () => Vector2): () => Vector2 {
+  return () => {
+    let candidato = campiona();
+    for (let tentativo = 0; tentativo < 30 && distanza(candidato, centro) <= raggioEsclusione; tentativo++) {
+      candidato = campiona();
+    }
+    return candidato;
+  };
+}
+
 function posizioneValida(pos: Vector2, raggio: number, piazzati: CorpoPiazzato[]): boolean {
   for (const corpo of piazzati) {
     const minDistanza = raggio + corpo.raggio + WORLD.separazioneMinimaPadding;
@@ -117,35 +136,48 @@ export function generaRegione(seed: string): RegioneSpaziale {
     pianeti.push(creaPianeta(rng, archetipo, posizione, raggio, nomiUsati, centroAreaSicura, areaSicuraIniziale.raggio));
   }
 
-  // --- Sistemi stellari riconoscibili (cluster). ---
+  // --- Sistemi stellari riconoscibili (cluster): il centro non deve mai
+  // cadere a ridosso dell'area sicura, altrimenti l'intero cluster (fino a
+  // sistemaRaggioCluster di raggio) finirebbe per affollarla. ---
   const numSistemi = rng.nextInt(WORLD.sistemiStellariMin, WORLD.sistemiStellariMax);
   const centriSistemi: Vector2[] = [];
-  for (let i = 0; i < numSistemi; i++) {
-    centriSistemi.push({
+  const campionaCentroSistema = campionaFuoriAreaSicura(
+    centroAreaSicura,
+    WORLD.areaSicuraRaggio + WORLD.sistemaRaggioCluster,
+    () => ({
       x: rng.nextFloat(-WORLD.estensioneRegioneMeta * 0.85, WORLD.estensioneRegioneMeta * 0.85),
       y: rng.nextFloat(-WORLD.estensioneRegioneMeta * 0.85, WORLD.estensioneRegioneMeta * 0.85),
-    });
+    }),
+  );
+  for (let i = 0; i < numSistemi; i++) {
+    centriSistemi.push(campionaCentroSistema());
   }
 
-  // --- Resto dei pianeti: in parte in cluster, in parte sparsi liberamente. ---
+  // --- Resto dei pianeti: in parte in cluster, in parte sparsi liberamente,
+  // sempre fuori dall'area sicura (richiesta utente: "sparsi in tutta
+  // l'intera mappa... non tutti vicini alla nave madre"). ---
   while (pianeti.length < totalePianeti) {
     const archetipo = scegliArchetipo(rng, false);
     const def = PLANET_ARCHETYPES[archetipo];
     const raggio = rng.nextFloat(def.raggioMin, def.raggioMax);
 
     const inCluster = centriSistemi.length > 0 && rng.next() < WORLD.probabilitaAppartenenzaCluster;
-    const posizione = posizionaConRitentativi(raggio, piazzati, () => {
-      if (inCluster) {
-        const centro = rng.pick(centriSistemi);
-        const angolo = rng.nextFloat(0, Math.PI * 2);
-        const distanzaCentro = rng.nextFloat(0, WORLD.sistemaRaggioCluster);
-        return { x: centro.x + Math.cos(angolo) * distanzaCentro, y: centro.y + Math.sin(angolo) * distanzaCentro };
-      }
-      return {
-        x: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
-        y: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
-      };
-    });
+    const posizione = posizionaConRitentativi(
+      raggio,
+      piazzati,
+      campionaFuoriAreaSicura(centroAreaSicura, WORLD.areaSicuraRaggio, () => {
+        if (inCluster) {
+          const centro = rng.pick(centriSistemi);
+          const angolo = rng.nextFloat(0, Math.PI * 2);
+          const distanzaCentro = rng.nextFloat(0, WORLD.sistemaRaggioCluster);
+          return { x: centro.x + Math.cos(angolo) * distanzaCentro, y: centro.y + Math.sin(angolo) * distanzaCentro };
+        }
+        return {
+          x: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
+          y: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
+        };
+      }),
+    );
 
     piazzati.push({ posizione, raggio });
     pianeti.push(creaPianeta(rng, archetipo, posizione, raggio, nomiUsati, centroAreaSicura, areaSicuraIniziale.raggio));
@@ -156,10 +188,14 @@ export function generaRegione(seed: string): RegioneSpaziale {
   const campiRelitti: WreckField[] = [];
   for (let i = 0; i < numRelitti; i++) {
     const raggio = rng.nextFloat(WORLD.relittiRaggioMin, WORLD.relittiRaggioMax);
-    const posizione = posizionaConRitentativi(raggio, piazzati, () => ({
-      x: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
-      y: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
-    }));
+    const posizione = posizionaConRitentativi(
+      raggio,
+      piazzati,
+      campionaFuoriAreaSicura(centroAreaSicura, WORLD.areaSicuraRaggio, () => ({
+        x: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
+        y: rng.nextFloat(-WORLD.estensioneRegioneMeta, WORLD.estensioneRegioneMeta),
+      })),
+    );
     piazzati.push({ posizione, raggio });
     const tipo: WreckFieldType = rng.next() < 0.6 ? "relitto" : "campoAsteroidi";
     campiRelitti.push({

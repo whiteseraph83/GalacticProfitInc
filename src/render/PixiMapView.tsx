@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type DragEvent } from "react";
-import { Application, Assets, Container, FederatedPointerEvent, FillGradient, Graphics, Point, Sprite, Text } from "pixi.js";
+import { Application, Assets, Circle, Container, FederatedPointerEvent, FillGradient, Graphics, Point, Sprite, Text } from "pixi.js";
 import type { MiningContract, Planet, ShuttleEntity, Vector2, WreckField } from "../domain/types";
 import { NOMI_RISORSA } from "../ui/resourceNames";
 import { WORLD } from "../domain/worldConstants";
@@ -40,17 +40,25 @@ export interface PixiMapViewProps {
   navette: ShuttleEntity[];
   pianetaSelezionatoId: string | null;
   onSelezionaPianeta: (id: string) => void;
+  /** Richiesta utente: il campo relitti/asteroidi deve essere cliccabile
+   * (prima era puramente decorativo), per selezionarlo e per confermare il
+   * comando Recupera rottami quando armato. */
+  relittoSelezionatoId: string | null;
+  onSelezionaRelitto: (id: string) => void;
   onMuoviNaveMadre: (destinazione: Vector2) => void;
   /** Non null quando una carta e' "armata" (click o drag in corso): disattiva
    * il movimento della nave madre al click (A4) e abilita l'evidenziazione
    * dei bersagli. */
   modalitaBersaglioCarta: {
     bersagliPianetaValidi: Set<string>;
+    bersagliRelittoValidi: Set<string>;
     accettaPuntoMappa: boolean;
   } | null;
   onBersaglioPianetaCarta: (planetId: string) => void;
+  onBersaglioRelittoCarta: (relittoId: string) => void;
   onBersaglioMappaCarta: (punto: Vector2) => void;
   onDropCartaSuPianeta: (cardInstanceId: string, planetId: string) => void;
+  onDropCartaSuRelitto: (cardInstanceId: string, relittoId: string) => void;
   onDropCartaSuMappa: (cardInstanceId: string, punto: Vector2) => void;
 }
 
@@ -71,11 +79,15 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
     navette,
     pianetaSelezionatoId,
     onSelezionaPianeta,
+    relittoSelezionatoId,
+    onSelezionaRelitto,
     onMuoviNaveMadre,
     modalitaBersaglioCarta,
     onBersaglioPianetaCarta,
+    onBersaglioRelittoCarta,
     onBersaglioMappaCarta,
     onDropCartaSuPianeta,
+    onDropCartaSuRelitto,
     onDropCartaSuMappa,
   },
   ref,
@@ -104,21 +116,26 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
   // reale (altrimenti, una volta creato, lo sprite non verrebbe mai piu'
   // toccato: vedi l'effect sotto).
   const planetInvestigatoRef = useRef<Map<string, boolean>>(new Map());
-  const wreckGfxRef = useRef<Map<string, Graphics>>(new Map());
+  const wreckGfxRef = useRef<Map<string, { container: Graphics; label: Text }>>(new Map());
+  const relittoSelectionRingRef = useRef<Graphics | null>(null);
   const callbacksRef = useRef({
     onSelezionaPianeta,
+    onSelezionaRelitto,
     onMuoviNaveMadre,
     modalitaBersaglioCarta,
     onBersaglioPianetaCarta,
+    onBersaglioRelittoCarta,
     onBersaglioMappaCarta,
     mothershipPosizione,
     pianetiScoperti,
   });
   callbacksRef.current = {
     onSelezionaPianeta,
+    onSelezionaRelitto,
     onMuoviNaveMadre,
     modalitaBersaglioCarta,
     onBersaglioPianetaCarta,
+    onBersaglioRelittoCarta,
     onBersaglioMappaCarta,
     mothershipPosizione,
     pianetiScoperti,
@@ -341,6 +358,12 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         selectionRing.visible = false;
         world.addChild(selectionRing);
         selectionRingRef.current = selectionRing;
+
+        // --- Anello di selezione per relitti/campi asteroidi --------------------
+        const relittoSelectionRing = new Graphics();
+        relittoSelectionRing.visible = false;
+        world.addChild(relittoSelectionRing);
+        relittoSelectionRingRef.current = relittoSelectionRing;
 
         // --- Evidenziazione bersagli validi per la carta in selezione -----------
         const targetHighlightLayer = new Container();
@@ -617,13 +640,20 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
     }
   }, [pianetiScoperti, tempoSimulatoMs, contrattiMinerari, navette, pixiReady]);
 
-  // Crea le grafiche per i relitti/campi di asteroidi scoperti.
+  // Crea le grafiche per i relitti/campi di asteroidi scoperti. Richiesta
+  // utente: devono essere cliccabili (prima erano puramente decorativi,
+  // nessun modo di scegliarli come bersaglio del comando Recupera rottami
+  // dalla mappa) e spiegare cosa sono con un'etichetta sempre visibile,
+  // sullo stesso stile dei contatori sul pianeta.
   useEffect(() => {
     const layer = wreckLayerRef.current;
     if (!layer) return;
     for (const relitto of relittiScoperti) {
       if (wreckGfxRef.current.has(relitto.id)) continue;
       const g = new Graphics();
+      g.eventMode = "static";
+      g.cursor = "pointer";
+      g.hitArea = new Circle(0, 0, Math.max(relitto.raggio, 14));
       const numFrammenti = relitto.tipo === "campoAsteroidi" ? 7 : 4;
       const rng = (seedOffset: number) => {
         // Variazione deterministica semplice basata sull'indice, sufficiente
@@ -641,8 +671,43 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         });
       }
       g.position.set(relitto.posizione.x, relitto.posizione.y);
+
+      const label = new Text({
+        text: "",
+        style: { fontFamily: "Consolas, monospace", fontSize: 11, fill: 0xb8c4d0, fontWeight: "500", align: "center" },
+      });
+      label.anchor.set(0.5, 0);
+      label.position.set(0, relitto.raggio + 8);
+      g.addChild(label);
+
+      g.on("pointertap", (e) => {
+        e.stopPropagation();
+        const modalita = callbacksRef.current.modalitaBersaglioCarta;
+        if (modalita) {
+          if (modalita.bersagliRelittoValidi.has(relitto.id)) {
+            callbacksRef.current.onBersaglioRelittoCarta(relitto.id);
+          }
+          return;
+        }
+        callbacksRef.current.onSelezionaRelitto(relitto.id);
+      });
+
       layer.addChild(g);
-      wreckGfxRef.current.set(relitto.id, g);
+      wreckGfxRef.current.set(relitto.id, { container: g, label });
+    }
+  }, [relittiScoperti, pixiReady]);
+
+  // Aggiorna l'etichetta esplicativa del relitto/campo asteroidi (richiesta
+  // utente: "serve spiegare che si possono recuperare i rottami con il
+  // comando Recupera rottami") e attenua i frammenti una volta recuperati.
+  useEffect(() => {
+    for (const relitto of relittiScoperti) {
+      const handle = wreckGfxRef.current.get(relitto.id);
+      if (!handle) continue;
+      const nome = relitto.tipo === "campoAsteroidi" ? "Campo di asteroidi" : "Relitto";
+      handle.label.text = relitto.recuperato ? `${nome}\n(rottami gia' recuperati)` : `${nome}\nRecupera rottami disponibile`;
+      handle.container.alpha = relitto.recuperato ? 0.45 : 1;
+      handle.container.cursor = relitto.recuperato ? "default" : "pointer";
     }
   }, [relittiScoperti, pixiReady]);
 
@@ -666,8 +731,25 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
     ring.visible = true;
   }, [pianetaSelezionatoId, pianetiScoperti, pixiReady]);
 
-  // Evidenzia tutti i pianeti scoperti che sono bersagli validi per la
-  // carta attualmente in selezione (A4: "evidenziare bersagli validi").
+  // Evidenzia il relitto/campo asteroidi selezionato (richiesta utente: "il
+  // campo di relitti/asteroidi deve essere cliccabile"), stesso stile
+  // dell'anello di selezione del pianeta.
+  useEffect(() => {
+    const ring = relittoSelectionRingRef.current;
+    if (!ring) return;
+    const relitto = relittoSelezionatoId ? relittiScoperti.find((r) => r.id === relittoSelezionatoId) : undefined;
+    if (!relitto) {
+      ring.visible = false;
+      return;
+    }
+    ring.clear();
+    ring.circle(0, 0, relitto.raggio + 10).stroke({ color: 0xffe27a, width: 2 });
+    ring.position.set(relitto.posizione.x, relitto.posizione.y);
+    ring.visible = true;
+  }, [relittoSelezionatoId, relittiScoperti, pixiReady]);
+
+  // Evidenzia tutti i pianeti e relitti scoperti che sono bersagli validi
+  // per la carta attualmente in selezione (A4: "evidenziare bersagli validi").
   useEffect(() => {
     const layer = targetHighlightLayerRef.current;
     if (!layer) return;
@@ -681,7 +763,14 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
       anello.position.set(pianeta.posizione.x, pianeta.posizione.y);
       layer.addChild(anello);
     }
-  }, [modalitaBersaglioCarta, pianetiScoperti, pixiReady]);
+    for (const relitto of relittiScoperti) {
+      if (!modalitaBersaglioCarta.bersagliRelittoValidi.has(relitto.id)) continue;
+      const anello = new Graphics();
+      anello.circle(0, 0, relitto.raggio + 12).stroke({ color: 0x6bffb0, width: 2.5, alpha: 0.85 });
+      anello.position.set(relitto.posizione.x, relitto.posizione.y);
+      layer.addChild(anello);
+    }
+  }, [modalitaBersaglioCarta, pianetiScoperti, relittiScoperti, pixiReady]);
 
   const risolviPuntoMondoDaEvento = (e: { clientX: number; clientY: number }): Vector2 | null => {
     const app = appRef.current;
@@ -702,9 +791,16 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
     const pianetaColpito = pianetiScoperti.find((p) => Math.hypot(p.posizione.x - puntoMondo.x, p.posizione.y - puntoMondo.y) <= p.raggio);
     if (pianetaColpito) {
       onDropCartaSuPianeta(cardInstanceId, pianetaColpito.id);
-    } else {
-      onDropCartaSuMappa(cardInstanceId, puntoMondo);
+      return;
     }
+    const relittoColpito = relittiScoperti.find(
+      (r) => Math.hypot(r.posizione.x - puntoMondo.x, r.posizione.y - puntoMondo.y) <= Math.max(r.raggio, 14),
+    );
+    if (relittoColpito) {
+      onDropCartaSuRelitto(cardInstanceId, relittoColpito.id);
+      return;
+    }
+    onDropCartaSuMappa(cardInstanceId, puntoMondo);
   };
 
   return (

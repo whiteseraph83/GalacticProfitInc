@@ -115,6 +115,7 @@ export function AppShell() {
   const pianetiScoperti = useMemo(() => state.pianeti.filter((p) => p.scoperto), [state.pianeti]);
   const relittiScoperti = useMemo(() => state.campiRelitti.filter((r) => r.scoperto), [state.campiRelitti]);
   const pianetaSelezionato = pianetiScoperti.find((p) => p.id === state.pianetaSelezionatoId) ?? null;
+  const [relittoSelezionatoId, setRelittoSelezionatoId] = useState<string | null>(null);
 
   // --- Selezione/trascinamento carta (click-carta oppure drag & drop) -------
   const [cartaSelezionataClick, setCartaSelezionataClick] = useState<CardInstance | null>(null);
@@ -161,10 +162,21 @@ export function AppShell() {
     return insieme;
   }, [cartaArmata, pianetiScoperti, state]);
 
+  const bersagliRelittoValidi = useMemo(() => {
+    const insieme = new Set<string>();
+    if (!cartaArmata) return insieme;
+    const def = CARD_DEFINITIONS[cartaArmata.code];
+    if (def.bersaglio !== "relitto") return insieme;
+    for (const relitto of relittiScoperti) {
+      if (validaGiocaCarta(state, cartaArmata.instanceId, { relittoId: relitto.id }).ok) insieme.add(relitto.id);
+    }
+    return insieme;
+  }, [cartaArmata, relittiScoperti, state]);
+
   // accettaPuntoMappa era usato solo da Esplora/Radar (bersaglio "zonaMappa"),
   // rimosso dal tipo bersaglio perche' Radar e' ora automatico (richiesta
   // utente): nessuna carta clicca piu' un punto libero della mappa.
-  const modalitaBersaglioCarta = cartaArmata ? { bersagliPianetaValidi, accettaPuntoMappa: false } : null;
+  const modalitaBersaglioCarta = cartaArmata ? { bersagliPianetaValidi, bersagliRelittoValidi, accettaPuntoMappa: false } : null;
 
   // Esc annulla la selezione-carta attiva (A4), non tocca una conferma gia' aperta
   // (quella la gestisce ConfirmModal stesso).
@@ -209,6 +221,12 @@ export function AppShell() {
     engine.dispatch({ id: nextCommandId("select"), type: "ui/selectPlanet", payload: { planetId: id } });
     setPannelloPianetaChiuso(false);
   };
+  // Selezione del relitto/campo asteroidi (richiesta utente: "deve essere
+  // cliccabile"): solo evidenziazione sulla mappa, non richiede un comando
+  // dedicato nel motore (nessun effetto di gioco, solo stato UI locale).
+  const selezionaRelitto = (id: string) => {
+    setRelittoSelezionatoId((prev) => (prev === id ? null : id));
+  };
   const muoviNaveMadre = (destinazione: { x: number; y: number }) =>
     engine.dispatch({ id: nextCommandId("move"), type: "ui/moveMothership", payload: { destinazione } });
 
@@ -244,6 +262,10 @@ export function AppShell() {
     if (!cartaArmata) return;
     proponiAzioneCarta(cartaArmata, { planetId });
   };
+  const onBersaglioRelittoCarta = (relittoId: string) => {
+    if (!cartaArmata) return;
+    proponiAzioneCarta(cartaArmata, { relittoId });
+  };
   const onBersaglioMappaCarta = (punto: Vector2) => {
     if (!cartaArmata) return;
     proponiAzioneCarta(cartaArmata, { punto });
@@ -251,6 +273,10 @@ export function AppShell() {
   const onDropCartaSuPianeta = (cardInstanceId: string, planetId: string) => {
     const carta = state.manoCarte.find((c) => c.instanceId === cardInstanceId);
     if (carta) proponiAzioneCarta(carta, { planetId });
+  };
+  const onDropCartaSuRelitto = (cardInstanceId: string, relittoId: string) => {
+    const carta = state.manoCarte.find((c) => c.instanceId === cardInstanceId);
+    if (carta) proponiAzioneCarta(carta, { relittoId });
   };
   const onDropCartaSuMappa = (cardInstanceId: string, punto: Vector2) => {
     const carta = state.manoCarte.find((c) => c.instanceId === cardInstanceId);
@@ -346,11 +372,15 @@ export function AppShell() {
             navette={state.navette}
             pianetaSelezionatoId={state.pianetaSelezionatoId}
             onSelezionaPianeta={selezionaPianeta}
+            relittoSelezionatoId={relittoSelezionatoId}
+            onSelezionaRelitto={selezionaRelitto}
             onMuoviNaveMadre={muoviNaveMadre}
             modalitaBersaglioCarta={modalitaBersaglioCarta}
             onBersaglioPianetaCarta={onBersaglioPianetaCarta}
+            onBersaglioRelittoCarta={onBersaglioRelittoCarta}
             onBersaglioMappaCarta={onBersaglioMappaCarta}
             onDropCartaSuPianeta={onDropCartaSuPianeta}
+            onDropCartaSuRelitto={onDropCartaSuRelitto}
             onDropCartaSuMappa={onDropCartaSuMappa}
           />
         </div>

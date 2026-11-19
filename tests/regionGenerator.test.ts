@@ -73,6 +73,20 @@ describe("generaRegione", () => {
     }
   });
 
+  it("nessun pianeta sparso/cluster finisce dentro l'area sicura oltre a quelli previsti li' (richiesta utente: pianeti sparsi su tutta la mappa)", () => {
+    for (const seed of ["regione-affollamento-1", "regione-affollamento-2", "regione-affollamento-3", "regione-affollamento-4", "regione-affollamento-5"]) {
+      const regione = generaRegione(seed);
+      const dentroAreaSicura = regione.pianeti.filter(
+        (p) => Math.hypot(p.posizione.x - regione.areaSicuraIniziale.centro.x, p.posizione.y - regione.areaSicuraIniziale.centro.y) <= WORLD.areaSicuraRaggio,
+      );
+      // Solo i 2-4 pianeti deliberatamente piazzati nell'area sicura
+      // all'inizio della generazione: nessuno sparso/in cluster deve
+      // capitare li' per puro caso.
+      expect(dentroAreaSicura.length).toBeLessThanOrEqual(WORLD.areaSicuraPianetiMax);
+      expect(dentroAreaSicura.length).toBeGreaterThanOrEqual(WORLD.areaSicuraPianetiMin);
+    }
+  });
+
   it("la stragrande maggioranza dei corpi rispetta la separazione minima", () => {
     const regione = generaRegione("regione-overlap");
     const corpi = [...regione.pianeti, ...regione.campiRelitti];
