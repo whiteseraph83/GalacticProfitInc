@@ -44,11 +44,10 @@ describe("stato iniziale", () => {
     expect(BALANCE.carburanteIniziale).toBeLessThanOrEqual(BALANCE.serbatoioMothershipCapacita);
   });
 
-  it("genera una regione con pianeti e alcuni gia' scoperti nell'area sicura", () => {
+  it("genera una regione con pianeti, nessuno gia' scoperto a inizio partita (richiesta utente)", () => {
     const stato = creaStatoIniziale("test-seed-regione");
     expect(stato.pianeti.length).toBeGreaterThanOrEqual(WORLD.pianetiMin);
-    const scoperti = stato.pianeti.filter((p) => p.scoperto);
-    expect(scoperti.length).toBeGreaterThan(0);
+    expect(stato.pianeti.filter((p) => p.scoperto)).toHaveLength(0);
     expect(stato.pianeti.filter((p) => p.investigato)).toHaveLength(0);
   });
 

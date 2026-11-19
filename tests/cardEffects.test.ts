@@ -68,10 +68,11 @@ describe("validaGiocaCarta / applicaGiocaCarta — Radar (OPS-01, ex Esplora)", 
 
 describe("validaGiocaCarta / applicaGiocaCarta — Investiga (OPS-02)", () => {
   it("avvia un'investigazione temporizzata (non istantanea)", () => {
-    const stato = creaStatoIniziale("carte-investiga");
-    const pianeta = stato.pianeti.find((p) => p.scoperto);
-    expect(pianeta).toBeDefined();
-    if (!pianeta) return;
+    const base = creaStatoIniziale("carte-investiga");
+    // Nessun pianeta e' gia' scoperto a inizio partita (richiesta utente):
+    // si simula qui l'esito del Radar segnando il primo pianeta scoperto.
+    const stato: GameState = { ...base, pianeti: base.pianeti.map((p, i) => (i === 0 ? { ...p, scoperto: true } : p)) };
+    const pianeta = stato.pianeti[0];
     const carta = trovaCartaInMano(stato, "OPS-02");
     const bersaglio = { planetId: pianeta.id };
 
@@ -93,9 +94,9 @@ describe("validaGiocaCarta / applicaGiocaCarta — Investiga (OPS-02)", () => {
   });
 
   it("rifiuta una seconda investigazione sullo stesso pianeta gia' in corso", () => {
-    const stato = creaStatoIniziale("carte-investiga-doppia");
-    const pianeta = stato.pianeti.find((p) => p.scoperto);
-    if (!pianeta) throw new Error("fixture");
+    const base = creaStatoIniziale("carte-investiga-doppia");
+    const stato: GameState = { ...base, pianeti: base.pianeti.map((p, i) => (i === 0 ? { ...p, scoperto: true } : p)) };
+    const pianeta = stato.pianeti[0];
     const carta = trovaCartaInMano(stato, "OPS-02");
     const { stato: dopo } = applicaGiocaCarta(stato, carta.instanceId, { planetId: pianeta.id }, new SeededRng("z"));
 
@@ -111,9 +112,9 @@ describe("validaGiocaCarta / applicaGiocaCarta — Investiga (OPS-02)", () => {
   });
 
   it("l'investigazione si completa dopo il tempo previsto (10-30s)", () => {
-    const stato = creaStatoIniziale("carte-investiga-completa");
-    const pianeta = stato.pianeti.find((p) => p.scoperto);
-    if (!pianeta) throw new Error("fixture");
+    const base = creaStatoIniziale("carte-investiga-completa");
+    const stato: GameState = { ...base, pianeti: base.pianeti.map((p, i) => (i === 0 ? { ...p, scoperto: true } : p)) };
+    const pianeta = stato.pianeti[0];
     const carta = trovaCartaInMano(stato, "OPS-02");
     const { stato: dopoAvvio } = applicaGiocaCarta(stato, carta.instanceId, { planetId: pianeta.id }, new SeededRng("durata"));
 
@@ -128,21 +129,20 @@ describe("validaGiocaCarta / applicaGiocaCarta — Investiga (OPS-02)", () => {
 
 describe("validaGiocaCarta / applicaGiocaCarta — Contratto minerario (IND-01)", () => {
   function statoConPianetaInvestigato(seed: string): { stato: GameState; pianetaId: string } {
-    const stato = creaStatoIniziale(seed);
-    const pianeta = stato.pianeti.find((p) => p.scoperto);
-    if (!pianeta) throw new Error("fixture");
-    const investigato = { ...pianeta, investigato: true };
+    const base = creaStatoIniziale(seed);
+    const pianeta = base.pianeti[0];
+    const investigato = { ...pianeta, scoperto: true, investigato: true };
     return {
-      stato: { ...stato, pianeti: stato.pianeti.map((p) => (p.id === pianeta.id ? investigato : p)) },
+      stato: { ...base, pianeti: base.pianeti.map((p) => (p.id === pianeta.id ? investigato : p)) },
       pianetaId: pianeta.id,
     };
   }
 
   it("rifiuta un pianeta non investigato", () => {
-    const stato = creaStatoIniziale("carte-contratto-non-investigato");
-    const pianeta = stato.pianeti.find((p) => p.scoperto);
+    const base = creaStatoIniziale("carte-contratto-non-investigato");
+    const stato: GameState = { ...base, pianeti: base.pianeti.map((p, i) => (i === 0 ? { ...p, scoperto: true } : p)) };
+    const pianeta = stato.pianeti[0];
     const carta = trovaCartaInMano(stato, "IND-01");
-    if (!pianeta) throw new Error("fixture");
     expect(validaGiocaCarta(stato, carta.instanceId, { planetId: pianeta.id }).ok).toBe(false);
   });
 
@@ -184,8 +184,11 @@ describe("integraCostoOperativoContratti", () => {
   it("deduce il costo operativo nel tempo e sospende il contratto se i crediti finiscono", () => {
     const { stato, pianetaId } = (() => {
       const base = creaStatoIniziale("carte-costo-operativo");
-      const pianeta = base.pianeti.find((p) => p.scoperto)!;
-      const investigato = { ...base, pianeti: base.pianeti.map((p) => (p.id === pianeta.id ? { ...p, investigato: true } : p)) };
+      const pianeta = base.pianeti[0];
+      const investigato = {
+        ...base,
+        pianeti: base.pianeti.map((p) => (p.id === pianeta.id ? { ...p, scoperto: true, investigato: true } : p)),
+      };
       return { stato: investigato, pianetaId: pianeta.id };
     })();
     const carta = trovaCartaInMano(stato, "IND-01");

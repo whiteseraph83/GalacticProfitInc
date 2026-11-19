@@ -198,6 +198,10 @@ describe("SimulationEngine - nebbia di guerra", () => {
 
   it("la scoperta e' permanente anche se la nave madre si allontana di nuovo", () => {
     const engine = new SimulationEngine("seed-fog-permanente");
+    // Nessun pianeta e' gia' scoperto a inizio partita (richiesta utente):
+    // si usa Radar per rilevarne uno prima di verificare la persistenza.
+    const radar = engine.getState().manoCarte.find((c) => c.code === "OPS-01")!;
+    engine.dispatch({ id: "radar-fog-permanente", type: "ui/giocaCarta", payload: { cardInstanceId: radar.instanceId, bersaglio: {} } });
     const pianeta = engine.getState().pianeti.find((p) => p.scoperto);
     expect(pianeta).toBeDefined();
     if (!pianeta) return;

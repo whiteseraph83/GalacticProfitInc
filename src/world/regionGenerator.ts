@@ -96,40 +96,26 @@ export function generaRegione(seed: string): RegioneSpaziale {
 
   const totalePianeti = rng.nextInt(WORLD.pianetiMin, WORLD.pianetiMax);
 
-  // --- Area sicura iniziale: garantisce risorse comuni raggiungibili subito. ---
-  const pianetiAreaSicura = rng.nextInt(WORLD.areaSicuraPianetiMin, WORLD.areaSicuraPianetiMax);
-  for (let i = 0; i < pianetiAreaSicura; i++) {
-    // Il primo pianeta dell'area sicura e' sempre un archetipo a ferro: e'
-    // quello su cui il tutorial guida Investiga + Contratto minerario come
-    // primi passi obbligati (richiesta utente), quindi deve essere
-    // affidabile e non dipendere dall'esito casuale della generazione.
-    const archetipo = i === 0 ? rng.pick(ARCHETIPI_FERRO) : scegliArchetipo(rng, true);
-    const def = PLANET_ARCHETYPES[archetipo];
-    const raggio = rng.nextFloat(def.raggioMin, def.raggioMax);
-    const posizione = posizionaConRitentativi(raggio, piazzati, () => {
-      const angolo = rng.nextFloat(0, Math.PI * 2);
-      // Richiesta utente: non piu' subito a ridosso della nave madre (prima
-      // il raggio minimo era 60, troppo vicino al punto di partenza) —
-      // ora parte circa a meta' del raggio sensori e arriva fino al bordo.
-      const distanzaCentro = rng.nextFloat(WORLD.areaSicuraRaggio * 0.45, WORLD.areaSicuraRaggio * 0.92);
-      return { x: Math.cos(angolo) * distanzaCentro, y: Math.sin(angolo) * distanzaCentro };
-    });
-    piazzati.push({ posizione, raggio });
-    pianeti.push(creaPianeta(rng, archetipo, posizione, raggio, nomiUsati, centroAreaSicura, areaSicuraIniziale.raggio));
-  }
-
-  // --- Pianeta "a portata di Radar": garantisce che il primo utilizzo del
-  // comando Radar (C1_S02 nella sceneggiatura introduttiva) riveli subito
-  // un pianeta vicino invece di uno a caso ovunque nella regione (richiesta
-  // utente: "deve essere poco fuori dal cerchio del radar della nave
-  // madre"). Non ancora scoperto per costruzione (e' oltre areaSicuraRaggio). ---
+  // --- Pianeta "a portata di Radar": richiesta utente finale, nessun
+  // pianeta deve essere presente dentro il cerchio della nave madre a
+  // inizio partita. Questo e' quindi il primo pianeta della regione: non
+  // ancora scoperto per costruzione (e' appena oltre areaSicuraRaggio), con
+  // un archetipo a ferro garantito perche' e' anche quello su cui il
+  // tutorial guida Investiga + Contratto minerario come primi passi
+  // obbligati, ed e' l'unico che il primo utilizzo di Radar puo' rilevare
+  // (richiesta utente: "il primo investiga deve essere fatto esclusivamente
+  // sul pianeta rilevato dal Radar nel tutorial"). ---
   {
-    const archetipo = scegliArchetipo(rng, true);
+    const archetipo = rng.pick(ARCHETIPI_FERRO);
     const def = PLANET_ARCHETYPES[archetipo];
     const raggio = rng.nextFloat(def.raggioMin, def.raggioMax);
     const posizione = posizionaConRitentativi(raggio, piazzati, () => {
       const angolo = rng.nextFloat(0, Math.PI * 2);
-      const distanzaCentro = rng.nextFloat(WORLD.areaSicuraRaggio * 1.05, WORLD.areaSicuraRaggio * 1.4);
+      // Fascia stretta (1.05-1.35x) tenuta sempre piu' vicina al centro di
+      // quanto qualunque altro pianeta possa mai essere (vedi esclusione
+      // allargata a 1.4x piu' sotto): garantisce che questo sia sempre il
+      // pianeta piu' vicino, quindi quello che il primo Radar rileva.
+      const distanzaCentro = rng.nextFloat(WORLD.areaSicuraRaggio * 1.05, WORLD.areaSicuraRaggio * 1.35);
       return { x: Math.cos(angolo) * distanzaCentro, y: Math.sin(angolo) * distanzaCentro };
     });
     piazzati.push({ posizione, raggio });
@@ -165,7 +151,13 @@ export function generaRegione(seed: string): RegioneSpaziale {
     const posizione = posizionaConRitentativi(
       raggio,
       piazzati,
-      campionaFuoriAreaSicura(centroAreaSicura, WORLD.areaSicuraRaggio, () => {
+      // Esclusione a 1.4x (non 1x): tiene ogni pianeta sparso/in cluster
+      // piu' lontano del pianeta a ferro "a portata di Radar" qui sopra
+      // (fascia 1.05-1.35x), cosi' quest'ultimo resta garantito il piu'
+      // vicino e quindi l'unico che il primo Radar del tutorial puo'
+      // rilevare (richiesta utente: "il primo investiga deve essere fatto
+      // esclusivamente sul pianeta rilevato dal Radar nel tutorial").
+      campionaFuoriAreaSicura(centroAreaSicura, WORLD.areaSicuraRaggio * 1.4, () => {
         if (inCluster) {
           const centro = rng.pick(centriSistemi);
           const angolo = rng.nextFloat(0, Math.PI * 2);

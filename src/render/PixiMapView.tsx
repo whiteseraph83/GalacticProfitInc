@@ -678,6 +678,7 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
       });
       label.anchor.set(0.5, 0);
       label.position.set(0, relitto.raggio + 8);
+      label.visible = false;
       g.addChild(label);
 
       g.on("pointertap", (e) => {
@@ -700,16 +701,19 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
   // Aggiorna l'etichetta esplicativa del relitto/campo asteroidi (richiesta
   // utente: "serve spiegare che si possono recuperare i rottami con il
   // comando Recupera rottami") e attenua i frammenti una volta recuperati.
+  // Richiesta utente successiva: la dicitura non deve restare sempre visibile
+  // sulla mappa, ma comparire solo al click sul relitto/campo selezionato.
   useEffect(() => {
     for (const relitto of relittiScoperti) {
       const handle = wreckGfxRef.current.get(relitto.id);
       if (!handle) continue;
       const nome = relitto.tipo === "campoAsteroidi" ? "Campo di asteroidi" : "Relitto";
       handle.label.text = relitto.recuperato ? `${nome}\n(rottami gia' recuperati)` : `${nome}\nRecupera rottami disponibile`;
+      handle.label.visible = relitto.id === relittoSelezionatoId;
       handle.container.alpha = relitto.recuperato ? 0.45 : 1;
       handle.container.cursor = relitto.recuperato ? "default" : "pointer";
     }
-  }, [relittiScoperti, pixiReady]);
+  }, [relittiScoperti, relittoSelezionatoId, pixiReady]);
 
   // Evidenzia il pianeta selezionato con un anello dedicato.
   useEffect(() => {

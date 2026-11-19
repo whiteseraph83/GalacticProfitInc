@@ -101,7 +101,15 @@ describe("prossimaScenaSceneggiatura", () => {
 
   it("C3_S01 (segnale ripetuto) resta bloccata finche' nessun pericolo e' scoperto", () => {
     const base = creaStatoIniziale("scene-capitoli-c3-s01");
-    const stato: GameState = { ...base, campagna: { ...base.campagna, capitoloCorrente: "CAP-3" } };
+    const stato: GameState = {
+      ...base,
+      campagna: { ...base.campagna, capitoloCorrente: "CAP-3" },
+      // Forzato esplicitamente a "nessuno scoperto": la generazione casuale
+      // del mondo puo' comunque piazzare un pericolo dentro l'area sicura
+      // (comportamento invariato, non riguardato dalla richiesta utente sui
+      // pianeti), e la fixture non deve dipendere da quell'esito casuale.
+      pericoli: base.pericoli.map((p) => ({ ...p, scoperto: false })),
+    };
     const viste = new Set([
       "C1_S01", "C1_S02", "C1_S02R", "C1_S02I", "C1_S03", "C1_S03I", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08",
       "C2_S01", "C2_S02", "C2_S03", "C2_S04", "C2_S05", "C2_S06", "C2_S07", "C2_S08",

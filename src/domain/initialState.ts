@@ -208,13 +208,15 @@ export function validaStato(state: GameState): string[] {
     if (pianeta.giacimentoTotale <= 0) problemi.push(`pianeta ${pianeta.id} senza giacimento`);
   }
 
-  const pianetiScopertiIniziali = state.pianeti.filter((p) => p.scoperto).length;
-  if (pianetiScopertiIniziali < WORLD.areaSicuraPianetiMin) {
-    problemi.push("l'area sicura iniziale non contiene abbastanza pianeti scoperti");
+  // Richiesta utente: nessun pianeta deve essere gia' scoperto dentro il
+  // cerchio della nave madre a inizio partita; le risorse comuni restano
+  // raggiungibili tramite il primo Radar invece che preassegnate.
+  if (state.pianeti.some((p) => p.scoperto)) {
+    problemi.push("un pianeta e' gia' scoperto a inizio partita");
   }
-  const archetipiComuniScoperti = state.pianeti.filter((p) => p.scoperto && p.archetipo !== "anomalo" && p.archetipo !== "cristallino" && p.archetipo !== "gassoso");
-  if (archetipiComuniScoperti.length === 0) {
-    problemi.push("nessuna risorsa comune raggiungibile nell'area sicura iniziale");
+  const primoPianeta = state.pianeti[0];
+  if (!primoPianeta || primoPianeta.risorsaDominante !== "ferro") {
+    problemi.push("il primo pianeta della regione non contiene ferro");
   }
 
   if (state.missioni.length < 20) problemi.push(`numero di missioni insufficiente (${state.missioni.length}, minimo 20)`);

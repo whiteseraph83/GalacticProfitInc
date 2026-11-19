@@ -17,8 +17,7 @@ import type { GameState, MiningContract } from "../src/domain/types";
 
 function creaStatoConContratto(overrides: Partial<MiningContract> = {}): GameState {
   const stato = creaStatoIniziale("logistica-test");
-  const pianeta = stato.pianeti.find((p) => p.scoperto);
-  if (!pianeta) throw new Error("nessun pianeta scoperto nello stato di test");
+  const pianeta = stato.pianeti[0];
   const naveMineraria = stato.naviMinerarie[0];
 
   const contratto: MiningContract = {

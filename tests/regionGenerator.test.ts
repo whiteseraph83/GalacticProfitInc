@@ -28,7 +28,10 @@ describe("generaRegione", () => {
   it("gli archetipi anomali sono una piccola minoranza (circa 2-5%, su piu' seed)", () => {
     // Un singolo seed puo' oscillare per varianza statistica su ~50-100
     // pianeti: si verifica la media su piu' regioni indipendenti.
-    const semi = ["regione-anomali-1", "regione-anomali-2", "regione-anomali-3", "regione-anomali-4", "regione-anomali-5"];
+    const semi = [
+      "regione-anomali-1", "regione-anomali-2", "regione-anomali-3", "regione-anomali-4", "regione-anomali-5",
+      "regione-anomali-6", "regione-anomali-7", "regione-anomali-8",
+    ];
     let totalePianeti = 0;
     let totaleAnomali = 0;
     for (const seme of semi) {
@@ -39,25 +42,38 @@ describe("generaRegione", () => {
     expect(totaleAnomali / totalePianeti).toBeLessThan(0.06);
   });
 
-  it("l'area sicura iniziale contiene pianeti scoperti con archetipi comuni", () => {
-    const regione = generaRegione("regione-sicura");
-    const scoperti = regione.pianeti.filter((p) => p.scoperto);
-    expect(scoperti.length).toBeGreaterThanOrEqual(WORLD.areaSicuraPianetiMin);
-    for (const pianeta of scoperti) {
-      const dist = Math.hypot(
-        pianeta.posizione.x - regione.areaSicuraIniziale.centro.x,
-        pianeta.posizione.y - regione.areaSicuraIniziale.centro.y,
-      );
-      expect(dist).toBeLessThanOrEqual(regione.areaSicuraIniziale.raggio);
+  it("nessun pianeta e' presente (ne' scoperto) dentro il cerchio della nave madre a inizio partita (richiesta utente)", () => {
+    for (const seed of ["regione-sicura-1", "regione-sicura-2", "regione-sicura-3"]) {
+      const regione = generaRegione(seed);
+      for (const pianeta of regione.pianeti) {
+        const dist = Math.hypot(
+          pianeta.posizione.x - regione.areaSicuraIniziale.centro.x,
+          pianeta.posizione.y - regione.areaSicuraIniziale.centro.y,
+        );
+        expect(dist).toBeGreaterThan(regione.areaSicuraIniziale.raggio);
+      }
+      expect(regione.pianeti.some((p) => p.scoperto)).toBe(false);
     }
   });
 
-  it("il primo pianeta dell'area sicura contiene sempre ferro (richiesta utente: tutorial guidato)", () => {
+  it("il primo pianeta della regione contiene sempre ferro ed e' appena fuori dal cerchio della nave madre (richiesta utente: tutorial guidato)", () => {
     for (const seed of ["regione-ferro-1", "regione-ferro-2", "regione-ferro-3", "regione-ferro-4", "regione-ferro-5"]) {
       const regione = generaRegione(seed);
       const primo = regione.pianeti[0];
-      expect(primo.scoperto).toBe(true);
+      expect(primo.scoperto).toBe(false);
       expect(primo.risorsaDominante).toBe("ferro");
+    }
+  });
+
+  it("il pianeta a ferro a portata di Radar e' sempre il pianeta piu' vicino alla nave madre (richiesta utente: il primo investiga deve essere esclusivamente su quel pianeta)", () => {
+    for (const seed of ["regione-piu-vicino-1", "regione-piu-vicino-2", "regione-piu-vicino-3", "regione-piu-vicino-4", "regione-piu-vicino-5"]) {
+      const regione = generaRegione(seed);
+      const centro = regione.areaSicuraIniziale.centro;
+      const distanzaDa = (p: (typeof regione.pianeti)[number]) => Math.hypot(p.posizione.x - centro.x, p.posizione.y - centro.y);
+      const primo = regione.pianeti[0];
+      for (const altro of regione.pianeti.slice(1)) {
+        expect(distanzaDa(primo)).toBeLessThan(distanzaDa(altro));
+      }
     }
   });
 
@@ -79,11 +95,10 @@ describe("generaRegione", () => {
       const dentroAreaSicura = regione.pianeti.filter(
         (p) => Math.hypot(p.posizione.x - regione.areaSicuraIniziale.centro.x, p.posizione.y - regione.areaSicuraIniziale.centro.y) <= WORLD.areaSicuraRaggio,
       );
-      // Solo i 2-4 pianeti deliberatamente piazzati nell'area sicura
-      // all'inizio della generazione: nessuno sparso/in cluster deve
-      // capitare li' per puro caso.
-      expect(dentroAreaSicura.length).toBeLessThanOrEqual(WORLD.areaSicuraPianetiMax);
-      expect(dentroAreaSicura.length).toBeGreaterThanOrEqual(WORLD.areaSicuraPianetiMin);
+      // Nessun pianeta deve mai capitare dentro l'area sicura (richiesta
+      // utente: "i pianeti a inizio gioco non dovranno proprio essere
+      // presenti all'interno del cerchio della nave madre").
+      expect(dentroAreaSicura.length).toBe(0);
     }
   });
 
