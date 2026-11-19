@@ -1,5 +1,7 @@
 import { useId, useState } from "react";
 import { useEngine, useGameState } from "../useEngine";
+import { CAPITOLI } from "../../domain/narrative";
+import { numeroCapitoloAttuale } from "../../domain/campaignScenes";
 import type { Missione } from "../../domain/types";
 
 function descriviRicompensa(m: Missione): string {
@@ -39,6 +41,8 @@ export function MissionsPanel({ compatta = false }: MissionsPanelProps = {}) {
     engine.dispatch({ id: `${idBase}-abbandona-${missioneId}-${Date.now()}`, type: "ui/abbandonaMissione", payload: { missioneId } });
 
   const disponibiliMostrate = mostraTutte ? disponibili : disponibili.slice(0, MAX_DISPONIBILI_MOSTRATE);
+  const numeroCapitolo = numeroCapitoloAttuale(state.campagna.capitoloCorrente);
+  const titoloCapitolo = CAPITOLI[state.campagna.capitoloCorrente ?? "CAP-1"];
 
   return (
     <section aria-label={compatta ? "Missioni attive" : "Missioni"}>
@@ -49,6 +53,9 @@ export function MissionsPanel({ compatta = false }: MissionsPanelProps = {}) {
           <h2>Missione principale</h2>
         </>
       )}
+      <p className="management-panel__note">
+        Capitolo {numeroCapitolo}: {titoloCapitolo}
+      </p>
       {principale && (
         <div className="mission-card mission-card--principale">
           <p className="mission-card__titolo">{principale.titolo}</p>
