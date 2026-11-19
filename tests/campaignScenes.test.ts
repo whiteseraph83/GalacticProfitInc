@@ -67,6 +67,80 @@ describe("prossimaScenaSceneggiatura", () => {
     expect(prossimaScenaSceneggiatura(statoConCliente, viste)?.id).toBe("C2_S07");
   });
 
+  it("C2_S03 (primo contatto Xylo) resta bloccata finche' nessun pianeta e' sempreVisibile (Radar)", () => {
+    const base = creaStatoIniziale("scene-capitoli-c2-s03");
+    const stato: GameState = { ...base, campagna: { ...base.campagna, capitoloCorrente: "CAP-2", eventiMercatoSpeciali: ["EVT-COM-01", "EVT-COM-02"] } };
+    const viste = new Set(["C1_S01", "C1_S02", "C1_S03", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08", "C2_S01", "C2_S02"]);
+    expect(prossimaScenaSceneggiatura(stato, viste)).toBeNull();
+
+    const statoConRadar: GameState = { ...stato, pianeti: stato.pianeti.map((p, i) => (i === 0 ? { ...p, sempreVisibile: true } : p)) };
+    expect(prossimaScenaSceneggiatura(statoConRadar, viste)?.id).toBe("C2_S03");
+  });
+
+  it("C2_S04 (relitto industriale) resta bloccata finche' nessun relitto e' recuperato", () => {
+    const base = creaStatoIniziale("scene-capitoli-c2-s04");
+    const stato: GameState = { ...base, campagna: { ...base.campagna, capitoloCorrente: "CAP-2" } };
+    const viste = new Set(["C1_S01", "C1_S02", "C1_S03", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08", "C2_S01", "C2_S02", "C2_S03"]);
+    expect(prossimaScenaSceneggiatura(stato, viste)).toBeNull();
+
+    const statoConRelitto: GameState = {
+      ...stato,
+      campiRelitti: [{ id: "w-1", tipo: "relitto", posizione: { x: 0, y: 0 }, raggio: 10, scoperto: true, recuperato: true }],
+    };
+    expect(prossimaScenaSceneggiatura(statoConRelitto, viste)?.id).toBe("C2_S04");
+  });
+
+  it("C3_S01 (segnale ripetuto) resta bloccata finche' nessun pericolo e' scoperto", () => {
+    const base = creaStatoIniziale("scene-capitoli-c3-s01");
+    const stato: GameState = { ...base, campagna: { ...base.campagna, capitoloCorrente: "CAP-3" } };
+    const viste = new Set([
+      "C1_S01", "C1_S02", "C1_S03", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08",
+      "C2_S01", "C2_S02", "C2_S03", "C2_S04", "C2_S05", "C2_S06", "C2_S07", "C2_S08",
+    ]);
+    expect(prossimaScenaSceneggiatura(stato, viste)).toBeNull();
+
+    const statoConPericolo: GameState = { ...stato, pericoli: stato.pericoli.map((p, i) => (i === 0 ? { ...p, scoperto: true } : p)) };
+    expect(prossimaScenaSceneggiatura(statoConPericolo, viste)?.id).toBe("C3_S01");
+  });
+
+  it("C4_S02 (autorizzazione mineraria) resta bloccata finche' nessuna civilta' ha una richiesta attiva", () => {
+    const base = creaStatoIniziale("scene-capitoli-c4-s02");
+    const stato: GameState = {
+      ...base,
+      campagna: { ...base.campagna, capitoloCorrente: "CAP-4" },
+      civilta: base.civilta.map((c) => ({ ...c, richiestaAttiva: null })),
+    };
+    const viste = new Set([
+      "C1_S01", "C1_S02", "C1_S03", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08",
+      "C2_S01", "C2_S02", "C2_S03", "C2_S04", "C2_S05", "C2_S06", "C2_S07", "C2_S08",
+      "C3_S01", "C3_S02", "C3_S03", "C3_S04", "C3_S05", "C3_S06", "C3_S07", "C3_S08",
+      "C4_S01",
+    ]);
+    expect(prossimaScenaSceneggiatura(stato, viste)).toBeNull();
+
+    const statoConRichiesta: GameState = {
+      ...stato,
+      civilta: [{ id: "civ-1", nome: "Test", posizione: { x: 0, y: 0 }, raggio: 50, scoperta: true, relazione: 30, richiestaAttiva: { risorsa: "ferro", quantita: 10, progresso: 0, ricompensaCrediti: 100, ricompensaRelazione: 5 } }],
+    };
+    expect(prossimaScenaSceneggiatura(statoConRichiesta, viste)?.id).toBe("C4_S02");
+  });
+
+  it("C5_S08 (epilogo) e C5_S09 (epilogo segreto) restano bloccati finche' nessun finale e' stato assegnato", () => {
+    const base = creaStatoIniziale("scene-capitoli-c5-s08");
+    const stato: GameState = { ...base, campagna: { ...base.campagna, capitoloCorrente: "CAP-5" } };
+    const viste = new Set([
+      "C1_S01", "C1_S02", "C1_S03", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08",
+      "C2_S01", "C2_S02", "C2_S03", "C2_S04", "C2_S05", "C2_S06", "C2_S07", "C2_S08",
+      "C3_S01", "C3_S02", "C3_S03", "C3_S04", "C3_S05", "C3_S06", "C3_S07", "C3_S08",
+      "C4_S01", "C4_S02", "C4_S03", "C4_S04", "C4_S05", "C4_S06", "C4_S07", "C4_S08",
+      "C5_S01", "C5_S02", "C5_S03", "C5_S04", "C5_S05", "C5_S06",
+    ]);
+    expect(prossimaScenaSceneggiatura(stato, viste)).toBeNull();
+
+    const statoConFinale: GameState = { ...stato, campagna: { ...stato.campagna, finaleOttenuto: "FIN-LEALTA" } };
+    expect(prossimaScenaSceneggiatura(statoConFinale, viste)?.id).toBe("C5_S08");
+  });
+
   it("C5_S07 (liquidazione) compare subito quando scatta il game over, anche al capitolo 1", () => {
     const stato: GameState = { ...statoAlCapitolo1(), gameOver: { motivo: "test" } };
     expect(prossimaScenaSceneggiatura(stato, new Set())?.id).toBe("C5_S07");

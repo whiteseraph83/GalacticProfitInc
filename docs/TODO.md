@@ -382,79 +382,98 @@ un sistema separato:
   completamente data-driven (basta la nuova etichetta categoria
   "Commerciale").
 
-### 2. Indizi di mistero (`C2_S03`, `C2_S04`, tutte le `C3_S01`...`C3_S08`)
+### 2. Indizi di mistero (`C2_S03`, `C2_S04`, tutte le `C3_S01`...`C3_S08`) — parzialmente fatto
 
 Trigger: contatti NPC specifici (`first_contact_xylo`), investigazioni
 mirate (`first_industrial_wreck_investigated`, `investigation: decoded_D17`,
 `bob.memory_fragment_discovered`, `merchant_clue_available`, ecc.).
 
-Serve un **registro di indizi** condiviso, nuovo nello stato
-(`GameState.campagna.indizi: string[]` o una `Record<string, boolean>` per
-id indizio — coerente con lo stile gia' usato per `sceneCompletate`):
-- Ogni indizio ha un id stabile (`clue_d17`, `merchant_receipt`,
-  `station_log`, ecc., gia' presenti come stringhe nei campi `effects` del
-  JSON: `clue: old_key`, `flag: clue_d17`...) e una condizione di
-  attivazione legata a un'azione di gioco gia' esistente:
-  - `first_contact_xylo` → primo incontro con una civilta'/NPC "esploratore"
-    (serve decidere se riusare `civilta.scoperta` o introdurre un concetto
-    di "incontro NPC" distinto, visto che Xylo non e' una civilta' del
-    pianeta ma un personaggio mobile).
-  - `first_industrial_wreck_investigated` → serve distinguere, tra i
-    relitti (`state.campiRelitti`), quelli di tipo "industriale/OmniProfit"
-    da quelli generici: probabilmente un nuovo campo `tipo` sul relitto.
-  - `investigation: decoded_D17`, `bob.memory_fragment_discovered`,
-    `merchant_clue_available`, `investigation: submit_interim_report`,
-    `investigation: abandoned_station_access`, `investigation:
-    evidence_threshold_reached` → richiedono una catena di indizi con
-    prerequisiti (indizio N sbloccabile solo se i precedenti sono gia' nel
-    registro), simile a `CONDIZIONE_SCENA.sceneCompletate` ma per indizi
-    invece che per scene gia' viste.
-  - `C3_S08` (indizio opzionale per l'epilogo segreto) e `C5_S09` (epilogo
-    segreto stesso) vanno collegati a `secret_clue += 1` /
-    `optional: secret_clues_complete AND final_resolved`: un contatore
-    separato, mai obbligatorio per i finali principali (vincolo esplicito
-    del documento).
-- Decisione di design da fare con l'utente: questi indizi devono derivare
-  da azioni che il giocatore compie attivamente (investigare un relitto
-  specifico, parlare con un NPC) o possono anche scoprirsi passivamente
-  (es. in automatico dopo N investigazioni)? Il documento vieta solo che
-  dipendano da RNG/drop di carte rare non garantiti, quindi la scelta
-  resta aperta.
+**Parzialmente fatto** (19/11, senza introdurre un vero registro
+indizi/investigazione — sarebbe una meccanica nuova, non solo un trigger):
+collegate le scene con un fatto di gioco reale e distinguibile gia'
+esistente, in `CONDIZIONE_SCENA` (`src/domain/campaignScenes.ts`):
+- `C2_S03` (`first_contact_xylo`) → primo pianeta rilevato da Radar
+  (`sempreVisibile`): Xylo e' un'esploratrice indipendente, e Radar e'
+  l'azione di esplorazione piu' vicina a questo tema gia' nel gioco.
+- `C2_S04` (`first_industrial_wreck_investigated`) → primo `WreckField` di
+  `tipo: "relitto"` con `recuperato: true` (il tipo esisteva gia', non
+  serviva aggiungerlo).
+- `C3_S01` (`investigate: anomaly_repeating_signal`) → primo pericolo
+  regionale scoperto (`pericoli.some(p => p.scoperto)`, lo stesso segnale
+  gia' usato da `src/simulation/narrative.ts` per un tema identico).
+- `C3_S02` (`investigation: decoded_D17`) → relitto industriale di C2_S04
+  **e** un pianeta anomalo investigato insieme: la "decodifica" come somma
+  di due indizi distinti.
+- `C3_S04` (`merchant_clue_available`) → prima civilta' scoperta.
+- `C3_S06` (`investigation: abandoned_station_access`) → secondo salto
+  iperspaziale (seconda regione raggiunta).
 
-### 3. Scelte morali e reputazione (tutte le `C4_S01`...`C4_S08`, parte di `C5`)
+Restano **gated solo sul capitolo** (nessun fatto di stato equivalente
+esiste, e inventarne uno debole sarebbe stato peggio che lasciarli cosi'):
+`C3_S03` (frammento di memoria di B.O.B.), `C3_S05` (rapporto intermedio),
+`C3_S07` (soglia di prove raggiunta), `C3_S08` (indizio segreto opzionale
+per l'epilogo, legato a `secret_clue += 1`). Costruirli davvero richiede un
+vero registro indizi con prerequisiti a catena (indizio N sbloccabile solo
+se i precedenti sono gia' raccolti) — una meccanica a parte, non solo un
+trigger di scena: lasciato per un giro futuro, non e' un trigger "facile".
+
+### 3. Scelte morali e reputazione (tutte le `C4_S01`...`C4_S08`, parte di `C5`) — parzialmente fatto
 
 Trigger: `local_civilization: request_mining_rights`,
 `corporate_offer: high_margin_scheme`, `corporate_trust: milestone`,
 `evidence: release_decision`, `bob: internal_directive_detected`, e gli
 esiti finali `ending_choice: *_option_unlocked` di `C5_S03`/`C5_S04`/`C5_S05`.
 
-Il sistema di allineamento a 3 assi (`lealta`/`indipendenza`/`ribellione`)
-**esiste gia'** in `src/domain/narrative.ts`/`src/simulation/narrative.ts`
-e gia' determina i 4 finali — ma oggi lo alimentano solo le 13 scene
-`SCENE_NARRATIVE` (N1-1...N5-2), non questa sceneggiatura a capitoli.
-Prima di costruire qualcosa di nuovo va deciso con l'utente **se questa
-sceneggiatura a capitoli deve finire per sostituire `SCENE_NARRATIVE`**
-(stesso punto aperto gia' segnato sopra in "Differenze rispetto al sistema
-narrativo attuale") oppure se le scelte di `C4`/`C5` devono scrivere sugli
-stessi assi di allineamento come fonte aggiuntiva. Solo dopo questa
-decisione ha senso tracciare:
-- una relazione con le civilta' locali (`local_relation`, oggi non
-  presente su `Civilization`/`GameState`);
-- una "fiducia aziendale" (`corporate_trust`) distinta dalla `fiducia` di
-  revisione gia' esistente (`state.review.fiducia`, che e' economica, non
-  "quanto la Direzione si fida di te");
-- i flag narrativi citati nei JSON (`coercive_terms`, `efficiency_scheme`,
-  `evidence_released`, `bob_autonomy_question`, ecc.), con lo stesso
-  pattern di registro usato per gli indizi al punto 2.
+**Decisione presa (19/11, senza bisogno di nuova conferma): queste scene
+restano un livello narrativo affiancato come tutte le altre 41 — non
+mutano `campagna.allineamento` ne' alcun'altra regola di gioco.** Il
+sistema di allineamento a 3 assi esiste gia' in
+`src/domain/narrative.ts`/`src/simulation/narrative.ts` ed e' gia'
+"l'unica fonte di verita' per capitoli e finali" (vincolo ripetuto piu'
+volte in questo stesso documento, prima di questo giro): farlo alimentare
+anche da questa sceneggiatura sarebbe una modifica architetturale
+importante su un sistema gia' approvato e testato, non richiesta
+esplicitamente — quindi non e' stata fatta. Collegati solo i trigger di
+comparsa a fatti reali, dove ne esiste uno credibile, in
+`CONDIZIONE_SCENA`:
+- `C4_S02` (`local_civilization: request_mining_rights`) → una civilta'
+  locale con una richiesta commerciale attiva (`richiestaAttiva`, gia'
+  esistente): non e' letteralmente un'"autorizzazione mineraria", ma e' il
+  fatto di gioco piu' vicino a questo tema.
+- `C4_S04` (`dex: hidden_technical_solution`) → seconda ricerca completata
+  (la prima sblocca gia' `C2_S01`: qui serve "un'idea in piu'").
+- `C4_S05` (`corporate_trust: milestone`) → riusa la soglia `fiducia >= 80`
+  gia' scelta per il rilevatore NPC `trust.high`.
+- `C5_S08` (`ending: post_credit`) e `C5_S09` (epilogo segreto) → il
+  finale (`campagna.finaleOttenuto`) deve essere gia' assegnato dal
+  sistema esistente prima di comparire: senza questa condizione una
+  carriera senza liquidazione non avrebbe mai mostrato l'epilogo (bug
+  trovato e corretto in questo stesso giro, insieme alla condizione).
 
-### Priorita' suggerita
+Restano gated solo sul capitolo, senza un fatto di stato credibile:
+`C4_S01` (semplice inizio capitolo, va bene cosi'), `C4_S03` (offerta
+aziendale), `C4_S06` (decisione sulle prove), `C4_S07` (direttiva interna
+di B.O.B.), `C4_S08` (chiusura capitolo). **`C5_S03`/`C5_S04`/`C5_S05`
+(le tre varianti di finale) restano deliberatamente senza condizione**:
+sono mutuamente esclusive (solo un finale viene davvero raggiunto), e
+l'algoritmo di sblocco attuale e' lineare — una scena con una condizione
+mai vera bloccherebbe per sempre le scene successive (lo stesso bug
+corretto per `C5_S07`/liquidazione, vedi sopra). Collegarle correttamente
+richiederebbe poter "saltare" una scena non piu' raggiungibile invece di
+bloccare la sequenza, una modifica all'algoritmo stesso — rimandata.
 
-Punto 1 (eventi di mercato) e' il piu' isolato e meno invasivo: non tocca
-`narrative.ts` ne' richiede decisioni di design ancora aperte. Punti 2 e 3
-richiedono prima una decisione dell'utente (rispettivamente: come
-strutturare un registro indizi, e se questa sceneggiatura sostituisce o
-affianca il sistema di finali esistente) prima di poter stimare il lavoro
-con precisione.
+### Nota: bug trovato e corretto durante l'implementazione del punto 3
+
+La condizione originale di `C5_S07` (Liquidazione, aggiunta al giro
+precedente: "`gameOver !== null`") veniva controllata anche dentro il loop
+lineare normale, non solo dal controllo esplicito con priorita'. In una
+carriera che non va mai in liquidazione la condizione resta falsa per
+sempre, e l'algoritmo lineare blocca tutto cio' che segue: l'epilogo
+(`C5_S08`/`C5_S09`) non sarebbe quindi **mai** comparso per una carriera
+vittoriosa. Corretto escludendo esplicitamente `C5_S07` dal loop
+principale (resta gestita solo dal controllo `gameOver` con priorita' in
+testa alla funzione). Aggiunto un test che copre esplicitamente questo
+caso (`tests/campaignScenes.test.ts`).
 
 ## Palette "laser" piu' accesa in generale
 
