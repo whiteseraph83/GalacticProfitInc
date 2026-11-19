@@ -452,7 +452,13 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         outerRadius: raggioScuro,
         textureSpace: "global",
         colorStops: [
+          // Richiesta utente: la luminosita' dentro il cerchio sensori deve
+          // essere UNIFORME (non puntata sulla nave e sfumata verso i
+          // bordi) — stesso colore/alpha dal centro fino al limite del
+          // raggio, poi la schiarita svanisce e lascia spazio all'esterno
+          // scurito.
           { offset: 0, color: "rgba(190, 235, 255, 0.22)" },
+          { offset: offsetConfine, color: "rgba(190, 235, 255, 0.22)" },
           { offset: offsetConfine, color: "rgba(0, 0, 0, 0)" },
           { offset: 1, color: "rgba(2, 4, 10, 0.85)" },
         ],
