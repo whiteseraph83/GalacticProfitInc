@@ -58,4 +58,18 @@ describe("CardHandBar", () => {
     expect(radar).toHaveAttribute("draggable", "false");
     expect(ricerca).toHaveAttribute("draggable", "false");
   });
+
+  // Richiesta utente: "la carta Esplora al click apre una modal che spiega
+  // e c'e' un bottone per attivare" (prima avviava subito l'esplorazione).
+  it("il click sulla carta Esplora apre una modal di spiegazione invece di avviare subito l'esplorazione", async () => {
+    await renderCardHandBar();
+    // La mano iniziale e' piena (5/5): "Esplora" compare solo con uno slot
+    // libero, quindi si vende prima un comando per liberarne uno.
+    fireEvent.click(screen.getByText("Fabbrica"));
+    fireEvent.click(screen.getByLabelText("Vendi il comando selezionato"));
+
+    fireEvent.click(await screen.findByText("Esplora"));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByText("Avvia esplorazione")).toBeInTheDocument();
+  });
 });

@@ -97,6 +97,18 @@
   margin-top: 4px;
 }
 
+/* Motivo di rifiuto di un comando (richiesta utente: "se non posso usare un
+ * comando... devi dirmi cosa manca"), mostrato dentro il tooltip della
+ * carta responsabile invece che in un banner separato che poteva
+ * sovrapporsi al tooltip stesso. */
+.game-card__tooltip-errore {
+  color: var(--warning);
+  display: block;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--warning);
+}
+
 .game-card--operazioni {
   border-top: 3px solid #37d6ff;
 }

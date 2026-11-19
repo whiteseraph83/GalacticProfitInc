@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CARD_DEFINITIONS } from "../domain/cards";
 import type { CardCode, CardInstance } from "../domain/types";
 import { useEngine, useGameState } from "./useEngine";
+import { ConfirmModal } from "./components/ConfirmModal";
 import "./CardHandBar.css";
 
 function formattaContoAllaRovescia(msResidui: number): string {
@@ -21,6 +22,13 @@ export interface CardHandBarProps {
    * e va evidenziato; tutti gli altri comandi, l'Esplora e il cestino
    * restano visibili ma non interagibili finche' il passo non si completa. */
   cartaSbloccataCode: CardCode | null;
+  /** Motivo per cui l'ultimo comando proposto e' stato rifiutato (requisiti
+   * mancanti), da mostrare nel tooltip della carta che l'ha causato.
+   * Richiesta utente: un banner fisso al centro della mano carte si
+   * sovrapponeva al tooltip della carta appena cliccata; mostrarlo dentro
+   * lo stesso tooltip lega visivamente l'avviso alla carta responsabile e
+   * non puo' mai sovrapporsi ad altro. */
+  erroreCarta?: { id: number; testo: string; cardInstanceId: string } | null;
 }
 
 /**
@@ -40,15 +48,21 @@ export function CardHandBar({
   onInizioTrascinamento,
   onFineTrascinamento,
   cartaSbloccataCode = null,
+  erroreCarta = null,
 }: CardHandBarProps) {
   const engine = useEngine();
   const state = useGameState();
   const [cartaConTooltip, setCartaConTooltip] = useState<string | null>(null);
+  // Richiesta utente: "la carta Esplora al click apre una modal che spiega
+  // e c'e' un bottone per attivare" — prima avviava subito l'esplorazione
+  // al click, senza spiegare cosa comporta ne' chiedere conferma.
+  const [modalEsploraAperta, setModalEsploraAperta] = useState(false);
 
   const esplorazioneInCorso = state.esplorazione.completataAlMs !== null;
   const slotLibero = state.manoCarte.length < state.capacitaManoCarte;
   const avviaEsplorazione = () => {
     engine.dispatch({ id: `esplora-${Date.now()}`, type: "ui/avviaEsplorazione" });
+    setModalEsploraAperta(false);
   };
 
   return (
@@ -56,7 +70,11 @@ export function CardHandBar({
       <div className="card-hand-bar__cards">
         {state.manoCarte.map((carta) => {
           const def = CARD_DEFINITIONS[carta.code];
-          const tooltipAperto = cartaConTooltip === carta.instanceId;
+          const erroreDiQuestaCarta = erroreCarta?.cardInstanceId === carta.instanceId ? erroreCarta.testo : null;
+          // L'errore puo' arrivare anche per una carta "armata" il cui
+          // bersaglio viene scelto sulla mappa (es. Investiga): il tooltip va
+          // mostrato comunque, anche se non e' stato aperto da un click qui.
+          const tooltipAperto = cartaConTooltip === carta.instanceId || erroreDiQuestaCarta !== null;
           const armata = cartaArmataId === carta.instanceId;
           // Richiesta utente: durante un passo guidato del tutorial, solo il
           // comando indicato resta usabile; gli altri restano visibili ma
@@ -105,6 +123,11 @@ export function CardHandBar({
                 <span className="game-card__tooltip">
                   {def.descrizione}
                   {!def.attivabile && <strong className="game-card__tooltip-nota"> Non ancora attivabile.</strong>}
+                  {erroreDiQuestaCarta && (
+                    <strong key={erroreCarta?.id} className="game-card__tooltip-errore" role="alert">
+                      {erroreDiQuestaCarta}
+                    </strong>
+                  )}
                 </span>
               )}
             </button>
@@ -123,7 +146,7 @@ export function CardHandBar({
             className={`game-card game-card--esplora ${esplorazioneInCorso ? "game-card--esplora-attiva" : ""} ${
               cartaSbloccataCode !== null ? "game-card--bloccata-tutorial" : ""
             }`}
-            onClick={avviaEsplorazione}
+            onClick={() => setModalEsploraAperta(true)}
             disabled={esplorazioneInCorso || cartaSbloccataCode !== null}
           >
             {esplorazioneInCorso ? (
@@ -161,6 +184,18 @@ export function CardHandBar({
       >
         🗑
       </button>
+      <ConfirmModal
+        aperto={modalEsploraAperta}
+        titolo="Esplora"
+        dettagli={[
+          { etichetta: "Effetto", valore: "Avvia un'esplorazione: dopo 1-3 minuti ricevi un nuovo comando in mano." },
+          { etichetta: "Durata", valore: "1-3 minuti (casuale)" },
+          { etichetta: "Esito", valore: "Una carta casuale (le comuni sono piu' probabili delle rare)" },
+        ]}
+        testoConferma="Avvia esplorazione"
+        onConferma={avviaEsplorazione}
+        onAnnulla={() => setModalEsploraAperta(false)}
+      />
     </footer>
   );
 }
