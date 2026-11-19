@@ -52,6 +52,15 @@ describe("generaRegione", () => {
     }
   });
 
+  it("il primo pianeta dell'area sicura contiene sempre ferro (richiesta utente: tutorial guidato)", () => {
+    for (const seed of ["regione-ferro-1", "regione-ferro-2", "regione-ferro-3", "regione-ferro-4", "regione-ferro-5"]) {
+      const regione = generaRegione(seed);
+      const primo = regione.pianeti[0];
+      expect(primo.scoperto).toBe(true);
+      expect(primo.risorsaDominante).toBe("ferro");
+    }
+  });
+
   it("la stragrande maggioranza dei corpi rispetta la separazione minima", () => {
     const regione = generaRegione("regione-overlap");
     const corpi = [...regione.pianeti, ...regione.campiRelitti];

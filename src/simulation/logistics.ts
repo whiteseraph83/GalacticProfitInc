@@ -1,5 +1,6 @@
 import { BALANCE } from "../domain/initialState";
 import type { EntityId, GameState, MiningContract, ResourceType, ShuttleEntity, Vector2 } from "../domain/types";
+import type { CommandValidationResult } from "./commands";
 import { bonusRicerca } from "./research";
 
 // Logistica mineraria (B1): estrazione nei contratti e automazione delle
@@ -244,4 +245,51 @@ export function integraNavette(statoIniziale: GameState, dtMs: number): GameStat
 
   navette = nuoveNavette;
   return cambiato ? { ...stato, navette, contrattiMinerari: contratti, mothership } : stato;
+}
+
+export function validaAnnullaContrattoMinerario(stato: GameState, contrattoId: EntityId): CommandValidationResult {
+  const contratto = stato.contrattiMinerari.find((c) => c.id === contrattoId);
+  if (!contratto || !contratto.attivo) {
+    return { ok: false, motivo: "contratto minerario inesistente o gia' concluso" };
+  }
+  return { ok: true };
+}
+
+/** Annulla un contratto minerario attivo (richiesta utente: "far tornare la
+ * navetta a casa con il carico gia' caricato"): il contratto viene rimosso,
+ * la nave mineraria assegnata torna disponibile per un nuovo contratto, e le
+ * navette che lo stavano servendo tornano libere se a vuoto oppure, se
+ * portano gia' del carico, proseguono verso la nave madre per consegnarlo
+ * invece di perderlo. */
+export function applicaAnnullaContrattoMinerario(stato: GameState, contrattoId: EntityId): GameState {
+  const contratto = stato.contrattiMinerari.find((c) => c.id === contrattoId);
+  if (!contratto) return stato;
+
+  const navette = stato.navette.map((navetta) => {
+    if (navetta.contrattoAssegnatoId !== contrattoId) return navetta;
+    const carico = cargoTotale(navetta.caricoAttuale);
+    if (carico > 0) {
+      return {
+        ...navetta,
+        stato: "ritorno" as const,
+        destinazione: stato.mothership.posizione,
+        contrattoAssegnatoId: null,
+        tempoAttesaMs: 0,
+      };
+    }
+    return {
+      ...navetta,
+      stato: "libera" as const,
+      destinazione: null,
+      contrattoAssegnatoId: null,
+      tempoAttesaMs: 0,
+    };
+  });
+
+  return {
+    ...stato,
+    navette,
+    contrattiMinerari: stato.contrattiMinerari.filter((c) => c.id !== contrattoId),
+    naviMinerarie: stato.naviMinerarie.map((n) => (n.id === contratto.naveMinerariaId ? { ...n, contrattoAttivoId: null } : n)),
+  };
 }

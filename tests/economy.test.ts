@@ -5,12 +5,15 @@ import { SeededRng } from "../src/domain/rng";
 import {
   applicaAcquistaRisorsa,
   applicaPagaQuotaRevisione,
+  applicaVendiCartaMano,
   applicaVendiRisorsa,
   integraMercato,
   integraRevisione,
   validaAcquistaRisorsa,
+  validaVendiCartaMano,
   validaVendiRisorsa,
 } from "../src/simulation/economy";
+import { PREZZI_CARTE } from "../src/domain/cardMarket";
 import type { GameState } from "../src/domain/types";
 
 describe("mercato", () => {
@@ -120,5 +123,22 @@ describe("revisione aziendale", () => {
   it("lo stato restituito da creaStatoIniziale resta valido (validaStato)", () => {
     const stato = creaStatoIniziale("revisione-stato-valido");
     expect(validaStato(stato)).toEqual([]);
+  });
+});
+
+describe("vendita comandi dalla mano (cestino)", () => {
+  it("rifiuta un comando non presente in mano", () => {
+    const stato = creaStatoIniziale("vendi-carta-inesistente");
+    expect(validaVendiCartaMano(stato, "non-esiste").ok).toBe(false);
+  });
+
+  it("rimuove il comando dalla mano e accredita una frazione del suo prezzo", () => {
+    const stato = creaStatoIniziale("vendi-carta-ok");
+    const carta = stato.manoCarte[0];
+    expect(validaVendiCartaMano(stato, carta.instanceId).ok).toBe(true);
+    const dopo = applicaVendiCartaMano(stato, carta.instanceId);
+    expect(dopo.manoCarte.find((c) => c.instanceId === carta.instanceId)).toBeUndefined();
+    const prezzo = PREZZI_CARTE[carta.code] ?? 0;
+    expect(dopo.crediti).toBe(stato.crediti + Math.round(prezzo * 0.5));
   });
 });

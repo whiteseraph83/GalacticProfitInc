@@ -395,3 +395,23 @@
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(107, 255, 176, 0.3);
 }
+
+/* Avviso requisiti mancanti (richiesta utente: "se non posso usare un
+ * comando... devi dirmi cosa manca"): banner transitorio appena sopra la
+ * mano carte, al centro, con lo stesso colore d'allerta usato altrove. */
+.card-hand-bar__avviso-requisito {
+  position: fixed;
+  left: 50%;
+  bottom: 122px;
+  transform: translateX(-50%);
+  z-index: 20;
+  margin: 0;
+  padding: 8px 16px;
+  background: rgba(20, 10, 4, 0.92);
+  border: 1px solid var(--warning);
+  color: var(--warning);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  box-shadow: 0 0 10px rgba(255, 179, 71, 0.35);
+}

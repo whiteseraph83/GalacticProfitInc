@@ -111,6 +111,10 @@
         {
           "speaker": "SISTEMA DI BORDO",
           "text": "Tutorial avviato. Obiettivo iniziale: esplorare un’area della galassia."
+        },
+        {
+          "speaker": "B.O.B.",
+          "text": "«Rilevo un giacimento di ferro a portata di sensori, già scoperto. Prima mossa consigliata: Investiga quel pianeta. Appena ne confermiamo la composizione, avvii subito un Contratto minerario sullo stesso.»"
         }
       ],
       "choices": [],

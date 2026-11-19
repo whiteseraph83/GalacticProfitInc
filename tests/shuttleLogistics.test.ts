@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { creaStatoIniziale, BALANCE } from "../src/domain/initialState";
-import { integraEstrazione, integraNavette } from "../src/simulation/logistics";
+import {
+  applicaAnnullaContrattoMinerario,
+  integraEstrazione,
+  integraNavette,
+  validaAnnullaContrattoMinerario,
+} from "../src/simulation/logistics";
 import type { GameState, MiningContract } from "../src/domain/types";
 
 // Il Macrostep 2 implementa l'intera logistica di estrazione/navette, ma la
@@ -129,5 +134,60 @@ describe("integraNavette", () => {
     const stato = creaStatoIniziale("senza-navette-attive");
     const aggiornato = integraNavette(stato, 100);
     expect(aggiornato).toBe(stato);
+  });
+});
+
+describe("validaAnnullaContrattoMinerario / applicaAnnullaContrattoMinerario", () => {
+  it("rifiuta un contratto inesistente", () => {
+    const stato = creaStatoConContratto();
+    expect(validaAnnullaContrattoMinerario(stato, "non-esiste").ok).toBe(false);
+  });
+
+  it("rimuove il contratto e libera la nave mineraria assegnata", () => {
+    const stato = creaStatoConContratto();
+    expect(validaAnnullaContrattoMinerario(stato, "contratto-test").ok).toBe(true);
+    const dopo = applicaAnnullaContrattoMinerario(stato, "contratto-test");
+    expect(dopo.contrattiMinerari).toHaveLength(0);
+    const nave = dopo.naviMinerarie.find((n) => n.id === stato.contrattiMinerari[0].naveMinerariaId)!;
+    expect(nave.contrattoAttivoId).toBeNull();
+  });
+
+  it("una navetta a vuoto assegnata al contratto torna libera", () => {
+    let stato = creaStatoConContratto({ depositoAccumulato: BALANCE.capacitaNavetta });
+    // Assegna davvero una navetta al contratto facendo avanzare la logistica.
+    for (let i = 0; i < 2000 && stato.navette.every((n) => n.stato === "libera"); i++) {
+      stato = integraNavette(stato, 100);
+    }
+    const assegnata = stato.navette.find((n) => n.contrattoAssegnatoId === "contratto-test")!;
+    expect(assegnata).toBeDefined();
+    // Nessun carico ancora a bordo (appena partita): deve tornare libera.
+    stato = {
+      ...stato,
+      navette: stato.navette.map((n) => (n.id === assegnata.id ? { ...n, caricoAttuale: {} } : n)),
+    };
+
+    const dopo = applicaAnnullaContrattoMinerario(stato, "contratto-test");
+    const navetta = dopo.navette.find((n) => n.id === assegnata.id)!;
+    expect(navetta.stato).toBe("libera");
+    expect(navetta.contrattoAssegnatoId).toBeNull();
+  });
+
+  it("una navetta con carico gia' imbarcato torna verso la nave madre invece di perderlo", () => {
+    let stato = creaStatoConContratto({ depositoAccumulato: BALANCE.capacitaNavetta });
+    for (let i = 0; i < 2000 && stato.navette.every((n) => n.stato === "libera"); i++) {
+      stato = integraNavette(stato, 100);
+    }
+    const assegnata = stato.navette.find((n) => n.contrattoAssegnatoId === "contratto-test")!;
+    const risorsa = stato.contrattiMinerari[0].risorsa;
+    stato = {
+      ...stato,
+      navette: stato.navette.map((n) => (n.id === assegnata.id ? { ...n, caricoAttuale: { [risorsa]: 5 } } : n)),
+    };
+
+    const dopo = applicaAnnullaContrattoMinerario(stato, "contratto-test");
+    const navetta = dopo.navette.find((n) => n.id === assegnata.id)!;
+    expect(navetta.stato).toBe("ritorno");
+    expect(navetta.destinazione).toEqual(stato.mothership.posizione);
+    expect(navetta.caricoAttuale[risorsa]).toBe(5);
   });
 });

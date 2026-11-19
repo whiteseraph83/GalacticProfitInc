@@ -19,6 +19,14 @@ import { generaNomeCivilta, generaNomePianeta } from "./nameGenerator";
 
 const PESO_TOTALE_ARCHETIPI = Object.values(PLANET_ARCHETYPES).reduce((somma, def) => somma + def.peso, 0);
 
+/** Archetipi comuni la cui risorsa dominante e' il ferro (richiesta utente:
+ * "il primo pianeta deve contenere il ferro come risorsa", cosi' che il
+ * tutorial possa guidare in modo affidabile verso Investiga + Contratto
+ * minerario su quel pianeta specifico fin dall'inizio partita). */
+const ARCHETIPI_FERRO: PlanetArchetype[] = Object.values(PLANET_ARCHETYPES)
+  .filter((d) => d.comune && d.risorsaDominante === "ferro")
+  .map((d) => d.archetipo);
+
 function scegliArchetipo(rng: SeededRng, soloComuni: boolean): PlanetArchetype {
   if (soloComuni) return rng.pick(ARCHETIPI_COMUNI);
 
@@ -72,7 +80,11 @@ export function generaRegione(seed: string): RegioneSpaziale {
   // --- Area sicura iniziale: garantisce risorse comuni raggiungibili subito. ---
   const pianetiAreaSicura = rng.nextInt(WORLD.areaSicuraPianetiMin, WORLD.areaSicuraPianetiMax);
   for (let i = 0; i < pianetiAreaSicura; i++) {
-    const archetipo = scegliArchetipo(rng, true);
+    // Il primo pianeta dell'area sicura e' sempre un archetipo a ferro: e'
+    // quello su cui il tutorial guida Investiga + Contratto minerario come
+    // primi passi obbligati (richiesta utente), quindi deve essere
+    // affidabile e non dipendere dall'esito casuale della generazione.
+    const archetipo = i === 0 ? rng.pick(ARCHETIPI_FERRO) : scegliArchetipo(rng, true);
     const def = PLANET_ARCHETYPES[archetipo];
     const raggio = rng.nextFloat(def.raggioMin, def.raggioMax);
     const posizione = posizionaConRitentativi(raggio, piazzati, () => {

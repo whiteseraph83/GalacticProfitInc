@@ -119,6 +119,25 @@ export function CardHandBar({ cartaArmataId, onCliccaCarta, onInizioTrascinament
           {state.manoCarte.length} / {state.capacitaManoCarte}
         </div>
       </div>
+      {/* Cestino per vendere un comando dalla mano (richiesta utente: "un
+       * cestino in basso a destra dove se cliccato un comando si illumina e
+       * se cliccato il cestino questo comando viene cancellato"): il click
+       * su una carta la seleziona gia' (stato `cartaConTooltip`, stesso
+       * evidenziatore del tooltip), qui si limita a venderla. */}
+      <button
+        type="button"
+        className="card-hand-bar__cestino"
+        disabled={!cartaConTooltip}
+        title={cartaConTooltip ? "Vendi il comando selezionato" : "Seleziona un comando per venderlo"}
+        aria-label="Vendi il comando selezionato"
+        onClick={() => {
+          if (!cartaConTooltip) return;
+          engine.dispatch({ id: `vendi-carta-${cartaConTooltip}-${Date.now()}`, type: "ui/vendiCartaMano", payload: { cardInstanceId: cartaConTooltip } });
+          setCartaConTooltip(null);
+        }}
+      >
+        🗑
+      </button>
     </footer>
   );
 }

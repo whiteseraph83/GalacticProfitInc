@@ -433,7 +433,7 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
       ring.clear();
       ring
         .circle(mothershipPosizione.x, mothershipPosizione.y, WORLD.visibilitaRaggio)
-        .stroke({ color: 0x37d6ff, width: 1.5, alpha: 0.22 });
+        .stroke({ color: 0x5be8ff, width: 2, alpha: 0.6 });
     }
     const nebbia = nebbiaRef.current;
     if (nebbia) {
@@ -452,9 +452,9 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         outerRadius: raggioScuro,
         textureSpace: "global",
         colorStops: [
-          { offset: 0, color: "rgba(180, 230, 255, 0.07)" },
+          { offset: 0, color: "rgba(190, 235, 255, 0.22)" },
           { offset: offsetConfine, color: "rgba(0, 0, 0, 0)" },
-          { offset: 1, color: "rgba(2, 4, 10, 0.78)" },
+          { offset: 1, color: "rgba(2, 4, 10, 0.85)" },
         ],
       });
       nebbiaGradienteRef.current = gradiente;
@@ -592,12 +592,24 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
       }
       const contratto = contrattiMinerari.find((c) => c.pianetaId === pianeta.id && c.attivo);
       if (contratto) {
-        sprite.impostaTimer(`${Math.floor(contratto.depositoAccumulato)}/${BALANCE.capacitaNavetta} ${NOMI_RISORSA[contratto.risorsa]}`);
+        // Il materiale estratto passa dal buffer del contratto alla stiva
+        // della navetta quasi istantaneamente quando questa e' li' a
+        // caricare (vedi `integraNavette`): mostrare solo
+        // `depositoAccumulato` lo farebbe apparire bloccato a 0 per tutta
+        // la durata del caricamento (richiesta utente: "il tooltip... resta
+        // fermo a 0 anche se la nave carica"). Il contatore mostrato somma
+        // quindi anche il carico gia' imbarcato dalla/e navetta/e assegnate
+        // a questo contratto, cosi' da riflettere il progresso reale.
+        const caricoNavette = navette
+          .filter((n) => n.contrattoAssegnatoId === contratto.id)
+          .reduce((somma, n) => somma + (n.caricoAttuale[contratto.risorsa] ?? 0), 0);
+        const totale = Math.min(BALANCE.capacitaNavetta, contratto.depositoAccumulato + caricoNavette);
+        sprite.impostaTimer(`${Math.floor(totale)}/${BALANCE.capacitaNavetta} ${NOMI_RISORSA[contratto.risorsa]}`);
         continue;
       }
       sprite.impostaTimer(null);
     }
-  }, [pianetiScoperti, tempoSimulatoMs, contrattiMinerari, pixiReady]);
+  }, [pianetiScoperti, tempoSimulatoMs, contrattiMinerari, navette, pixiReady]);
 
   // Crea le grafiche per i relitti/campi di asteroidi scoperti.
   useEffect(() => {

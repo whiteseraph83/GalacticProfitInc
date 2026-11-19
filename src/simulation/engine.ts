@@ -4,7 +4,7 @@ import { WORLD } from "../domain/worldConstants";
 import { SeededRng } from "../domain/rng";
 import type { EntityId, GameState, NotificationEntry, Vector2 } from "../domain/types";
 import { calcolaPercorso } from "./pathfinding";
-import { integraEstrazione, integraNavette } from "./logistics";
+import { applicaAnnullaContrattoMinerario, integraEstrazione, integraNavette, validaAnnullaContrattoMinerario } from "./logistics";
 import {
   applicaAvviaEsplorazione,
   applicaGiocaCarta,
@@ -18,11 +18,13 @@ import { applicaAccodaRaffinazione, integraRaffinazione, validaAccodaRaffinazion
 import {
   applicaAcquistaRisorsa,
   applicaPagaQuotaRevisione,
+  applicaVendiCartaMano,
   applicaVendiRisorsa,
   integraMercato,
   integraRevisione,
   validaAcquistaRisorsa,
   validaPagaQuotaRevisione,
+  validaVendiCartaMano,
   validaVendiRisorsa,
 } from "./economy";
 import {
@@ -239,6 +241,10 @@ export class SimulationEngine {
         return validaAvviaRicerca(this.state, command.payload.tecnologiaId);
       case "ui/avviaEsplorazione":
         return validaAvviaEsplorazione(this.state);
+      case "ui/annullaContrattoMinerario":
+        return validaAnnullaContrattoMinerario(this.state, command.payload.contrattoId);
+      case "ui/vendiCartaMano":
+        return validaVendiCartaMano(this.state, command.payload.cardInstanceId);
       case "demo/confirmableAction":
         return { ok: true };
       default:
@@ -388,6 +394,17 @@ export class SimulationEngine {
       case "ui/avviaEsplorazione": {
         this.state = applicaAvviaEsplorazione(this.state, this.cardRng);
         this.notify("Esplorazione avviata.");
+        return;
+      }
+      case "ui/annullaContrattoMinerario": {
+        this.state = applicaAnnullaContrattoMinerario(this.state, command.payload.contrattoId);
+        this.notify("Contratto minerario annullato.", "attenzione");
+        return;
+      }
+      case "ui/vendiCartaMano": {
+        const carta = this.state.manoCarte.find((c) => c.instanceId === command.payload.cardInstanceId);
+        this.state = applicaVendiCartaMano(this.state, command.payload.cardInstanceId);
+        if (carta) this.notify(`Comando venduto: ${carta.code}.`);
         return;
       }
       case "demo/confirmableAction": {

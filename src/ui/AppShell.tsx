@@ -68,6 +68,19 @@ export function AppShell() {
     risorseMaiPosseduteRef.current = aggiornato;
     setRisorseMaiPossedute(aggiornato);
   }, [state.mothership.stivaCarico]);
+  // Richiesta utente: "se non posso usare un comando... devi dirmi cosa
+  // manca" — finora un comando non attivabile (requisiti mancanti) veniva
+  // semplicemente ignorato al click, senza alcun messaggio. Il motivo di
+  // rifiuto gia' calcolato da validaGiocaCarta/validaSaltoIperspaziale viene
+  // ora mostrato in un avviso transitorio vicino alla mano carte.
+  const [avvisoRequisito, setAvvisoRequisito] = useState<{ id: number; testo: string } | null>(null);
+  const avvisoRequisitoIdRef = useRef(0);
+  useEffect(() => {
+    if (!avvisoRequisito) return;
+    const timer = window.setTimeout(() => setAvvisoRequisito(null), 4000);
+    return () => window.clearTimeout(timer);
+  }, [avvisoRequisito]);
+
   const [dialogoAutoAvanza, setDialogoAutoAvanza] = useState(false);
   // Bottone ">>>" per debug/test (richiesta utente): avanza a raffica
   // attraverso tutti i dialoghi in coda, incluse le scene successive che si
@@ -202,7 +215,13 @@ export function AppShell() {
 
   function proponiAzioneCarta(carta: CardInstance, bersaglio: BersaglioCarta) {
     const risultato = validaGiocaCarta(state, carta.instanceId, bersaglio);
-    if (!risultato.ok) return; // bersaglio non valido: nessun effetto, nessuna carta consumata
+    if (!risultato.ok) {
+      // Bersaglio/requisiti non validi: nessun effetto, nessuna carta
+      // consumata, ma l'utente deve sapere perche' (richiesta utente).
+      avvisoRequisitoIdRef.current += 1;
+      setAvvisoRequisito({ id: avvisoRequisitoIdRef.current, testo: risultato.motivo ?? "comando non utilizzabile al momento" });
+      return;
+    }
     setPropostaCarta({ carta, bersaglio });
   }
 
@@ -341,6 +360,11 @@ export function AppShell() {
           <ManagementPanel />
         </aside>
       </div>
+      {avvisoRequisito && (
+        <p key={avvisoRequisito.id} className="card-hand-bar__avviso-requisito" role="alert">
+          {avvisoRequisito.testo}
+        </p>
+      )}
       <CardHandBar
         cartaArmataId={cartaArmata?.instanceId ?? null}
         onCliccaCarta={onCliccaCarta}

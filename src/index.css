@@ -83,6 +83,16 @@ button {
   background: transparent;
 }
 
+.btn-danger {
+  border-color: #ff5d6c;
+  color: #ff9aa3;
+}
+
+.btn-danger:hover {
+  border-color: #ff5d6c;
+  box-shadow: 0 0 10px rgba(255, 93, 108, 0.45);
+}
+
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;

@@ -1,7 +1,8 @@
+import { PREZZI_CARTE } from "../domain/cardMarket";
 import { BALANCE } from "../domain/initialState";
 import { MERCATO, PREZZI_BASE } from "../domain/market";
 import type { SeededRng } from "../domain/rng";
-import type { GameState, ResourceType } from "../domain/types";
+import type { EntityId, GameState, ResourceType } from "../domain/types";
 import type { CommandValidationResult } from "./commands";
 
 // Mercato, contabilita' e revisioni aziendali (B3, Macrostep 5). Funzioni
@@ -99,6 +100,31 @@ export function applicaVendiRisorsa(stato: GameState, risorsa: ResourceType, qua
     { ...statoConVendita, contabilita: { ...statoConVendita.contabilita, venditeTotali: statoConVendita.contabilita.venditeTotali + 1 } },
     incasso,
   );
+}
+
+/** Frazione del prezzo di mercato rimborsata vendendo un comando dalla mano
+ * (richiesta utente: "permetti la vendita di comandi... un cestino in basso
+ * a destra"): meno del prezzo pieno, altrimenti comprare e rivendere subito
+ * una carta al mercato sarebbe un'operazione a somma zero o in attivo. */
+const FRAZIONE_RIMBORSO_CARTA = 0.5;
+
+export function validaVendiCartaMano(stato: GameState, cardInstanceId: EntityId): CommandValidationResult {
+  const carta = stato.manoCarte.find((c) => c.instanceId === cardInstanceId);
+  if (!carta) return { ok: false, motivo: "comando non presente in mano" };
+  return { ok: true };
+}
+
+export function applicaVendiCartaMano(stato: GameState, cardInstanceId: EntityId): GameState {
+  const carta = stato.manoCarte.find((c) => c.instanceId === cardInstanceId);
+  if (!carta) return stato;
+  const prezzoBase = PREZZI_CARTE[carta.code] ?? 0;
+  const incasso = Math.round(prezzoBase * FRAZIONE_RIMBORSO_CARTA);
+  const statoSenzaCarta: GameState = {
+    ...stato,
+    manoCarte: stato.manoCarte.filter((c) => c.instanceId !== cardInstanceId),
+    crediti: stato.crediti + incasso,
+  };
+  return registraRicavo(statoSenzaCarta, incasso);
 }
 
 export function validaAcquistaRisorsa(stato: GameState, risorsa: ResourceType, quantita: number): CommandValidationResult {
