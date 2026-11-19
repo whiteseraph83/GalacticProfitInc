@@ -145,6 +145,58 @@ describe("validaIgnoraEvento / applicaIgnoraEvento", () => {
   });
 });
 
+describe("eventi commerciali unici (EVT-COM-01/02)", () => {
+  it("non vengono generati prima del capitolo 2", () => {
+    const base = creaStatoIniziale("com-prima-capitolo-2");
+    const stato: GameState = { ...base, eventi: { ...base.eventi, carteGiocateDallUltimo: base.eventi.sogliaProssimo } };
+    // 50 generazioni successive con seed diversi: mai EVT-COM-01/02 prima del capitolo 2.
+    for (let i = 0; i < 50; i += 1) {
+      const { stato: dopo } = integraGenerazioneEventi(stato, new SeededRng(`com-seed-${i}`));
+      const def = dopo.eventi.attivi[0]?.definizioneId;
+      expect(def).not.toBe("EVT-COM-01");
+      expect(def).not.toBe("EVT-COM-02");
+    }
+  });
+
+  it("EVT-COM-02 non viene generato prima che EVT-COM-01 sia gia' comparso", () => {
+    const base = creaStatoIniziale("com-ordine");
+    const stato: GameState = {
+      ...base,
+      campagna: { ...base.campagna, capitoloCorrente: "CAP-2" },
+      eventi: { ...base.eventi, carteGiocateDallUltimo: base.eventi.sogliaProssimo },
+    };
+    for (let i = 0; i < 50; i += 1) {
+      const { stato: dopo } = integraGenerazioneEventi(stato, new SeededRng(`com-ordine-seed-${i}`));
+      expect(dopo.eventi.attivi[0]?.definizioneId).not.toBe("EVT-COM-02");
+    }
+  });
+
+  it("registra l'id in campagna.eventiMercatoSpeciali quando EVT-COM-01 viene generato, e non lo ripete", () => {
+    const base = creaStatoIniziale("com-registrato");
+    let stato: GameState = {
+      ...base,
+      campagna: { ...base.campagna, capitoloCorrente: "CAP-2" },
+      eventi: { ...base.eventi, carteGiocateDallUltimo: base.eventi.sogliaProssimo },
+    };
+    let visto = false;
+    for (let i = 0; i < 200 && !visto; i += 1) {
+      const { stato: dopo } = integraGenerazioneEventi(stato, new SeededRng(`com-registrato-seed-${i}`));
+      if (dopo.eventi.attivi.some((e) => e.definizioneId === "EVT-COM-01")) {
+        expect(dopo.campagna.eventiMercatoSpeciali).toContain("EVT-COM-01");
+        visto = true;
+      }
+      stato = { ...dopo, eventi: { ...dopo.eventi, attivi: [], carteGiocateDallUltimo: dopo.eventi.sogliaProssimo } };
+    }
+    expect(visto).toBe(true);
+
+    // Una volta registrato, non deve mai piu' essere scelto dal pool casuale.
+    for (let i = 0; i < 50; i += 1) {
+      const { stato: dopo } = integraGenerazioneEventi(stato, new SeededRng(`com-no-repeat-${i}`));
+      expect(dopo.eventi.attivi.some((e) => e.definizioneId === "EVT-COM-01")).toBe(false);
+    }
+  });
+});
+
 describe("stato iniziale con eventi", () => {
   it("resta valido secondo validaStato", () => {
     expect(validaStato(creaStatoIniziale("eventi-stato-valido"))).toEqual([]);

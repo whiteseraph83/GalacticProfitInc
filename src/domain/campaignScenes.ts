@@ -86,6 +86,12 @@ const CONDIZIONE_SCENA: Record<string, (stato: GameState) => boolean> = {
   C2_S01: (stato) => stato.ricerca.completate.length > 0,
   // trigger: "first_hyperspace_jump_completed"
   C2_S06: (stato) => stato.numeroRegione > 1,
+  // trigger: "first_special_market_event" (EVT-COM-01, "L'offerta del
+  // signor Krix": vedi src/domain/events.ts / src/simulation/events.ts)
+  C2_S02: (stato) => stato.campagna.eventiMercatoSpeciali.includes("EVT-COM-01"),
+  // trigger: "special_demand_with_deleted_identity" (EVT-COM-02, "Il
+  // cliente cancellato")
+  C2_S07: (stato) => stato.campagna.eventiMercatoSpeciali.includes("EVT-COM-02"),
   // trigger: "career: insolvency_game_over" — mostrata in anticipo dal
   // controllo esplicito qui sotto quando serve; questa condizione evita
   // comunque che compaia "in sequenza" per chi raggiunge il capitolo 5

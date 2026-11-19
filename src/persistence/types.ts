@@ -28,7 +28,9 @@ import type { GameState } from "../domain/types";
 // l'autosave appena riattivato) andava in NaN/undefined allo stesso modo.
 // Portato a 5: aggiunto ContabilitaState.venditeTotali (trigger reale della
 // scena di tutorial "prima vendita", richiesta utente).
-export const SAVE_SCHEMA_VERSION = 5;
+// Portato a 6: aggiunto CampagnaState.eventiMercatoSpeciali (eventi
+// commerciali unici EVT-COM-01/02, trigger reale delle scene C2_S02/C2_S07).
+export const SAVE_SCHEMA_VERSION = 6;
 
 export interface SaveFile {
   schemaVersion: number;

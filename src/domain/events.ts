@@ -114,6 +114,33 @@ export const EVENTO_DEFINITIONS: Record<string, EventoDefinition> = {
       { id: "rifiuta", testo: "Rifiuta: i pirati sottraggono parte del carico", effetti: [{ tipo: "cargoRubato", percentuale: 15 }] },
     ],
   },
+  // Eventi commerciali unici (non del pool casuale generico, vedi
+  // `EVENTI_COMMERCIALI_CONFIG`/`simulation/events.ts`): collegano le
+  // scene di sceneggiatura C2_S02/C2_S07 (docs/TODO.md, "Piano: eventi di
+  // mercato speciali") a un evento di gioco reale invece di comparire
+  // semplicemente in sequenza di capitolo.
+  "EVT-COM-01": {
+    id: "EVT-COM-01",
+    categoria: "commerciale",
+    titolo: "L'offerta del signor Krix",
+    descrizione: "Barthol Krix propone un piccolo affare non vincolante, giusto per presentarsi.",
+    critico: false,
+    scelte: [
+      { id: "valuta", testo: "Valuta le offerte di Krix", effetti: [{ tipo: "crediti", valore: 150 }] },
+      { id: "rimanda", testo: "Rimanda la trattativa", effetti: [{ tipo: "nessunEffetto" }] },
+    ],
+  },
+  "EVT-COM-02": {
+    id: "EVT-COM-02",
+    categoria: "commerciale",
+    titolo: "Il cliente cancellato",
+    descrizione: "Un acquirente senza nome offre bene per un carico di materiale raffinato, pagando in anticipo.",
+    critico: false,
+    scelte: [
+      { id: "accetta", testo: "Accetta l'ordine speciale", effetti: [{ tipo: "crediti", valore: 300 }] },
+      { id: "rinuncia", testo: "Rinuncia all'affare", effetti: [{ tipo: "nessunEffetto" }] },
+    ],
+  },
   "EVT-PIR-02": {
     id: "EVT-PIR-02",
     categoria: "pirateria",

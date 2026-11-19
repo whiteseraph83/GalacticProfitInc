@@ -47,6 +47,26 @@ describe("prossimaScenaSceneggiatura", () => {
     expect(prossimaScenaSceneggiatura(statoConFabbrica, viste)?.id).toBe("C1_S06");
   });
 
+  it("C2_S02 (offerta di Krix) resta bloccata finche' EVT-COM-01 non e' mai comparso", () => {
+    const base = creaStatoIniziale("scene-capitoli-c2-s02");
+    const stato: GameState = { ...base, campagna: { ...base.campagna, capitoloCorrente: "CAP-2" } };
+    const viste = new Set(["C1_S01", "C1_S02", "C1_S03", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08", "C2_S01"]);
+    expect(prossimaScenaSceneggiatura(stato, viste)).toBeNull();
+
+    const statoConKrix: GameState = { ...stato, campagna: { ...stato.campagna, eventiMercatoSpeciali: ["EVT-COM-01"] } };
+    expect(prossimaScenaSceneggiatura(statoConKrix, viste)?.id).toBe("C2_S02");
+  });
+
+  it("C2_S07 (cliente cancellato) resta bloccata finche' EVT-COM-02 non e' mai comparso", () => {
+    const base = creaStatoIniziale("scene-capitoli-c2-s07");
+    const stato: GameState = { ...base, campagna: { ...base.campagna, capitoloCorrente: "CAP-2", eventiMercatoSpeciali: ["EVT-COM-01"] } };
+    const viste = new Set(["C1_S01", "C1_S02", "C1_S03", "C1_S04", "C1_S05", "C1_S06", "C1_S07", "C1_S08", "C2_S01", "C2_S02", "C2_S03", "C2_S04", "C2_S05", "C2_S06"]);
+    expect(prossimaScenaSceneggiatura(stato, viste)).toBeNull();
+
+    const statoConCliente: GameState = { ...stato, campagna: { ...stato.campagna, eventiMercatoSpeciali: ["EVT-COM-01", "EVT-COM-02"] } };
+    expect(prossimaScenaSceneggiatura(statoConCliente, viste)?.id).toBe("C2_S07");
+  });
+
   it("C5_S07 (liquidazione) compare subito quando scatta il game over, anche al capitolo 1", () => {
     const stato: GameState = { ...statoAlCapitolo1(), gameOver: { motivo: "test" } };
     expect(prossimaScenaSceneggiatura(stato, new Set())?.id).toBe("C5_S07");

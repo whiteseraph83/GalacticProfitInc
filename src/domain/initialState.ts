@@ -148,7 +148,13 @@ export function creaStatoIniziale(seed: string, vantaggioEreditatoId?: string): 
     civilta: regione.civilta,
     pericoli: regione.pericoli,
     eventi: { attivi: [], carteGiocateDallUltimo: 0, sogliaProssimo: new SeededRng(`${seed}|eventi`).nextInt(EVENTI_CONFIG.sogliaCarteMin, EVENTI_CONFIG.sogliaCarteMax) },
-    campagna: { capitoloCorrente: null, sceneCompletate: [], allineamento: { lealta: 0, indipendenza: 0, ribellione: 0 }, finaleOttenuto: null },
+    campagna: {
+      capitoloCorrente: null,
+      sceneCompletate: [],
+      allineamento: { lealta: 0, indipendenza: 0, ribellione: 0 },
+      finaleOttenuto: null,
+      eventiMercatoSpeciali: [],
+    },
   };
 
   if (vantaggioEreditatoId) state = applicaVantaggioEreditato(state, vantaggioEreditatoId);

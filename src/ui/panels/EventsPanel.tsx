@@ -8,6 +8,7 @@ const NOME_CATEGORIA: Record<string, string> = {
   diplomatico: "Diplomatico",
   misterioso: "Misterioso",
   pirateria: "Pirateria",
+  commerciale: "Commerciale",
 };
 
 /** Pannello Eventi (B9, Macrostep 9): "eventi ordinari non modali" — qui

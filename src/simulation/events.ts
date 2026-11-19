@@ -1,5 +1,6 @@
 import { EVENTI_CONFIG, EVENTO_DEFINITIONS } from "../domain/events";
-import type { EffettoScelta, EntityId, EventoAttivo, GameState, ResourceType } from "../domain/types";
+import { numeroCapitoloAttuale } from "../domain/campaignScenes";
+import type { EffettoScelta, EntityId, EventoAttivo, EventoDefinition, GameState, ResourceType } from "../domain/types";
 import type { SeededRng } from "../domain/rng";
 import type { CommandValidationResult } from "./commands";
 import { registraRicavo, registraSpesa } from "./economy";
@@ -29,6 +30,22 @@ function nextEventId(): string {
   return `evento-${autoEventCounter}`;
 }
 
+/** Definizioni ammesse al pool casuale in questo momento di partita. Gli
+ * eventi di categoria "commerciale" sono narrativi unici (collegano le
+ * scene di sceneggiatura C2_S02/C2_S07, docs/TODO.md): non prima del
+ * capitolo 2, mai due volte, e "Il cliente cancellato" (EVT-COM-02) solo
+ * dopo che Krix e' stato introdotto (EVT-COM-01). Le altre categorie non
+ * hanno restrizioni, come prima. */
+function candidatiEvento(stato: GameState): EventoDefinition[] {
+  return Object.values(EVENTO_DEFINITIONS).filter((def) => {
+    if (def.categoria !== "commerciale") return true;
+    if (stato.campagna.eventiMercatoSpeciali.includes(def.id)) return false;
+    if (numeroCapitoloAttuale(stato.campagna.capitoloCorrente) < 2) return false;
+    if (def.id === "EVT-COM-02" && !stato.campagna.eventiMercatoSpeciali.includes("EVT-COM-01")) return false;
+    return true;
+  });
+}
+
 export interface RisultatoEventi {
   stato: GameState;
   notifiche: string[];
@@ -42,15 +59,18 @@ export function integraGenerazioneEventi(stato: GameState, rng: SeededRng): Risu
   if (stato.eventi.carteGiocateDallUltimo < stato.eventi.sogliaProssimo) return { stato, notifiche: [] };
   if (stato.eventi.attivi.length >= EVENTI_CONFIG.attiviMax) return { stato, notifiche: [] };
 
-  const definizioni = Object.values(EVENTO_DEFINITIONS);
+  const definizioni = candidatiEvento(stato);
   const definizione = rng.pick(definizioni);
   const nuovoEvento: EventoAttivo = { id: nextEventId(), definizioneId: definizione.id, creatoAlMs: stato.tempoSimulatoMs };
   const sogliaProssimo = rng.nextInt(EVENTI_CONFIG.sogliaCarteMin, EVENTI_CONFIG.sogliaCarteMax);
+  const eventiMercatoSpeciali =
+    definizione.categoria === "commerciale" ? [...stato.campagna.eventiMercatoSpeciali, definizione.id] : stato.campagna.eventiMercatoSpeciali;
 
   return {
     stato: {
       ...stato,
       eventi: { attivi: [...stato.eventi.attivi, nuovoEvento], carteGiocateDallUltimo: 0, sogliaProssimo },
+      campagna: { ...stato.campagna, eventiMercatoSpeciali },
     },
     notifiche: [`Nuovo evento: ${definizione.titolo}${definizione.critico ? " (critico)" : ""}.`],
   };

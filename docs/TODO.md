@@ -356,28 +356,31 @@ costruito per sbloccarle davvero — da implementare un pezzo alla volta,
 non tutto insieme, e da confermare con l'utente prima di ogni pezzo (sono
 scelte di design, non dettagli tecnici).
 
-### 1. Eventi di mercato speciali (`C2_S02`, `C2_S07`)
+### 1. Eventi di mercato speciali (`C2_S02`, `C2_S07`) — ✅ fatto
 
 Trigger: `first_special_market_event`, `special_demand_with_deleted_identity`.
 Introducono Barthol Krix con un'offerta/richiesta unica, non ripetibile.
 
-Serve:
-- Un nuovo tipo di evento nello stato (`GameState.eventiMercato` o
-  un'estensione di `state.eventi`, da valutare con `src/simulation/events.ts`
-  gia' esistente come riferimento per lo stile) con almeno: un id, un tipo
-  (`offertaSpeciale` / `richiestaSpeciale`), i termini (risorsa, quantita',
-  prezzo/premio) e uno stato (`proposta` / `accettata` / `rifiutata` /
-  `scaduta`).
-- Un generatore che, con una cadenza o condizione ragionevole (es. non
-  prima del capitolo 2, non piu' di una attiva alla volta — da concordare
-  con l'utente), crea la prima occorrenza: questo e' l'evento che sblocca
-  `C2_S02` (`first_special_market_event`), e una successiva variante con
-  "identita' cancellata" collegata al filone mistero sblocca `C2_S07`.
-- Un pannello o un'estensione di `MarketPanel.tsx` per presentare/accettare
-  l'offerta (le scelte della scena stessa, `trade`/`decline` per `C2_S02`,
-  `sell`/`skip` per `C2_S07`, vanno gia' applicate dal motore scelte
-  esistente in `src/simulation/narrative.ts`, serve solo collegare gli
-  `effects` del JSON a `EffettoScena`/mutazioni di stato equivalenti).
+Implementato riusando il motore eventi generico gia' esistente
+(`src/domain/events.ts`, `src/simulation/events.ts`) invece di costruire
+un sistema separato:
+- Due nuove `EventoDefinition` di categoria `"commerciale"`:
+  `EVT-COM-01` ("L'offerta del signor Krix") ed `EVT-COM-02` ("Il cliente
+  cancellato"), con le stesse scelte/effetti del motore eventi generico
+  (`EffettoScelta`, nessun nuovo tipo di effetto necessario).
+- `CampagnaState.eventiMercatoSpeciali: string[]` (nuovo campo,
+  `SAVE_SCHEMA_VERSION` 5→6) registra gli id gia' comparsi almeno una
+  volta: li rende non ripetibili dal pool casuale e permette alle scene
+  `C2_S02`/`C2_S07` di sbloccarsi solo quando l'evento e' davvero apparso
+  (`CONDIZIONE_SCENA` in `src/domain/campaignScenes.ts`).
+- `candidatiEvento()` in `src/simulation/events.ts` filtra il pool: niente
+  eventi commerciali prima del capitolo 2, mai due volte, ed `EVT-COM-02`
+  solo dopo che `EVT-COM-01` e' gia' comparso (Krix va introdotto prima).
+  Generati con la stessa cadenza casuale ad ogni 8-10 carte degli altri
+  eventi (`EVENTI_CONFIG`), coerente con "mai timer rigidi".
+- Pannello: nessuna modifica necessaria, `EventsPanel.tsx` e' gia'
+  completamente data-driven (basta la nuova etichetta categoria
+  "Commerciale").
 
 ### 2. Indizi di mistero (`C2_S03`, `C2_S04`, tutte le `C3_S01`...`C3_S08`)
 

@@ -473,7 +473,7 @@ export interface CardMarketState {
 
 // --- Eventi periodici (B9, Macrostep 9) -------------------------------------
 
-export type CategoriaEvento = "aziendale" | "economico" | "diplomatico" | "misterioso" | "pirateria";
+export type CategoriaEvento = "aziendale" | "economico" | "diplomatico" | "misterioso" | "pirateria" | "commerciale";
 
 /** Conseguenze concrete e implementate (mai un generico "+X% a caso"
  * travestito da scelta, B9): crediti/fiducia/relazione sono variazioni
@@ -574,6 +574,12 @@ export interface CampagnaState {
   sceneCompletate: string[];
   allineamento: Record<AsseNarrativo, number>;
   finaleOttenuto: string | null;
+  /** Id delle definizioni di evento "commerciale" (categoria `EventoDefinition`)
+   * gia' generate almeno una volta: le rende non ripetibili (sono eventi
+   * narrativi unici, non del pool casuale generico) e permette alle scene
+   * di sceneggiatura collegate (C2_S02, C2_S07) di sbloccarsi solo quando
+   * l'evento e' davvero comparso. */
+  eventiMercatoSpeciali: string[];
 }
 
 export interface NotificationEntry {
