@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { brandingPostCampagna } from "../domain/narrative";
 import type { RawResourceType } from "../domain/types";
+import { GAME_VERSION } from "../version";
 import { NOMI_RISORSA } from "./resourceNames";
 import { useGameState } from "./useEngine";
 import { IconCarburante, IconCrediti, IconFiducia, IconMinerale, IconQuota } from "./icons/StatIcons";
@@ -17,7 +18,7 @@ const COLORE_MINERALE: Record<RawResourceType, string> = {
   materiaEsotica: "#ff3df2",
 };
 
-export function TopBar({ onTogglePause }: { onTogglePause: () => void }) {
+export function TopBar() {
   const state = useGameState();
   const { mothership, review } = state;
 
@@ -87,9 +88,9 @@ export function TopBar({ onTogglePause }: { onTogglePause: () => void }) {
       </div>
 
       <div className="top-bar__controls">
-        <button type="button" className="btn" onClick={onTogglePause}>
-          {state.inPausa ? "Riprendi" : "Pausa"}
-        </button>
+        <span className="top-bar__version" title={`Versione ${GAME_VERSION}`}>
+          v{GAME_VERSION}
+        </span>
       </div>
     </header>
   );

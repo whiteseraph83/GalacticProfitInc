@@ -205,7 +205,6 @@ export function AppShell() {
     return () => cancelAnimationFrame(frameId);
   }, [engine]);
 
-  const togglePause = () => engine.dispatch({ id: nextCommandId("pause"), type: "ui/togglePause" });
   const selezionaPianeta = (id: string) => {
     engine.dispatch({ id: nextCommandId("select"), type: "ui/selectPlanet", payload: { planetId: id } });
     setPannelloPianetaChiuso(false);
@@ -297,7 +296,7 @@ export function AppShell() {
 
   return (
     <div className="app-shell">
-      <TopBar onTogglePause={togglePause} />
+      <TopBar />
       <RevisionBanner />
       <div className="app-shell__body">
         <aside className="app-shell__side-panel app-shell__side-panel--left">

@@ -452,20 +452,14 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         outerRadius: raggioScuro,
         textureSpace: "global",
         colorStops: [
-          // Richiesta utente: la luminosita' dentro il cerchio sensori deve
-          // essere UNIFORME (non puntata sulla nave e sfumata verso i
-          // bordi) — stesso colore/alpha dal centro fino al limite del
-          // raggio, poi la schiarita svanisce e lascia spazio all'esterno
-          // scurito.
-          { offset: 0, color: "rgba(190, 235, 255, 0.22)" },
-          // Stop duplicato esatto allo stesso offset per un bordo netto: su
-          // alcuni motori canvas e' gestito in modo incoerente (uno dei due
-          // stop puo' essere scartato silenziosamente, facendo tornare una
-          // sfumatura continua da 0 a offsetConfine). Un piccolissimo
-          // scarto (epsilon) forza un'interpolazione reale ma ripidissima,
-          // percepita come un bordo netto, su qualunque implementazione.
-          { offset: Math.max(0, offsetConfine - 0.004), color: "rgba(190, 235, 255, 0.22)" },
-          { offset: Math.min(1, offsetConfine + 0.004), color: "rgba(0, 0, 0, 0)" },
+          // Richiesta utente (rivista): la zona centrale resta uniforme ma
+          // meno chiara di prima, e in prossimita' del contorno del cerchio
+          // sensori compare una sfumatura verso lo scuro invece di un bordo
+          // netto — una fascia di transizione tra l'80% e il 100% del
+          // raggio sensori, poi l'esterno gia' scurito.
+          { offset: 0, color: "rgba(190, 235, 255, 0.12)" },
+          { offset: offsetConfine * 0.8, color: "rgba(190, 235, 255, 0.12)" },
+          { offset: offsetConfine, color: "rgba(0, 0, 0, 0)" },
           { offset: 1, color: "rgba(2, 4, 10, 0.85)" },
         ],
       });
