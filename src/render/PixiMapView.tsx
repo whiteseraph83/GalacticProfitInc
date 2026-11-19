@@ -442,7 +442,12 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
       // questo effect rieseguirebbe molto spesso) per non perdere texture a
       // ogni spostamento (vedi doc FillGradient di PixiJS).
       nebbiaGradienteRef.current?.texture.destroy();
-      const raggioScuro = WORLD.visibilitaRaggio * 1.6;
+      // Richiesta utente: la sfumatura verso lo scuro deve stare in
+      // prossimita' del contorno del cerchio sensori, non iniziare molto
+      // prima — raggioScuro ravvicinato (1.15x invece di 1.6x) cosi' sia la
+      // dissolvenza della schiarita (poco prima del bordo) sia lo scurirsi
+      // definitivo (poco dopo) restano concentrati intorno alla linea.
+      const raggioScuro = WORLD.visibilitaRaggio * 1.15;
       const offsetConfine = WORLD.visibilitaRaggio / raggioScuro;
       const gradiente = new FillGradient({
         type: "radial",
@@ -452,13 +457,8 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         outerRadius: raggioScuro,
         textureSpace: "global",
         colorStops: [
-          // Richiesta utente (rivista): la zona centrale resta uniforme ma
-          // meno chiara di prima, e in prossimita' del contorno del cerchio
-          // sensori compare una sfumatura verso lo scuro invece di un bordo
-          // netto — una fascia di transizione tra l'80% e il 100% del
-          // raggio sensori, poi l'esterno gia' scurito.
           { offset: 0, color: "rgba(190, 235, 255, 0.12)" },
-          { offset: offsetConfine * 0.8, color: "rgba(190, 235, 255, 0.12)" },
+          { offset: offsetConfine * 0.93, color: "rgba(190, 235, 255, 0.12)" },
           { offset: offsetConfine, color: "rgba(0, 0, 0, 0)" },
           { offset: 1, color: "rgba(2, 4, 10, 0.85)" },
         ],

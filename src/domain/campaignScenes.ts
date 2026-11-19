@@ -67,6 +67,13 @@ export function numeroCapitoloScena(scena: CampaignScene): number {
  * scene la cui meccanica sottostante non esiste ancora — mercato
  * speciale, indizi di mistero, scelte morali — vedi docs/TODO.md). */
 const CONDIZIONE_SCENA: Record<string, (stato: GameState) => boolean> = {
+  // trigger: "tutorial.first_explore_done" — richiesta utente: prima la
+  // battuta di B.O.B. "Rilevato un pianeta" arrivava subito dopo quella che
+  // spiega come usare Radar, senza che il giocatore avesse ancora avuto
+  // modo di usarlo davvero. Ora compare solo dopo che Radar ha
+  // effettivamente reso un pianeta "sempreVisibile" (l'unico effetto reale
+  // del comando, vedi cardEffects.ts OPS-01).
+  C1_S02R: (stato) => stato.pianeti.some((p) => p.sempreVisibile),
   // trigger: "tutorial.first_investigation"
   C1_S03: (stato) => stato.pianeti.some((p) => p.investigato),
   // trigger: "tutorial.first_contract_started"

@@ -146,10 +146,6 @@
         {
           "speaker": "B.O.B.",
           "text": "Confermare consuma un comando; annullare non costa nulla. Approfitti del concetto, è raro nel nostro settore."
-        },
-        {
-          "speaker": "B.O.B.",
-          "text": "Rilevato un pianeta. Il dipartimento commerciale ha già chiesto se possiamo metterlo in fattura."
         }
       ],
       "choices": [],
@@ -159,6 +155,26 @@
       ],
       "gate": [
         "La carta si consuma solo dopo conferma; drag & drop e click + click equivalenti."
+      ],
+      "tone": "tutorial",
+      "priority": "story"
+    },
+    {
+      "id": "C1_S02R",
+      "chapter": "C1",
+      "title": "Un punto nel buio (esito)",
+      "trigger": "tutorial.first_explore_done",
+      "summary": "Reazione dopo l'uso effettivo del Radar (richiesta utente: prima si scatenava subito dopo l'istruzione, senza che il giocatore avesse ancora agito).",
+      "lines": [
+        {
+          "speaker": "B.O.B.",
+          "text": "Rilevato un pianeta. Il dipartimento commerciale ha già chiesto se possiamo metterlo in fattura."
+        }
+      ],
+      "choices": [],
+      "effects": [],
+      "gate": [
+        "Compare solo dopo che il comando Radar e' stato davvero confermato (almeno un pianeta sempre visibile)."
       ],
       "tone": "tutorial",
       "priority": "story"
