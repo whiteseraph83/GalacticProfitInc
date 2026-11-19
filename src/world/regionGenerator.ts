@@ -89,8 +89,28 @@ export function generaRegione(seed: string): RegioneSpaziale {
     const raggio = rng.nextFloat(def.raggioMin, def.raggioMax);
     const posizione = posizionaConRitentativi(raggio, piazzati, () => {
       const angolo = rng.nextFloat(0, Math.PI * 2);
-      // Mai esattamente al centro (dove nasce la nave madre): raggio minimo 60.
-      const distanzaCentro = rng.nextFloat(60, WORLD.areaSicuraRaggio * 0.85);
+      // Richiesta utente: non piu' subito a ridosso della nave madre (prima
+      // il raggio minimo era 60, troppo vicino al punto di partenza) —
+      // ora parte circa a meta' del raggio sensori e arriva fino al bordo.
+      const distanzaCentro = rng.nextFloat(WORLD.areaSicuraRaggio * 0.45, WORLD.areaSicuraRaggio * 0.92);
+      return { x: Math.cos(angolo) * distanzaCentro, y: Math.sin(angolo) * distanzaCentro };
+    });
+    piazzati.push({ posizione, raggio });
+    pianeti.push(creaPianeta(rng, archetipo, posizione, raggio, nomiUsati, centroAreaSicura, areaSicuraIniziale.raggio));
+  }
+
+  // --- Pianeta "a portata di Radar": garantisce che il primo utilizzo del
+  // comando Radar (C1_S02 nella sceneggiatura introduttiva) riveli subito
+  // un pianeta vicino invece di uno a caso ovunque nella regione (richiesta
+  // utente: "deve essere poco fuori dal cerchio del radar della nave
+  // madre"). Non ancora scoperto per costruzione (e' oltre areaSicuraRaggio). ---
+  {
+    const archetipo = scegliArchetipo(rng, true);
+    const def = PLANET_ARCHETYPES[archetipo];
+    const raggio = rng.nextFloat(def.raggioMin, def.raggioMax);
+    const posizione = posizionaConRitentativi(raggio, piazzati, () => {
+      const angolo = rng.nextFloat(0, Math.PI * 2);
+      const distanzaCentro = rng.nextFloat(WORLD.areaSicuraRaggio * 1.05, WORLD.areaSicuraRaggio * 1.4);
       return { x: Math.cos(angolo) * distanzaCentro, y: Math.sin(angolo) * distanzaCentro };
     });
     piazzati.push({ posizione, raggio });

@@ -12,7 +12,7 @@ import {
   validaGiocaCarta,
 } from "../src/simulation/cardEffects";
 import { WORLD } from "../src/domain/worldConstants";
-import type { CardInstance, GameState } from "../src/domain/types";
+import type { CardInstance, GameState, Planet } from "../src/domain/types";
 
 function trovaCartaInMano(stato: GameState, code: CardInstance["code"]): CardInstance {
   const carta = stato.manoCarte.find((c) => c.code === code);
@@ -50,6 +50,19 @@ describe("validaGiocaCarta / applicaGiocaCarta — Radar (OPS-01, ex Esplora)", 
     };
     const risultato = validaGiocaCarta(statoSenzaBersagli, carta.instanceId, {});
     expect(risultato.ok).toBe(false);
+  });
+
+  it("rileva sempre il pianeta idoneo piu' vicino, non uno a caso (richiesta utente)", () => {
+    const base = creaStatoIniziale("carte-radar-vicino");
+    const lontano: Planet = { ...base.pianeti[0], id: "lontano", posizione: { x: 1000, y: 0 }, investigato: false };
+    const vicino: Planet = { ...base.pianeti[0], id: "vicino", posizione: { x: WORLD.visibilitaRaggio + 20, y: 0 }, investigato: false };
+    const medio: Planet = { ...base.pianeti[0], id: "medio", posizione: { x: WORLD.visibilitaRaggio + 150, y: 0 }, investigato: false };
+    const stato: GameState = { ...base, pianeti: [lontano, vicino, medio] };
+    const carta = trovaCartaInMano(stato, "OPS-01");
+
+    const { stato: dopo } = applicaGiocaCarta(stato, carta.instanceId, {}, new SeededRng("qualsiasi-seed"));
+    const rilevato = dopo.pianeti.find((p) => p.sempreVisibile);
+    expect(rilevato?.id).toBe("vicino");
   });
 });
 

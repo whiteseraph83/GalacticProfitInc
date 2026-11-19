@@ -144,8 +144,19 @@ export function applicaGiocaCarta(stato: GameState, cardInstanceId: EntityId, be
       // I relitti/civilta'/pericoli restano scoperti passivamente dal solo
       // avvicinamento (vedi integrateFogDiscovery in engine.ts): non serve
       // che Radar li tocchi.
+      // Richiesta utente: il Radar deve rilevare il segnale piu' vicino, non
+      // un pianeta a caso ovunque nella regione — cosi' il primo utilizzo
+      // (guidato dal tutorial) rivela sempre qualcosa a portata di mano,
+      // invece di poter capitare su un corpo lontanissimo.
       const candidati = pianetiRilevabiliDalRadar(nuovoStato);
-      const scelto = candidati.length > 0 ? candidati[rng.nextInt(0, candidati.length - 1)] : null;
+      const scelto =
+        candidati.length > 0
+          ? candidati.reduce((piuVicino, p) =>
+              distanza(p.posizione, nuovoStato.mothership.posizione) < distanza(piuVicino.posizione, nuovoStato.mothership.posizione)
+                ? p
+                : piuVicino,
+            )
+          : null;
       if (scelto) {
         nuovoStato = {
           ...nuovoStato,

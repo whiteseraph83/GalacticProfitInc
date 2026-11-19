@@ -61,6 +61,18 @@ describe("generaRegione", () => {
     }
   });
 
+  it("esiste sempre un pianeta non scoperto poco fuori dal raggio sensori, a portata del primo Radar (richiesta utente)", () => {
+    for (const seed of ["regione-radar-1", "regione-radar-2", "regione-radar-3", "regione-radar-4", "regione-radar-5"]) {
+      const regione = generaRegione(seed);
+      const aPortata = regione.pianeti.find((p) => {
+        if (p.scoperto) return false;
+        const dist = Math.hypot(p.posizione.x - regione.areaSicuraIniziale.centro.x, p.posizione.y - regione.areaSicuraIniziale.centro.y);
+        return dist > WORLD.visibilitaRaggio && dist <= WORLD.areaSicuraRaggio * 1.4 + 1;
+      });
+      expect(aPortata).toBeDefined();
+    }
+  });
+
   it("la stragrande maggioranza dei corpi rispetta la separazione minima", () => {
     const regione = generaRegione("regione-overlap");
     const corpi = [...regione.pianeti, ...regione.campiRelitti];

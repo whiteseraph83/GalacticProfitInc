@@ -11,10 +11,17 @@ export const WORLD = {
   pianetiMax: 32,
   estensioneRegioneMeta: 1400, // meta' lato della regione quadrata, in unita' mondo
   areaSicuraRaggio: 300,
-  areaSicuraPianetiMin: 4,
-  areaSicuraPianetiMax: 6,
+  // Ridotti da 4-6 a 3-4 e allontanati dal centro (richiesta utente: "appena
+  // il gioco parte ci sono davvero tanti pianeti subito vicini alla nave
+  // madre"): meno corpi nell'area sicura, e piazzati piu' lontano dal punto
+  // di partenza invece che subito a ridosso della nave.
+  areaSicuraPianetiMin: 3,
+  areaSicuraPianetiMax: 4,
   visibilitaRaggio: 300, // raggio di scoperta attorno alla nave madre
-  separazioneMinimaPadding: 24, // margine minimo aggiuntivo tra i bordi di due pianeti
+  // Aumentato da 24 a 48 (richiesta utente: "i pianeti devono essere molto
+  // piu' lontani tra loro"): piu' respiro tra un corpo e l'altro ovunque
+  // sulla mappa, non solo nell'area sicura iniziale.
+  separazioneMinimaPadding: 48,
   sistemiStellariMin: 3,
   sistemiStellariMax: 5,
   sistemaPianetiMin: 3,
