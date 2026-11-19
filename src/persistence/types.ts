@@ -26,7 +26,9 @@ import type { GameState } from "../domain/types";
 // il bump a 3 (Planet.sempreVisibile, GameState.esplorazione al posto di
 // ultimaGenerazioneCarteMs) — un salvataggio autosalvato nel frattempo (con
 // l'autosave appena riattivato) andava in NaN/undefined allo stesso modo.
-export const SAVE_SCHEMA_VERSION = 4;
+// Portato a 5: aggiunto ContabilitaState.venditeTotali (trigger reale della
+// scena di tutorial "prima vendita", richiesta utente).
+export const SAVE_SCHEMA_VERSION = 5;
 
 export interface SaveFile {
   schemaVersion: number;

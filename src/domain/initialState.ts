@@ -138,7 +138,7 @@ export function creaStatoIniziale(seed: string, vantaggioEreditatoId?: string): 
     esplorazione: { completataAlMs: null },
     fabbrica: { id: nextId("factory"), costruita: false, linee: 1, coda: [] },
     mercato: { prezzi: { ...PREZZI_BASE }, ultimoAggiornamentoMs: 0 },
-    contabilita: { ricaviTotali: 0, speseTotali: 0, ricaviPeriodoCorrente: 0, spesePeriodoCorrente: 0, debito: null },
+    contabilita: { ricaviTotali: 0, speseTotali: 0, ricaviPeriodoCorrente: 0, spesePeriodoCorrente: 0, debito: null, venditeTotali: 0 },
     gameOver: null,
     missioni,
     mercatoCarte: { slots: creaSlotMercatoCarte(rngMercatoCarte), ultimaRotazioneMs: 0 },

@@ -1,5 +1,5 @@
 import scenesData from "../assets/reference/campagna/Galactic_Profit_Inc_Scene_Capitoli.json";
-import type { CapitoloId } from "./types";
+import type { CapitoloId, GameState } from "./types";
 
 // Sceneggiatura a capitoli fornita dall'utente (docs/TODO.md, "Campagna
 // narrativa a capitoli"): 5 capitoli, 41 scene narrative + 9 scene
@@ -58,16 +58,65 @@ export function numeroCapitoloScena(scena: CampaignScene): number {
   return Number(scena.chapter.replace("C", ""));
 }
 
-/** La prossima scena di sceneggiatura da mostrare: la prima non ancora
- * vista il cui capitolo e' gia' stato raggiunto nella campagna esistente
- * (stesso principio lineare di `sceneAttiva` in
- * `src/simulation/narrative.ts`, ma qui puramente read-only/decorativo:
- * non blocca nulla se non si sblocca mai). */
-export function prossimaScenaSceneggiatura(capitoloCorrente: CapitoloId | null, viste: ReadonlySet<string>): CampaignScene | null {
-  const numeroAttuale = numeroCapitoloAttuale(capitoloCorrente);
+/** Condizioni di sblocco reali (richiesta utente: "alcuni dialoghi devono
+ * innescarsi solo ad un evento specifico", non alla sola sequenza di
+ * capitolo) per le scene di sceneggiatura il cui `trigger` testuale nel
+ * JSON corrisponde a un segnale di stato gia' osservabile nel gioco.
+ * Scena assente da questa mappa = nessuna condizione extra oltre al
+ * capitolo raggiunto (comportamento di prima: riguarda soprattutto le
+ * scene la cui meccanica sottostante non esiste ancora — mercato
+ * speciale, indizi di mistero, scelte morali — vedi docs/TODO.md). */
+const CONDIZIONE_SCENA: Record<string, (stato: GameState) => boolean> = {
+  // trigger: "tutorial.first_investigation"
+  C1_S03: (stato) => stato.pianeti.some((p) => p.investigato),
+  // trigger: "tutorial.first_contract_started"
+  C1_S04: (stato) => stato.contrattiMinerari.length > 0,
+  // trigger: "tutorial.first_sale"
+  C1_S05: (stato) => stato.contabilita.venditeTotali > 0,
+  // trigger: "first_factory_built"
+  C1_S06: (stato) => stato.fabbrica.costruita,
+  // trigger: "first_review.cards_remaining == 3"
+  C1_S07: (stato) =>
+    stato.review.numeroRevisioniPagate === 0 &&
+    stato.review.statoRevisione === "nessuna" &&
+    stato.review.sogliaCarteProssimaRevisione - stato.review.carteGiocateDallUltimaRevisione <= 3,
+  // trigger: "first_review.ready"
+  C1_S08: (stato) => stato.review.numeroRevisioniPagate === 0 && stato.review.statoRevisione !== "nessuna",
+  // trigger: "research.first_upgrade_complete"
+  C2_S01: (stato) => stato.ricerca.completate.length > 0,
+  // trigger: "first_hyperspace_jump_completed"
+  C2_S06: (stato) => stato.numeroRegione > 1,
+  // trigger: "career: insolvency_game_over" — mostrata in anticipo dal
+  // controllo esplicito qui sotto quando serve; questa condizione evita
+  // comunque che compaia "in sequenza" per chi raggiunge il capitolo 5
+  // senza essere mai andato in liquidazione.
+  C5_S07: (stato) => stato.gameOver !== null,
+};
+
+/** La prossima scena di sceneggiatura da mostrare: fra quelle del
+ * capitolo gia' raggiunto (ordine lineare, stesso principio di
+ * `sceneAttiva` in `src/simulation/narrative.ts`), la prima non ancora
+ * vista la cui condizione di sblocco (se definita in `CONDIZIONE_SCENA`)
+ * e' gia' soddisfatta. Le scene senza condizione nota restano gate solo
+ * sul capitolo, come prima (puramente read-only/decorativo: non blocca
+ * nulla se non si sblocca mai).
+ *
+ * Eccezione: C5_S07 ("Liquidazione") e' per design accessibile da
+ * qualsiasi capitolo, non solo dal 5 (gate esplicito nel documento di
+ * sceneggiatura), quindi va controllata a parte, con priorita' assoluta
+ * appena `gameOver` e' impostato. */
+export function prossimaScenaSceneggiatura(stato: GameState, viste: ReadonlySet<string>): CampaignScene | null {
+  if (stato.gameOver && !viste.has("C5_S07")) {
+    const liquidazione = SCENE_CAPITOLI.find((s) => s.id === "C5_S07");
+    if (liquidazione) return liquidazione;
+  }
+
+  const numeroAttuale = numeroCapitoloAttuale(stato.campagna.capitoloCorrente);
   for (const scena of SCENE_CAPITOLI) {
     if (viste.has(scena.id)) continue;
     if (numeroCapitoloScena(scena) > numeroAttuale) return null;
+    const condizione = CONDIZIONE_SCENA[scena.id];
+    if (condizione && !condizione(stato)) return null;
     return scena;
   }
   return null;

@@ -409,6 +409,10 @@ export interface ContabilitaState {
   ricaviPeriodoCorrente: number;
   spesePeriodoCorrente: number;
   debito: { capitaleResiduo: number; tassoInteresse: number } | null;
+  /** Numero di vendite manuali concluse (comando "vendi risorsa"): usato
+   * per distinguere "prima vendita" da altre entrate (missioni, eventi,
+   * scene narrative) che alzano `ricaviTotali` senza essere una vendita. */
+  venditeTotali: number;
 }
 
 export interface MarketState {

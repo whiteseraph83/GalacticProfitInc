@@ -95,7 +95,10 @@ export function applicaVendiRisorsa(stato: GameState, risorsa: ResourceType, qua
         : m,
     ),
   };
-  return registraRicavo(statoConVendita, incasso);
+  return registraRicavo(
+    { ...statoConVendita, contabilita: { ...statoConVendita.contabilita, venditeTotali: statoConVendita.contabilita.venditeTotali + 1 } },
+    incasso,
+  );
 }
 
 export function validaAcquistaRisorsa(stato: GameState, risorsa: ResourceType, quantita: number): CommandValidationResult {

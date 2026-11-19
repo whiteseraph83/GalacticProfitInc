@@ -126,7 +126,7 @@ export function useNpcChatter(stato: GameState): { attuale: ChatterAttivo | null
     // 12 scene approvate/testate, il cui avanzamento resta gestito da
     // `NarrativePanel`); 3) chiacchiericcio NPC innescato da trigger di stato.
     if (coda.length === 0) {
-      const scena = prossimaScenaSceneggiatura(stato.campagna.capitoloCorrente, sceneVisteRef.current);
+      const scena = prossimaScenaSceneggiatura(stato, sceneVisteRef.current);
       if (scena) {
         sceneVisteRef.current.add(scena.id);
         for (const riga of scena.lines) {
