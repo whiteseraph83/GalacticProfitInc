@@ -149,6 +149,15 @@ export function AppShell() {
   // al centro. Su desktop questo stato resta inutilizzato (le barre sono
   // sempre visibili via CSS, vedi AppShell.css).
   const [drawerMobileAperto, setDrawerMobileAperto] = useState<"sinistra" | "destra" | null>(null);
+  // Richiesta utente: su mobile i bottoni Missioni/Mercato/Catalogo
+  // comandi/Ricerca/Impostazioni restavano sempre sovrapposti alla mappa —
+  // ora si aprono come un elenco a comparsa tramite un terzo bottone nella
+  // barra in basso, invece di stare sempre in vista.
+  const [comandiMobileAperti, setComandiMobileAperti] = useState(false);
+  const apriOverlayDaMobile = (overlay: typeof overlayAperto) => {
+    setOverlayAperto(overlay);
+    setComandiMobileAperti(false);
+  };
 
   // Feedback sonoro per nuove notifiche (B11: "feedback UI"): montato qui
   // (non nel pannello Registro notifiche, ora un overlay su richiesta) cosi'
@@ -354,21 +363,6 @@ export function AppShell() {
       <TopBar />
       <RevisionBanner />
       <div className="app-shell__main">
-        {/* Richiesta utente: su mobile le sidebar si aprono con un bottone,
-         * posizionato in una barra sopra la mappa (qui) e una sotto (vedi in
-         * fondo a questo blocco), lasciando la mappa libera al centro.
-         * Su desktop queste barre restano nascoste via CSS. */}
-        <div className="app-shell__mobile-bar app-shell__mobile-bar--top">
-          <button
-            type="button"
-            className="btn btn-small app-shell__mobile-toggle"
-            aria-expanded={drawerMobileAperto === "sinistra"}
-            onClick={() => setDrawerMobileAperto((prev) => (prev === "sinistra" ? null : "sinistra"))}
-          >
-            ☰ Eventi
-          </button>
-        </div>
-
         <div className="app-shell__body">
           {drawerMobileAperto && (
             <div className="app-shell__drawer-backdrop" onClick={() => setDrawerMobileAperto(null)} />
@@ -402,20 +396,24 @@ export function AppShell() {
               Seleziona un bersaglio per {CARD_DEFINITIONS[cartaArmata.code].nome} (Esc per annullare)
             </span>
           )}
-          <div className="map-floating-controls">
-            <button type="button" className="btn" onClick={() => setOverlayAperto("missioni")}>
+          {/* Richiesta utente: su mobile questi bottoni stavano sempre
+           * sovrapposti alla mappa — ora compaiono solo quando il bottone
+           * "Comandi" della barra in basso li apre (vedi
+           * comandiMobileAperti); su desktop restano sempre visibili. */}
+          <div className={`map-floating-controls ${comandiMobileAperti ? "map-floating-controls--mobile-aperto" : ""}`}>
+            <button type="button" className="btn" onClick={() => apriOverlayDaMobile("missioni")}>
               Missioni
             </button>
-            <button type="button" className="btn" onClick={() => setOverlayAperto("mercato")}>
+            <button type="button" className="btn" onClick={() => apriOverlayDaMobile("mercato")}>
               Mercato
             </button>
-            <button type="button" className="btn" onClick={() => setOverlayAperto("mercatoCarte")}>
+            <button type="button" className="btn" onClick={() => apriOverlayDaMobile("mercatoCarte")}>
               Catalogo comandi
             </button>
-            <button type="button" className="btn" onClick={() => setOverlayAperto("ricerca")}>
+            <button type="button" className="btn" onClick={() => apriOverlayDaMobile("ricerca")}>
               Ricerca
             </button>
-            <button type="button" className="btn" onClick={() => setOverlayAperto("impostazioni")}>
+            <button type="button" className="btn" onClick={() => apriOverlayDaMobile("impostazioni")}>
               Impostazioni
             </button>
           </div>
@@ -462,14 +460,50 @@ export function AppShell() {
           </aside>
         </div>
 
+        {/* Richiesta utente: barra unica in basso con tre bottoni a sola
+         * icona (niente testo, cosi' ci stanno tutti e tre): Eventi e
+         * missioni (sidebar sinistra), Comandi (l'elenco Missioni/Mercato/
+         * Catalogo comandi/Ricerca/Impostazioni, prima sempre sovrapposto
+         * alla mappa) e Gestione flotta (sidebar destra). */}
         <div className="app-shell__mobile-bar app-shell__mobile-bar--bottom">
           <button
             type="button"
-            className="btn btn-small app-shell__mobile-toggle"
-            aria-expanded={drawerMobileAperto === "destra"}
-            onClick={() => setDrawerMobileAperto((prev) => (prev === "destra" ? null : "destra"))}
+            className="app-shell__mobile-toggle"
+            aria-label="Eventi e missioni"
+            title="Eventi e missioni"
+            aria-expanded={drawerMobileAperto === "sinistra"}
+            onClick={() => {
+              setComandiMobileAperti(false);
+              setDrawerMobileAperto((prev) => (prev === "sinistra" ? null : "sinistra"));
+            }}
           >
-            ⚙ Gestione
+            🔔
+          </button>
+          <button
+            type="button"
+            className="app-shell__mobile-toggle"
+            aria-label="Comandi"
+            title="Comandi"
+            aria-expanded={comandiMobileAperti}
+            onClick={() => {
+              setDrawerMobileAperto(null);
+              setComandiMobileAperti((prev) => !prev);
+            }}
+          >
+            ☰
+          </button>
+          <button
+            type="button"
+            className="app-shell__mobile-toggle"
+            aria-label="Gestione flotta"
+            title="Gestione flotta"
+            aria-expanded={drawerMobileAperto === "destra"}
+            onClick={() => {
+              setComandiMobileAperti(false);
+              setDrawerMobileAperto((prev) => (prev === "destra" ? null : "destra"));
+            }}
+          >
+            ⚙
           </button>
         </div>
       </div>

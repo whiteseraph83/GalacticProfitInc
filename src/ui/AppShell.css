@@ -47,14 +47,33 @@
   .app-shell__mobile-bar {
     display: flex;
     justify-content: center;
-    padding: 8px;
+    gap: 14px;
+    padding: 6px;
     background: var(--panel-bg);
     border-top: 1px solid var(--border-faint);
   }
 
-  .app-shell__mobile-bar--top {
-    border-top: none;
-    border-bottom: 1px solid var(--border-faint);
+  /* Richiesta utente: solo icona, niente testo, cosi' i tre bottoni
+   * (Eventi, Comandi, Gestione) stanno comodamente sulla stessa riga. */
+  .app-shell__mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border-faint);
+    background-color: var(--bg);
+    color: var(--text);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .app-shell__mobile-toggle[aria-expanded="true"] {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
   }
 
   .app-shell__body {
@@ -149,6 +168,21 @@
   flex-direction: column;
   gap: 8px;
   z-index: 5;
+}
+
+/* Richiesta utente: su mobile questi bottoni restano nascosti finche' il
+ * bottone "Comandi" della barra in basso non li apre, invece di stare
+ * sempre sovrapposti alla mappa. Questa regola va dichiarata DOPO quella
+ * base qui sopra (stessa specificita': ".map-floating-controls"), altrimenti
+ * l'ordine nel file la farebbe perdere indipendentemente dal media query. */
+@media (max-width: 860px) {
+  .map-floating-controls {
+    display: none;
+  }
+
+  .map-floating-controls--mobile-aperto {
+    display: flex;
+  }
 }
 
 .planet-panel__name {
