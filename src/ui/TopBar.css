@@ -19,6 +19,10 @@
   color: var(--accent);
 }
 
+.top-bar__brand-main-short {
+  display: none;
+}
+
 .top-bar__brand-sub {
   font-size: 0.73rem;
   color: var(--text-muted);
@@ -73,16 +77,54 @@
 }
 
 /* Richiesta utente: migliorare la giocabilita' su mobile — la top bar non
- * andava mai a capo e tagliava i contatori fuori dallo schermo. */
+ * andava mai a capo e tagliava i contatori fuori dallo schermo. Poi
+ * ulteriormente rivista su richiesta: i contatori stavano su due righe
+ * (etichetta sopra, valore sotto) alzando troppo la top bar e spingendo giu'
+ * il resto dell'interfaccia — ora stanno su un'unica riga orizzontale, con
+ * icona e testo piu' piccoli; la versione si nasconde e il titolo per
+ * esteso lascia posto alla sigla "OP". */
 @media (max-width: 860px) {
   .top-bar {
     flex-wrap: wrap;
-    row-gap: 6px;
-    gap: 12px;
-    padding: 8px 12px;
+    row-gap: 4px;
+    gap: 10px;
+    padding: 6px 10px;
+  }
+
+  .top-bar__brand-main-full {
+    display: none;
+  }
+
+  .top-bar__brand-main-short {
+    display: inline;
   }
 
   .top-bar__stats {
-    gap: 14px;
+    gap: 10px;
+    row-gap: 4px;
+  }
+
+  .top-bar__stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .top-bar__stat svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .top-bar__stat-label {
+    font-size: 0.62rem;
+  }
+
+  .top-bar__stat-value {
+    font-size: 0.78rem;
+  }
+
+  .top-bar__version {
+    display: none;
   }
 }

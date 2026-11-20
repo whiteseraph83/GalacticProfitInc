@@ -47,7 +47,17 @@ export function TopBar() {
   return (
     <header className="top-bar">
       <div className="top-bar__brand">
-        <span className="top-bar__brand-main">{branding.main}</span>
+        <span className="top-bar__brand-main" aria-label={branding.main}>
+          {/* Richiesta utente: su mobile il titolo per esteso occupa troppo
+           * spazio nella top bar — diventa la sigla "OP" (il nome completo
+           * resta per lo screen reader via aria-label qui sopra). */}
+          <span className="top-bar__brand-main-full" aria-hidden="true">
+            {branding.main}
+          </span>
+          <span className="top-bar__brand-main-short" aria-hidden="true">
+            OP
+          </span>
+        </span>
         <span className="top-bar__brand-sub">{branding.sub}</span>
       </div>
 
