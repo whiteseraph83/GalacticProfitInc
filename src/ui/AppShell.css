@@ -2,7 +2,14 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 1fr;
+  /* Richiesta utente: su un telefono vero "100vh" include l'area coperta
+   * dalla barra indirizzi/toolbar del browser (che non si ritrae mai, visto
+   * che il body ha overflow:hidden e quindi non scrolla mai), tagliando
+   * fuori schermo la bottoniera in basso. "100dvh" (dynamic viewport
+   * height) si adatta invece all'area davvero visibile; il valore in vh
+   * resta come fallback per i browser che non lo supportano. */
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
 }
 
