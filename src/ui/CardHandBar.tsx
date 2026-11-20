@@ -29,6 +29,11 @@ export interface CardHandBarProps {
    * lo stesso tooltip lega visivamente l'avviso alla carta responsabile e
    * non puo' mai sovrapporsi ad altro. */
   erroreCarta?: { id: number; testo: string; cardInstanceId: string } | null;
+  /** Richiesta utente: su mobile la barra non sta sempre in vista (rischiava
+   * di finire sotto il bordo reale dello schermo) ma si apre tramite un
+   * bottone dedicato nella barra in basso di AppShell; su desktop questo
+   * prop resta inutilizzato (la barra e' sempre visibile via CSS). */
+  mobileAperta?: boolean;
 }
 
 /**
@@ -49,6 +54,7 @@ export function CardHandBar({
   onFineTrascinamento,
   cartaSbloccataCode = null,
   erroreCarta = null,
+  mobileAperta = false,
 }: CardHandBarProps) {
   const engine = useEngine();
   const state = useGameState();
@@ -66,7 +72,7 @@ export function CardHandBar({
   };
 
   return (
-    <footer className="card-hand-bar">
+    <footer className={`card-hand-bar ${mobileAperta ? "card-hand-bar--mobile-aperta" : ""}`}>
       <div className="card-hand-bar__cards">
         {state.manoCarte.map((carta) => {
           const def = CARD_DEFINITIONS[carta.code];

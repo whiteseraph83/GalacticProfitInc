@@ -61,6 +61,25 @@
   .game-card {
     flex-shrink: 0;
   }
+
+  /* Richiesta utente: la barra finiva esattamente sul bordo di "100vh",
+   * tagliata fuori schermo su un telefono reale (barra indirizzi del
+   * browser) — ora parte nascosta sotto al bordo e si apre come le altre
+   * tramite il bottone "Carte comando" nella barra in basso di AppShell. */
+  .card-hand-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateY(100%);
+    transition: transform 220ms ease;
+    z-index: 65;
+    box-shadow: 0 -4px 28px rgba(0, 0, 0, 0.6);
+  }
+
+  .card-hand-bar.card-hand-bar--mobile-aperta {
+    transform: translateY(0);
+  }
 }
 
 .game-card {

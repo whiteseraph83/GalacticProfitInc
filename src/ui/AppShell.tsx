@@ -154,6 +154,12 @@ export function AppShell() {
   // ora si aprono come un elenco a comparsa tramite un terzo bottone nella
   // barra in basso, invece di stare sempre in vista.
   const [comandiMobileAperti, setComandiMobileAperti] = useState(false);
+  // Richiesta utente: su mobile la barra delle carte comando in fondo
+  // finiva esattamente sul bordo inferiore di "100vh", che su un telefono
+  // reale viene coperto dalla barra indirizzi del browser — invece di
+  // restare sempre nel flusso (rischiando di finire fuori schermo), si apre
+  // come le altre tramite un bottone dedicato nella barra in basso.
+  const [carteMobileAperte, setCarteMobileAperte] = useState(false);
   const apriOverlayDaMobile = (overlay: typeof overlayAperto) => {
     setOverlayAperto(overlay);
     setComandiMobileAperti(false);
@@ -460,11 +466,13 @@ export function AppShell() {
           </aside>
         </div>
 
-        {/* Richiesta utente: barra unica in basso con tre bottoni a sola
-         * icona (niente testo, cosi' ci stanno tutti e tre): Eventi e
-         * missioni (sidebar sinistra), Comandi (l'elenco Missioni/Mercato/
-         * Catalogo comandi/Ricerca/Impostazioni, prima sempre sovrapposto
-         * alla mappa) e Gestione flotta (sidebar destra). */}
+        {/* Richiesta utente: barra unica in basso con bottoni a sola icona
+         * (niente testo, cosi' ci stanno tutti): Eventi e missioni (sidebar
+         * sinistra), Comandi (l'elenco Missioni/Mercato/Catalogo comandi/
+         * Ricerca/Impostazioni, prima sempre sovrapposto alla mappa), Carte
+         * (la mano comandi, vedi carteMobileAperte sopra) e Gestione flotta
+         * (sidebar destra). Ogni bottone chiude gli altri pannelli mobile
+         * aperti, cosi' non restano mai sovrapposti tra loro. */}
         <div className="app-shell__mobile-bar app-shell__mobile-bar--bottom">
           <button
             type="button"
@@ -474,6 +482,7 @@ export function AppShell() {
             aria-expanded={drawerMobileAperto === "sinistra"}
             onClick={() => {
               setComandiMobileAperti(false);
+              setCarteMobileAperte(false);
               setDrawerMobileAperto((prev) => (prev === "sinistra" ? null : "sinistra"));
             }}
           >
@@ -487,10 +496,25 @@ export function AppShell() {
             aria-expanded={comandiMobileAperti}
             onClick={() => {
               setDrawerMobileAperto(null);
+              setCarteMobileAperte(false);
               setComandiMobileAperti((prev) => !prev);
             }}
           >
             ☰
+          </button>
+          <button
+            type="button"
+            className="app-shell__mobile-toggle"
+            aria-label="Carte comando"
+            title="Carte comando"
+            aria-expanded={carteMobileAperte}
+            onClick={() => {
+              setDrawerMobileAperto(null);
+              setComandiMobileAperti(false);
+              setCarteMobileAperte((prev) => !prev);
+            }}
+          >
+            🃏
           </button>
           <button
             type="button"
@@ -500,6 +524,7 @@ export function AppShell() {
             aria-expanded={drawerMobileAperto === "destra"}
             onClick={() => {
               setComandiMobileAperti(false);
+              setCarteMobileAperte(false);
               setDrawerMobileAperto((prev) => (prev === "destra" ? null : "destra"));
             }}
           >
@@ -514,6 +539,7 @@ export function AppShell() {
         onFineTrascinamento={() => setCartaInTrascinamento(null)}
         cartaSbloccataCode={passoTutorialAttivo?.cardCode ?? null}
         erroreCarta={avvisoRequisito}
+        mobileAperta={carteMobileAperte}
       />
 
       {propostaCarta && (
