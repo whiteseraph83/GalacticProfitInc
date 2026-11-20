@@ -188,6 +188,10 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
         }
         appRef.current = app;
         host.appendChild(app.canvas);
+        // Richiesta utente: pinch-to-zoom su mobile — senza questo il
+        // browser intercetta il gesto a due dita per zoomare/scrollare la
+        // pagina invece di lasciarlo gestire qui sotto.
+        app.canvas.style.touchAction = "none";
 
         const world = new Container();
         world.position.set(app.renderer.width / 2, app.renderer.height / 2);
@@ -315,6 +319,66 @@ export const PixiMapView = forwardRef<PixiMapViewHandle, PixiMapViewProps>(funct
           },
           { passive: false },
         );
+
+        // --- Pinch-to-zoom su mobile (richiesta utente) ----------------------
+        // Pixi federa gli eventi touch in pointerdown/move/up (il pan a un
+        // dito sopra funziona gia' cosi'), ma non gestisce da solo un gesto
+        // a due dita: lo si intercetta qui con i TouchEvent nativi del
+        // canvas, stesso principio dello zoom con rotella sopra (centrato sul
+        // punto medio tra le due dita invece che sul puntatore del mouse).
+        let pinchDistanzaIniziale = 0;
+        let pinchScalaIniziale = 1;
+        let pinchAttivo = false;
+
+        const distanzaTouch = (touches: TouchList) =>
+          Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
+        const puntoMedioTouch = (touches: TouchList, rect: DOMRect) =>
+          new Point(
+            (touches[0].clientX + touches[1].clientX) / 2 - rect.left,
+            (touches[0].clientY + touches[1].clientY) / 2 - rect.top,
+          );
+
+        app.canvas.addEventListener(
+          "touchstart",
+          (e: TouchEvent) => {
+            if (e.touches.length !== 2) return;
+            e.preventDefault();
+            // Un pinch subentra a un eventuale pan/trascinamento gia' in
+            // corso con il primo dito, altrimenti il punto di riferimento
+            // del drag (lastPointer) resterebbe quello del dito singolo e
+            // causerebbe un salto della mappa al rilascio.
+            dragging = false;
+            dragMoved = false;
+            pinchAttivo = true;
+            pinchDistanzaIniziale = distanzaTouch(e.touches);
+            pinchScalaIniziale = world.scale.x;
+          },
+          { passive: false },
+        );
+
+        app.canvas.addEventListener(
+          "touchmove",
+          (e: TouchEvent) => {
+            if (!pinchAttivo || e.touches.length !== 2 || pinchDistanzaIniziale === 0) return;
+            e.preventDefault();
+            const rect = app.canvas.getBoundingClientRect();
+            const pointer = puntoMedioTouch(e.touches, rect);
+            const beforeLocal = world.toLocal(pointer);
+            const fattore = distanzaTouch(e.touches) / pinchDistanzaIniziale;
+            const newScale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, pinchScalaIniziale * fattore));
+            world.scale.set(newScale);
+            const afterGlobal = world.toGlobal(beforeLocal);
+            world.position.x += pointer.x - afterGlobal.x;
+            world.position.y += pointer.y - afterGlobal.y;
+          },
+          { passive: false },
+        );
+
+        const terminaPinch = (e: TouchEvent) => {
+          if (e.touches.length < 2) pinchAttivo = false;
+        };
+        app.canvas.addEventListener("touchend", terminaPinch);
+        app.canvas.addEventListener("touchcancel", terminaPinch);
 
         // --- Griglia di sfondo (puramente decorativa) ------------------------
         const grid = new Graphics();
