@@ -71,3 +71,18 @@
   letter-spacing: 0.03em;
   white-space: nowrap;
 }
+
+/* Richiesta utente: migliorare la giocabilita' su mobile — la top bar non
+ * andava mai a capo e tagliava i contatori fuori dallo schermo. */
+@media (max-width: 860px) {
+  .top-bar {
+    flex-wrap: wrap;
+    row-gap: 6px;
+    gap: 12px;
+    padding: 8px 12px;
+  }
+
+  .top-bar__stats {
+    gap: 14px;
+  }
+}

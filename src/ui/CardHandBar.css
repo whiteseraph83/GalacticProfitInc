@@ -44,6 +44,23 @@
   display: flex;
   gap: 10px;
   align-items: flex-end;
+  min-width: 0;
+}
+
+/* Richiesta utente: migliorare la giocabilita' su mobile — le 5 carte a
+ * larghezza fissa non ci stanno su uno schermo stretto; invece di
+ * rimpicciolirle (diventerebbero illeggibili) la fila scorre in
+ * orizzontale, come un carosello. */
+@media (max-width: 860px) {
+  .card-hand-bar__cards {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-shrink: 1;
+  }
+
+  .game-card {
+    flex-shrink: 0;
+  }
 }
 
 .game-card {

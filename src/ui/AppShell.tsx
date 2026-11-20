@@ -144,6 +144,12 @@ export function AppShell() {
   >(null);
   const [pannelloPianetaChiuso, setPannelloPianetaChiuso] = useState(false);
 
+  // Richiesta utente: su mobile le due barre laterali devono stare chiuse
+  // di default e aprirsi solo tramite un bottone, lasciando la mappa libera
+  // al centro. Su desktop questo stato resta inutilizzato (le barre sono
+  // sempre visibili via CSS, vedi AppShell.css).
+  const [drawerMobileAperto, setDrawerMobileAperto] = useState<"sinistra" | "destra" | null>(null);
+
   // Feedback sonoro per nuove notifiche (B11: "feedback UI"): montato qui
   // (non nel pannello Registro notifiche, ora un overlay su richiesta) cosi'
   // suona anche quando l'overlay non e' aperto.
@@ -347,16 +353,47 @@ export function AppShell() {
     <div className="app-shell">
       <TopBar />
       <RevisionBanner />
-      <div className="app-shell__body">
-        <aside className="app-shell__side-panel app-shell__side-panel--left">
-          <NarrativePanel />
-          <MissionsPanel compatta />
-          <EventsPanel />
-          <CivilizationsPanel />
-          <NotificationLogPanel limite={10} onVediTutte={() => setOverlayAperto("notifiche")} />
-        </aside>
+      <div className="app-shell__main">
+        {/* Richiesta utente: su mobile le sidebar si aprono con un bottone,
+         * posizionato in una barra sopra la mappa (qui) e una sotto (vedi in
+         * fondo a questo blocco), lasciando la mappa libera al centro.
+         * Su desktop queste barre restano nascoste via CSS. */}
+        <div className="app-shell__mobile-bar app-shell__mobile-bar--top">
+          <button
+            type="button"
+            className="btn btn-small app-shell__mobile-toggle"
+            aria-expanded={drawerMobileAperto === "sinistra"}
+            onClick={() => setDrawerMobileAperto((prev) => (prev === "sinistra" ? null : "sinistra"))}
+          >
+            ☰ Eventi
+          </button>
+        </div>
 
-        <div className="app-shell__map">
+        <div className="app-shell__body">
+          {drawerMobileAperto && (
+            <div className="app-shell__drawer-backdrop" onClick={() => setDrawerMobileAperto(null)} />
+          )}
+          <aside
+            className={`app-shell__side-panel app-shell__side-panel--left ${
+              drawerMobileAperto === "sinistra" ? "app-shell__side-panel--aperto" : ""
+            }`}
+          >
+            <button
+              type="button"
+              className="app-shell__side-panel-close"
+              aria-label="Chiudi pannello"
+              onClick={() => setDrawerMobileAperto(null)}
+            >
+              ✕
+            </button>
+            <NarrativePanel />
+            <MissionsPanel compatta />
+            <EventsPanel />
+            <CivilizationsPanel />
+            <NotificationLogPanel limite={10} onVediTutte={() => setOverlayAperto("notifiche")} />
+          </aside>
+
+          <div className="app-shell__map">
           <span className="map-placeholder-badge">
             Regione {state.numeroRegione}: {pianetiScoperti.length}/{state.pianeti.length} pianeti scoperti
           </span>
@@ -406,11 +443,35 @@ export function AppShell() {
             onDropCartaSuRelitto={onDropCartaSuRelitto}
             onDropCartaSuMappa={onDropCartaSuMappa}
           />
+          </div>
+
+          <aside
+            className={`app-shell__side-panel ${
+              drawerMobileAperto === "destra" ? "app-shell__side-panel--aperto" : ""
+            }`}
+          >
+            <button
+              type="button"
+              className="app-shell__side-panel-close"
+              aria-label="Chiudi pannello"
+              onClick={() => setDrawerMobileAperto(null)}
+            >
+              ✕
+            </button>
+            <ManagementPanel />
+          </aside>
         </div>
 
-        <aside className="app-shell__side-panel">
-          <ManagementPanel />
-        </aside>
+        <div className="app-shell__mobile-bar app-shell__mobile-bar--bottom">
+          <button
+            type="button"
+            className="btn btn-small app-shell__mobile-toggle"
+            aria-expanded={drawerMobileAperto === "destra"}
+            onClick={() => setDrawerMobileAperto((prev) => (prev === "destra" ? null : "destra"))}
+          >
+            ⚙ Gestione
+          </button>
+        </div>
       </div>
       <CardHandBar
         cartaArmataId={cartaArmata?.instanceId ?? null}

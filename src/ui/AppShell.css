@@ -6,11 +6,112 @@
   width: 100vw;
 }
 
+/* Evita il "blowout" tipico di CSS Grid: senza min-width:0 i figli di una
+ * singola colonna 1fr possono forzare la traccia a crescere oltre il
+ * contenitore quando il loro contenuto (es. la fila di carte) non ci
+ * starebbe, facendo traboccare l'intera pagina a destra fuori schermo. */
+.app-shell > * {
+  min-width: 0;
+}
+
+.app-shell__main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .app-shell__body {
   position: relative;
   display: grid;
   grid-template-columns: minmax(220px, 280px) 1fr minmax(260px, 320px);
   min-height: 0;
+  flex: 1;
+}
+
+/* Richiesta utente: su mobile le sidebar diventano drawer apribili da un
+ * bottone sopra e uno sotto la mappa, che resta libera al centro. Su
+ * desktop queste barre e i relativi controlli restano nascosti. */
+.app-shell__mobile-bar {
+  display: none;
+}
+
+.app-shell__side-panel-close {
+  display: none;
+}
+
+.app-shell__drawer-backdrop {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .app-shell__mobile-bar {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    background: var(--panel-bg);
+    border-top: 1px solid var(--border-faint);
+  }
+
+  .app-shell__mobile-bar--top {
+    border-top: none;
+    border-bottom: 1px solid var(--border-faint);
+  }
+
+  .app-shell__body {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell__side-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: min(84vw, 320px);
+    z-index: 60;
+    transition: transform 220ms ease;
+    box-shadow: 0 0 28px rgba(0, 0, 0, 0.6);
+  }
+
+  .app-shell__side-panel--left {
+    left: 0;
+    transform: translateX(-100%);
+  }
+
+  .app-shell__side-panel:not(.app-shell__side-panel--left) {
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  /* Specificita' pari a ".app-shell__side-panel:not(...)" sopra (due
+   * classi), cosi' da vincere per ordine di dichiarazione invece di perdere
+   * contro la regola piu' specifica del pannello destro. */
+  .app-shell__side-panel.app-shell__side-panel--aperto {
+    transform: translateX(0);
+  }
+
+  .app-shell__side-panel-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border-faint);
+    background-color: var(--bg);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .app-shell__drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgba(3, 5, 10, 0.6);
+  }
 }
 
 .app-shell__map {
